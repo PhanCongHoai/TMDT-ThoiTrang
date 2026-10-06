@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tài Khoản Cá Nhân VIP | AURALIÈ Haute Couture</title>
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="top-announcement-bar">
+    <div class="announcement-content">
+      <span><i class="fa-solid fa-crown"></i> Thượng Hội Viên Platinum: Hạng Thẻ Tích Lũy 125.000.000đ</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-headset"></i> Chuyên Viên Tư Vấn VIP Riêng: 1900 8888</span>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVIGATION -->
+  <header class="d-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <a href="index.html" class="d-logo">AURALIÈ<span>HAUTE COUTURE</span></a>
+    
+    <nav class="desktop-nav-wrapper">
+      <ul class="d-nav">
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="index.html#catalog">Sản phẩm</a></li>
+        <li><a href="collections.html">Bộ sưu tập</a></li>
+        <li><a href="blog.html">Tạp chí</a></li>
+        <li><a href="about.html">Về chúng tôi</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+
+    <div class="d-user-actions">
+      <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
+        <i class="fa-regular fa-heart"></i>
+        <span class="badge-count">2</span>
+      </a>
+
+      <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count" id="cart-count">3</span>
+      </a>
+
+      <div class="user-dropdown-wrapper">
+        <a href="profile.html" class="d-btn-icon desktop-user-btn active" id="user-menu-trigger" title="Tài khoản cá nhân VIP">
+          <i class="fa-solid fa-user"></i>
+        </a>
+        <div class="user-dropdown-menu">
+          <div class="user-dropdown-header">
+            <div class="user-avatar-small">TV</div>
+            <div class="user-info-text">
+              <strong class="user-name">Bà Nguyễn Thanh Vân</strong>
+              <span class="user-rank"><i class="fa-solid fa-crown"></i> PLATINUM VIP</span>
+            </div>
+          </div>
+          
+          <div class="user-vip-progress">
+            <div class="vip-progress-label">
+              <span>Tích điểm: <strong>2.450 VIP</strong></span>
+              <span>Hạng: <strong>Diamond (75%)</strong></span>
+            </div>
+            <div class="vip-progress-bar"><div class="vip-progress-fill" style="width: 75%;"></div></div>
+          </div>
+
+          <ul class="user-dropdown-links">
+            <li><a href="profile.html#info"><i class="fa-solid fa-user-gear"></i> Thông Tin & Số Đo</a></li>
+            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi <span class="dropdown-badge gold">1 đang giao</span></a></li>
+            <li><a href="profile.html#address"><i class="fa-solid fa-location-dot"></i> Sổ Địa Chỉ Giao Hàng</a></li>
+            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích <span class="dropdown-badge">2</span></a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-gem"></i> Đặc Quyền VIP Lounge</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a href="login.html" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main">
+
+    <section class="page-section">
+
+      <div style="display: grid; grid-template-columns: 280px 1fr; gap: 2.5rem;" class="responsive-grid">
+
+        <!-- THÔNG TIN AVATAR & SIDEBAR MENU CÁ NHÂN -->
+        <aside style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 2rem; text-align: center; box-shadow: var(--shadow-subtle);">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-dark); color: var(--accent-gold); font-size: 2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--accent-gold);">
+              TV
+            </div>
+            <h3 style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--primary-dark);">Bà Nguyễn Thanh Vân</h3>
+            <span style="display: inline-block; background: #faf7f2; border: 1px solid var(--accent-gold); color: var(--accent-gold); font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 20px; margin-top: 0.4rem;">
+              <i class="fa-solid fa-crown"></i> HỘI VIÊN PLATINUM VIP
+            </span>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.6rem;">Thành viên từ tháng 01/2026</p>
+          </div>
+
+          <div class="sidebar-widget" style="padding: 1.25rem;">
+            <ul class="category-list" id="profile-tabs">
+              <li><a href="#orders" class="profile-tab-link active"><i class="fa-solid fa-box-archive" style="width:20px;"></i> <span>Lịch Sử Đơn Hàng</span></a></li>
+              <li><a href="#info" class="profile-tab-link"><i class="fa-solid fa-user-pen" style="width:20px;"></i> <span>Thông Tin Tài Khoản</span></a></li>
+              <li><a href="#address" class="profile-tab-link"><i class="fa-solid fa-location-dot" style="width:20px;"></i> <span>Sổ Địa Chỉ Giao Hàng</span></a></li>
+              <li><a href="wishlist.html"><i class="fa-solid fa-heart" style="width:20px;"></i> <span>Sản Phẩm Yêu Thích</span></a></li>
+              <li><a href="login.html" style="color: #c62828;"><i class="fa-solid fa-right-from-bracket" style="width:20px;"></i> <span>Đăng Xuất</span></a></li>
+            </ul>
+          </div>
+
+        </aside>
+
+        <!-- NỘI DUNG CHÍNH TÀI KHOẢN -->
+        <div>
+
+          <!-- TAB 1: LỊCH SỬ ĐƠN HÀNG -->
+          <div id="section-orders" class="profile-section-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+              <h2 style="font-family: var(--font-serif); font-size: 1.8rem;">Lịch Sử Đơn Hàng VIP</h2>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Hiển thị 2 đơn hàng gần nhất</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+              <!-- Order Card 1 -->
+              <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-subtle);">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem;">
+                  <div>
+                    <strong style="font-size: 1.05rem; color: var(--primary-dark);">Mã Đơn: AUR-2026-992</strong>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Ngày đặt: 02/10/2026 - 14:30</span>
+                  </div>
+                  <span style="background: #e3f2fd; color: #1565c0; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px;">
+                    <i class="fa-solid fa-truck-fast"></i> ĐANG VẬN CHUYỂN HỎA TỐC
+                  </span>
+                </div>
+
+                <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem;">
+                  <img src="assets/card_1.jpg" alt="Double-Breasted Tailored Suit" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+                  <div style="flex: 1;">
+                    <h4 style="font-size: 0.95rem; color: var(--primary-dark);">Double-Breasted Tailored Suit</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Phân loại: Đen Tuyền (Jet Black) | Size: M | Số lượng: 1</p>
+                  </div>
+                  <span style="font-weight: 700; font-size: 1.1rem; color: var(--primary-dark);">12.500.000 ₫</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-light);">
+                  <span style="font-size: 0.85rem; color: var(--text-muted);">Thanh toán: <strong>VNPAY QR (Đã thanh toán)</strong></span>
+                  <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="alert('Đã gửi yêu cầu theo dõi hành trình đơn hàng AUR-2026-992 tới SMS quý khách!')">Tra Cứu Vận Chuyển</button>
+                </div>
+              </div>
+
+              <!-- Order Card 2 -->
+              <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-subtle);">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem;">
+                  <div>
+                    <strong style="font-size: 1.05rem; color: var(--primary-dark);">Mã Đơn: AUR-2026-781</strong>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Ngày đặt: 18/09/2026 - 09:15</span>
+                  </div>
+                  <span style="background: #e8f5e9; color: #2e7d32; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px;">
+                    <i class="fa-solid fa-circle-check"></i> ĐÃ HOÀN THÀNH
+                  </span>
+                </div>
+
+                <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem;">
+                  <img src="assets/card_2.jpg" alt="Minimalist Silk Trench Dress" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+                  <div style="flex: 1;">
+                    <h4 style="font-size: 0.95rem; color: var(--primary-dark);">Minimalist Silk Trench Dress</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Phân loại: Đỏ Ruby | Size: S | Số lượng: 1</p>
+                  </div>
+                  <span style="font-weight: 700; font-size: 1.1rem; color: var(--primary-dark);">18.900.000 ₫</span>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-light);">
+                  <span style="font-size: 0.85rem; color: var(--text-muted);">Thanh toán: <strong>Thẻ Tín Dụng Quốc Tế (Visa/Mastercard)</strong></span>
+                  <a href="index.html#catalog" class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; text-decoration:none;">Mua Lại Đơn Này</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TAB 2: THÔNG TIN CÁ NHÂN -->
+          <div id="section-info" class="profile-section-content" style="display: none;">
+            <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.5rem;">Cập Nhật Thông Tin Cá Nhân</h2>
+            
+            <form style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;" class="responsive-grid">
+                <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
+                  <label style="font-size: 0.85rem; font-weight: 600;">Họ Và Tên</label>
+                  <input type="text" value="Nguyễn Thanh Vân">
+                </div>
+                <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
+                  <label style="font-size: 0.85rem; font-weight: 600;">Số Điện Thoại VIP</label>
+                  <input type="tel" value="0908 888 999">
+                </div>
+              </div>
+
+              <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
+                <label style="font-size: 0.85rem; font-weight: 600;">Địa Chỉ Email</label>
+                <input type="email" value="thanhvan.nguyen@auralie.fashion" readonly style="background:#f5f5f5;">
+              </div>
+
+              <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
+                <label style="font-size: 0.85rem; font-weight: 600;">Địa Chỉ Giao Hàng Thường Dùng</label>
+                <input type="text" value="Căn hộ Penthouse P12, Landmark 81, Q.Bình Thạnh, TP.Hồ Chí Minh">
+              </div>
+
+              <button type="button" class="btn-primary-luxury" style="padding: 0.8rem 1.5rem; width: fit-content; font-size: 0.85rem;" onclick="alert('Đã cập nhật thông tin thành công!')">Lưu Thay Đổi</button>
+            </form>
+          </div>
+
+          <!-- TAB 3: SỔ ĐỊA CHỈ -->
+          <div id="section-address" class="profile-section-content" style="display: none;">
+            <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.5rem;">Sổ Địa Chỉ Giao Hàng</h2>
+            <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 0.75rem; background: var(--accent-gold); color: #fff; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold;">MẶC ĐỊNH</span>
+                <h4 style="font-size: 1rem; margin-top: 0.4rem;">Showroom / Nhà Riêng</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Căn hộ Penthouse P12, Landmark 81, Q.Bình Thạnh, TP.Hồ Chí Minh</p>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">SĐT: 0908 888 999</span>
+              </div>
+              <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: var(--secondary-dark);">Chỉnh Sửa</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="d-footer">
+    <div class="footer-bottom" style="text-align: center;">
+      <p>© 2026 AURALIÈ HAUTE COUTURE. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabLinks = document.querySelectorAll('.profile-tab-link');
+      const sections = {
+        '#orders': document.getElementById('section-orders'),
+        '#info': document.getElementById('section-info'),
+        '#address': document.getElementById('section-address')
+      };
+
+      tabLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const target = link.getAttribute('href');
+          if (sections[target]) {
+            e.preventDefault();
+            tabLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            Object.keys(sections).forEach(key => {
+              sections[key].style.display = key === target ? 'block' : 'none';
+            });
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

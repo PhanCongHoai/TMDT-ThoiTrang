@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ Hàng Thời Trang | AURALIÈ Haute Couture</title>
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="top-announcement-bar">
+    <div class="announcement-content">
+      <span><i class="fa-solid fa-gem"></i> Bộ Sưu Tập Thu Đông 2026 Mới Nhất Đã Ra Mắt</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-truck-fast"></i> Miễn Phí Vận Chuyển Hỏa Tốc Đơn Trên 5.000.000đ</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-phone"></i> Hotline VIP: 1900 8888</span>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVIGATION -->
+  <header class="d-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <a href="index.html" class="d-logo">AURALIÈ<span>HAUTE COUTURE</span></a>
+    
+    <nav class="desktop-nav-wrapper">
+      <ul class="d-nav">
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="index.html#catalog">Sản phẩm</a></li>
+        <li><a href="collections.html">Bộ sưu tập</a></li>
+        <li><a href="blog.html">Tạp chí</a></li>
+        <li><a href="about.html">Về chúng tôi</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+
+    <div class="d-user-actions">
+      <div class="d-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+      </div>
+
+      <button class="d-btn-icon mobile-search-btn" id="mobile-search-toggle" title="Tìm kiếm">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
+      <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
+        <i class="fa-regular fa-heart"></i>
+        <span class="badge-count">2</span>
+      </a>
+
+      <a href="cart.html" class="d-btn-icon active-icon" id="cart-btn" title="Giỏ hàng" style="color: var(--accent-gold);">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count" id="cart-count">3</span>
+      </a>
+
+      <div class="user-dropdown-wrapper">
+        <a href="profile.html" class="d-btn-icon desktop-user-btn" id="user-menu-trigger" title="Tài khoản cá nhân VIP">
+          <i class="fa-regular fa-user"></i>
+        </a>
+        <div class="user-dropdown-menu">
+          <div class="user-dropdown-header">
+            <div class="user-avatar-small">TV</div>
+            <div class="user-info-text">
+              <strong class="user-name">Bà Nguyễn Thanh Vân</strong>
+              <span class="user-rank"><i class="fa-solid fa-crown"></i> PLATINUM VIP</span>
+            </div>
+          </div>
+          
+          <div class="user-vip-progress">
+            <div class="vip-progress-label">
+              <span>Tích điểm: <strong>2.450 VIP</strong></span>
+              <span>Hạng: <strong>Diamond (75%)</strong></span>
+            </div>
+            <div class="vip-progress-bar"><div class="vip-progress-fill" style="width: 75%;"></div></div>
+          </div>
+
+          <ul class="user-dropdown-links">
+            <li><a href="profile.html#info"><i class="fa-solid fa-user-gear"></i> Thông Tin & Số Đo</a></li>
+            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi <span class="dropdown-badge gold">1 đang giao</span></a></li>
+            <li><a href="profile.html#address"><i class="fa-solid fa-location-dot"></i> Sổ Địa Chỉ Giao Hàng</a></li>
+            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích <span class="dropdown-badge">2</span></a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-gem"></i> Đặc Quyền VIP Lounge</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a href="login.html" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE SEARCH OVERLAY -->
+  <div class="mobile-search-overlay" id="mobile-search-overlay">
+    <div class="mobile-search-container">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Tìm kiếm sản phẩm..." id="mobile-search-input">
+      <button class="close-search-btn" id="close-search-btn">&times;</button>
+    </div>
+  </div>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="drawer-header">
+      <span class="d-logo" style="font-size: 1.5rem;">AURALIÈ</span>
+      <button class="close-drawer-btn" id="close-drawer-btn">&times;</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="index.html"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+      <li><a href="index.html#catalog"><i class="fa-solid fa-shirt"></i> Sản phẩm</a></li>
+      <li><a href="collections.html"><i class="fa-solid fa-layer-group"></i> Bộ sưu tập</a></li>
+      <li><a href="about.html"><i class="fa-solid fa-building"></i> Về chúng tôi</a></li>
+      <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
+    </ul>
+  </div>
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <main class="site-main">
+
+    <!-- PAGE TITLE SECTION -->
+    <section style="background: #ffffff; padding: 2.5rem 1.25rem; border-bottom: 1px solid var(--border-light); text-align: center;">
+      <span style="color: var(--accent-gold); font-size: 0.8rem; letter-spacing: 3px; font-weight: 700;">AURALIÈ SHOPPING BAG</span>
+      <h1 class="section-title" style="text-align: center; margin-top: 0.5rem;">Giỏ Hàng Của Bạn (3 Sản Phẩm)</h1>
+    </section>
+
+    <!-- CART BODY CONTAINER -->
+    <section class="page-section">
+      <div style="display: grid; grid-template-columns: 1fr 380px; gap: 2.5rem;" class="responsive-grid">
+        
+        <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM GIỎ HÀNG -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- Item 1 -->
+          <div class="cart-item-card" style="display: flex; gap: 1.5rem; background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-light); align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 1.25rem; align-items: center;">
+              <img src="assets/card_1.jpg" alt="Double-Breasted Tailored Suit" style="width: 90px; height: 110px; object-fit: cover; border-radius: 8px;">
+              <div>
+                <span class="card-category">Áo Vest Nam</span>
+                <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0.2rem 0;">Double-Breasted Tailored Suit</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Size: <strong>M</strong> | Màu: <strong>Đen Lux</strong></p>
+                <p style="font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); margin-top: 0.4rem;">12.500.000 ₫</p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+              <div class="quantity-control" style="display: flex; align-items: center; border: 1px solid var(--border-light); border-radius: 20px; padding: 0.2rem 0.6rem; background: #faf8f5;">
+                <button style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">-</button>
+                <span style="font-size: 0.9rem; font-weight: 600; padding: 0 0.5rem;">1</span>
+                <button style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">+</button>
+              </div>
+
+              <button style="background: none; border: none; color: #a00; font-size: 1.2rem; cursor: pointer;" title="Xóa khỏi giỏ hàng">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="cart-item-card" style="display: flex; gap: 1.5rem; background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-light); align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 1.25rem; align-items: center;">
+              <img src="assets/card_2.jpg" alt="Minimalist Silk Trench Dress" style="width: 90px; height: 110px; object-fit: cover; border-radius: 8px;">
+              <div>
+                <span class="card-category">Đầm Haute Couture</span>
+                <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0.2rem 0;">Minimalist Silk Trench Dress</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Size: <strong>S</strong> | Màu: <strong>Đỏ Burgundy</strong></p>
+                <p style="font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); margin-top: 0.4rem;">18.900.000 ₫</p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+              <div class="quantity-control" style="display: flex; align-items: center; border: 1px solid var(--border-light); border-radius: 20px; padding: 0.2rem 0.6rem; background: #faf8f5;">
+                <button style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">-</button>
+                <span style="font-size: 0.9rem; font-weight: 600; padding: 0 0.5rem;">1</span>
+                <button style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">+</button>
+              </div>
+
+              <button style="background: none; border: none; color: #a00; font-size: 1.2rem; cursor: pointer;" title="Xóa khỏi giỏ hàng">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="cart-item-card" style="display: flex; gap: 1.5rem; background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-light); align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 1.25rem; align-items: center;">
+              <img src="assets/card_4.jpg" alt="Heritage Tan Leather Handbag" style="width: 90px; height: 110px; object-fit: cover; border-radius: 8px;">
+              <div>
+                <span class="card-category">Phụ Kiện Da</span>
+                <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0.2rem 0;">Heritage Tan Leather Handbag</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Size: <strong>Freesize</strong> | Màu: <strong>Champagne Gold</strong></p>
+                <p style="font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); margin-top: 0.4rem;">24.500.000 ₫</p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+              <div class="quantity-control" style="display: flex; align-items: center; border: 1px solid var(--border-light); border-radius: 20px; padding: 0.2rem 0.6rem; background: #faf8f5;">
+                <button style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">-</button>
+                <span style="font-size: 0.9rem; font-weight: 600; padding: 0 0.5rem;">1</span>
+                <button style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">+</button>
+              </div>
+
+              <button style="background: none; border: none; color: #a00; font-size: 1.2rem; cursor: pointer;" title="Xóa khỏi giỏ hàng">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+            <a href="index.html#catalog" style="color: var(--primary-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;"><i class="fa-solid fa-arrow-left"></i> Tiếp Tục Mua Sắm</a>
+            <button style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;"><i class="fa-solid fa-arrows-rotate"></i> Cập Nhật Giỏ Hàng</button>
+          </div>
+        </div>
+
+        <!-- CỘT PHẢI: TỔNG QUAN ĐƠN HÀNG (ORDER SUMMARY) -->
+        <div class="sidebar-widget" style="padding: 2rem; background: #ffffff; height: fit-content;">
+          <h3 class="widget-title" style="margin-bottom: 1.5rem;">Tóm Tắt Đơn Hàng</h3>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Tạm tính sản phẩm:</span>
+              <span style="font-weight: 600;">55.900.000 ₫</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; color: #2e7d32;">
+              <span>Mã giảm giá VIP (AURALIE2026 - 20%):</span>
+              <span style="font-weight: 600;">-11.180.000 ₫</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted);">Phí vận chuyển:</span>
+              <span style="color: var(--accent-gold); font-weight: 600;">Miễn Phí Hỏa Tốc</span>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border-light); margin: 0.5rem 0;">
+
+            <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; color: var(--primary-dark);">
+              <span>Tổng Thanh Toán:</span>
+              <span style="color: var(--accent-gold);">44.720.000 ₫</span>
+            </div>
+          </div>
+
+          <!-- MÃ GIẢM GIÁ -->
+          <div style="margin-bottom: 1.5rem;">
+            <span class="filter-label">Mã Ưu Đãi VIP</span>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" value="AURALIE2026" style="padding: 0.6rem 1rem; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.85rem; width: 100%; outline: none;">
+              <button class="btn-primary-luxury" style="padding: 0.6rem 1rem; border-radius: 20px; font-size: 0.75rem;">Đã Áp Dụng</button>
+            </div>
+          </div>
+
+          <!-- BUTTON THANH TOÁN -->
+          <button class="btn-primary-luxury" style="width: 100%; justify-content: center; padding: 1rem; font-size: 0.9rem;">
+            Tiến Hành Thanh Toán <i class="fa-solid fa-lock"></i>
+          </button>
+
+          <div style="margin-top: 1.5rem; text-align: center; font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: center; gap: 1rem;">
+            <span><i class="fa-solid fa-shield-halved" style="color: var(--accent-gold);"></i> Bảo Mật SSL</span>
+            <span><i class="fa-solid fa-rotate-left" style="color: var(--accent-gold);"></i> Đổi Trả 30 Ngày</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="d-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h2>AURALIÈ</h2>
+        <p>Thương hiệu thời trang cao cấp định hình phong cách sống hiện đại và tinh tế. Thiết kế chuẩn Châu Âu cho trải nghiệm xa xỉ.</p>
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col collapsible-footer">
+        <h4 class="accordion-header">Chính Sách <i class="fa-solid fa-chevron-down accordion-icon"></i></h4>
+        <ul class="footer-links accordion-content">
+          <li><a href="warranty-policy.html">Chính sách bảo hành</a></li>
+          <li><a href="return-policy.html">Đổi trả trong 30 ngày</a></li>
+          <li><a href="shipping-policy.html">Vận chuyển hỏa tốc</a></li>
+          <li><a href="privacy-policy.html">Bảo mật thông tin</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col collapsible-footer">
+        <h4 class="accordion-header">Thông Tin Liên Hệ <i class="fa-solid fa-chevron-down accordion-icon"></i></h4>
+        <ul class="footer-links accordion-content">
+          <li><a href="contact.html">Showroom: Đồng Khởi, Q.1, TP.HCM</a></li>
+          <li><a href="contact.html">Hotline: 1900 8888</a></li>
+          <li><a href="contact.html">Email: vip@auralie.fashion</a></li>
+          <li><a href="contact.html">Giờ mở cửa: 09:00 - 22:00</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Đăng Ký Nhận Tin</h4>
+        <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 1rem;">Nhận thông tin bộ sưu tập mới và ưu đãi đặc quyền VIP.</p>
+        <div class="newsletter-box">
+          <input type="email" placeholder="Email của bạn...">
+          <button class="btn-primary-luxury" style="padding: 0.6rem 1rem; border-radius: 20px; font-size: 0.75rem;">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 AURALIÈ HAUTE COUTURE. All Rights Reserved.</p>
+      <p>Website Thương Mại Điện Tử Thời Trang Cao Cấp.</p>
+    </div>
+  </footer>
+
+  <!-- MOBILE STICKY BOTTOM NAVIGATION -->
+  <nav class="m-bottom-nav">
+    <a href="index.html" class="m-nav-item"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
+    <a href="collections.html" class="m-nav-item"><i class="fa-solid fa-layer-group"></i><span>Bộ sưu tập</span></a>
+    <a href="#" class="m-nav-item" id="bottom-search-trigger"><i class="fa-solid fa-magnifying-glass"></i><span>Tìm kiếm</span></a>
+    <a href="cart.html" class="m-nav-item active"><i class="fa-solid fa-bag-shopping"></i><span>Giỏ hàng</span></a>
+    <a href="contact.html" class="m-nav-item"><i class="fa-solid fa-envelope"></i><span>Liên hệ</span></a>
+  </nav>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

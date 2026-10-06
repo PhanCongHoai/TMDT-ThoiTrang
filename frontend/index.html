@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURALIÈ Haute Couture | Thời Trang Thượng Lưu & Độc Quyền</title>
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="top-announcement-bar">
+    <div class="announcement-content">
+      <span><i class="fa-solid fa-gem"></i> Bộ Sưu Tập Thu Đông 2026 Mới Nhất Đã Ra Mắt</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-truck-fast"></i> Miễn Phí Vận Chuyển Hỏa Tốc Đơn Trên 5.000.000đ</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-phone"></i> Hotline VIP: 1900 8888</span>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVIGATION -->
+  <header class="d-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <a href="index.html" class="d-logo">AURALIÈ<span>HAUTE COUTURE</span></a>
+    
+    <nav class="desktop-nav-wrapper">
+      <ul class="d-nav">
+        <li><a href="index.html" class="active">Trang chủ</a></li>
+        <li><a href="index.html#catalog">Sản phẩm</a></li>
+        <li><a href="collections.html">Bộ sưu tập</a></li>
+        <li><a href="blog.html">Tạp chí</a></li>
+        <li><a href="about.html">Về chúng tôi</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+
+    <div class="d-user-actions">
+      <!-- Search Box on Desktop -->
+      <div class="d-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+      </div>
+
+      <!-- Search Trigger Icon Button on Mobile -->
+      <button class="d-btn-icon mobile-search-btn" id="mobile-search-toggle" title="Tìm kiếm">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
+      <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
+        <i class="fa-regular fa-heart"></i>
+        <span class="badge-count">2</span>
+      </a>
+
+      <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count" id="cart-count">3</span>
+      </a>
+
+      <div class="user-dropdown-wrapper">
+        <a href="profile.html" class="d-btn-icon desktop-user-btn" id="user-menu-trigger" title="Tài khoản cá nhân VIP">
+          <i class="fa-regular fa-user"></i>
+        </a>
+        <div class="user-dropdown-menu">
+          <div class="user-dropdown-header">
+            <div class="user-avatar-small">TV</div>
+            <div class="user-info-text">
+              <strong class="user-name">Bà Nguyễn Thanh Vân</strong>
+              <span class="user-rank"><i class="fa-solid fa-crown"></i> PLATINUM VIP</span>
+            </div>
+          </div>
+          
+          <div class="user-vip-progress">
+            <div class="vip-progress-label">
+              <span>Tích điểm: <strong>2.450 VIP</strong></span>
+              <span>Hạng: <strong>Diamond (75%)</strong></span>
+            </div>
+            <div class="vip-progress-bar"><div class="vip-progress-fill" style="width: 75%;"></div></div>
+          </div>
+
+          <ul class="user-dropdown-links">
+            <li><a href="profile.html#info"><i class="fa-solid fa-user-gear"></i> Thông Tin & Số Đo</a></li>
+            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi <span class="dropdown-badge gold">1 đang giao</span></a></li>
+            <li><a href="profile.html#address"><i class="fa-solid fa-location-dot"></i> Sổ Địa Chỉ Giao Hàng</a></li>
+            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích <span class="dropdown-badge">2</span></a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-gem"></i> Đặc Quyền VIP Lounge</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a href="login.html" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE SEARCH OVERLAY -->
+  <div class="mobile-search-overlay" id="mobile-search-overlay">
+    <div class="mobile-search-container">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Tìm kiếm sản phẩm thời trang..." id="mobile-search-input">
+      <button class="close-search-btn" id="close-search-btn">&times;</button>
+    </div>
+    <div class="trending-search-tags">
+      <span>Gợi ý tìm kiếm:</span>
+      <a href="collections.html">Vest Cashmere</a>
+      <a href="collections.html">Đầm Lụa Dạ Hội</a>
+      <a href="collections.html">Túi Da Thủ Công</a>
+    </div>
+  </div>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="drawer-header">
+      <span class="d-logo" style="font-size: 1.5rem;">AURALIÈ</span>
+      <button class="close-drawer-btn" id="close-drawer-btn">&times;</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="index.html" class="active"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+      <li><a href="index.html#catalog"><i class="fa-solid fa-shirt"></i> Sản phẩm</a></li>
+      <li><a href="collections.html"><i class="fa-solid fa-layer-group"></i> Bộ sưu tập</a></li>
+      <li><a href="blog.html"><i class="fa-solid fa-newspaper"></i> Tạp chí</a></li>
+      <li><a href="about.html"><i class="fa-solid fa-building"></i> Về chúng tôi</a></li>
+      <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
+      <li><a href="wishlist.html"><i class="fa-regular fa-heart"></i> Yêu thích (2)</a></li>
+      <li><a href="cart.html"><i class="fa-solid fa-bag-shopping"></i> Giỏ hàng (3)</a></li>
+    </ul>
+  </div>
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <!-- MOBILE FILTER BOTTOM SHEET / DRAWER -->
+  <div class="mobile-filter-drawer" id="mobile-filter-drawer">
+    <div class="drawer-header">
+      <h3><i class="fa-solid fa-sliders"></i> Bộ Lọc Sản Phẩm</h3>
+      <button class="close-drawer-btn" id="close-filter-btn">&times;</button>
+    </div>
+    <div class="filter-drawer-body">
+      <div class="filter-group">
+        <span class="filter-label">Danh Mục Thời Trang</span>
+        <ul class="category-list">
+          <li><a href="#" class="active" data-cat="all"><span>Tất Cả Sản Phẩm</span> <span class="category-count">20</span></a></li>
+          <li><a href="#" data-cat="vest-blazer"><span>Áo Vest & Blazer</span> <span class="category-count">4</span></a></li>
+          <li><a href="#" data-cat="vay-dam"><span>Váy & Đầm Dạ Hội</span> <span class="category-count">4</span></a></li>
+          <li><a href="#" data-cat="ao-khoac"><span>Áo Khoác Thu Đông</span> <span class="category-count">4</span></a></li>
+          <li><a href="#" data-cat="tui-xach"><span>Túi Xách Da Cao Cấp</span> <span class="category-count">4</span></a></li>
+          <li><a href="#" data-cat="giay-phu-kien"><span>Giày & Phụ Kiện</span> <span class="category-count">4</span></a></li>
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Tông Màu Sắc</span>
+        <div class="color-options">
+          <div class="color-dot selected" style="background: #1a1a1a;" title="Đen Lux"></div>
+          <div class="color-dot" style="background: #d4c5b9;" title="Beige Nhẹ"></div>
+          <div class="color-dot" style="background: #1b263b;" title="Xanh Navy"></div>
+          <div class="color-dot" style="background: #8b263e;" title="Đỏ Burgundy"></div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Kích Cỡ</span>
+        <div class="size-options">
+          <button class="size-btn">S</button>
+          <button class="size-btn active">M</button>
+          <button class="size-btn">L</button>
+          <button class="size-btn">XL</button>
+        </div>
+      </div>
+    </div>
+    <div class="filter-drawer-footer">
+      <button class="btn-primary-luxury" id="apply-filter-btn" style="width: 100%; justify-content: center;">Áp Dụng Bộ Lọc</button>
+    </div>
+  </div>
+  <main class="site-main">
+
+    <!-- HERO BANNER SECTION -->
+    <section class="d-hero-banner">
+      <img src="assets/hero_banner.jpg" alt="AURALIE Haute Couture Hero Fashion" class="d-hero-img">
+      <div class="d-hero-overlay">
+        <div class="d-hero-content">
+          <p class="d-hero-tag">BỘ SỰU TẬP THU ĐÔNG 2026</p>
+          <h1 class="d-hero-title">Nét Đẹp Thời Trang Thượng Lưu</h1>
+          <p class="d-hero-subtitle">Khám phá các thiết kế Áo khoác & Vest Tailored độc quyền từ len Cashmere & Lụa thượng hạng.</p>
+          <div class="hero-action-btns">
+            <a href="#catalog" class="btn-primary-luxury">
+              Khám Phá Ngay <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <a href="collections.html" class="btn-primary-luxury" style="background: transparent; border: 1px solid #fff; box-shadow: none; margin-left: 0.75rem;">
+              Xem Lookbook
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BRAND VALUES / FEATURES SECTION (THƯƠNG HIỆU XA XỈ AURALIÈ) -->
+    <section class="brand-features-section">
+      <div class="feature-card">
+        <span class="feature-tag">01 / CRAFTSMANSHIP</span>
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-scissors"></i>
+        </div>
+        <h3>May Thủ Công</h3>
+        <p>Cắt may tỉ mỉ chuẩn phom dáng Châu Âu</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-tag">02 / EXPRESS DELIVERY</span>
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <h3>Giao Hỏa Tốc 2H</h3>
+        <p>Giao hàng tận nơi trong 2 giờ tại Showroom</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-tag">03 / GUARANTEE</span>
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3>Bảo Hành Phom Dáng</h3>
+        <p>Bảo hành 12 tháng & chỉnh sửa trang phục miễn phí</p>
+      </div>
+
+      <div class="feature-card">
+        <span class="feature-tag">04 / VIP CONCIERGE</span>
+        <div class="feature-icon-box">
+          <i class="fa-solid fa-crown"></i>
+        </div>
+        <h3>Đặc Quyền VIP</h3>
+        <p>Tư vấn phong cách riêng tại Showroom Đồng Khởi</p>
+      </div>
+    </section>
+
+    <!-- MAIN BODY LAYOUT: SIDEBAR + PRODUCT CATALOG -->
+    <div class="d-body-layout" id="catalog">
+
+      <!-- SIDEBAR FILTER (DESKTOP) -->
+      <aside class="d-sidebar">
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Danh Mục Thời Trang</h3>
+          <ul class="category-list" id="category-filter-list">
+            <li><a href="#" class="active" data-cat="all"><span>Tất Cả Sản Phẩm</span> <span class="category-count">20</span></a></li>
+            <li><a href="#" data-cat="vest-blazer"><span>Áo Vest & Blazer</span> <span class="category-count">4</span></a></li>
+            <li><a href="#" data-cat="vay-dam"><span>Váy & Đầm Dạ Hội</span> <span class="category-count">4</span></a></li>
+            <li><a href="#" data-cat="ao-khoac"><span>Áo Khoác Thu Đông</span> <span class="category-count">4</span></a></li>
+            <li><a href="#" data-cat="tui-xach"><span>Túi Xách Da Cao Cấp</span> <span class="category-count">4</span></a></li>
+            <li><a href="#" data-cat="giay-phu-kien"><span>Giày & Phụ Kiện</span> <span class="category-count">4</span></a></li>
+          </ul>
+        </div>
+
+        <div class="sidebar-widget">
+          <h3 class="widget-title">Bộ Lọc Sản Phẩm</h3>
+          
+          <div class="filter-group">
+            <span class="filter-label">Tông Màu Sắc</span>
+            <div class="color-options">
+              <div class="color-dot selected" style="background: #1a1a1a;" title="Đen Lux"></div>
+              <div class="color-dot" style="background: #d4c5b9;" title="Beige Nhẹ"></div>
+              <div class="color-dot" style="background: #1b263b;" title="Xanh Navy"></div>
+              <div class="color-dot" style="background: #8b263e;" title="Đỏ Burgundy"></div>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <span class="filter-label">Kích Cỡ</span>
+            <div class="size-options">
+              <button class="size-btn">S</button>
+              <button class="size-btn active">M</button>
+              <button class="size-btn">L</button>
+              <button class="size-btn">XL</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="promo-widget">
+          <p class="promo-badge">ĐẶC QUYỀN VIP</p>
+          <h4 class="promo-title">Giảm 20% Cho Đơn Đầu Tiên</h4>
+          <p class="promo-desc">Nhập mã <strong>AURALIE2026</strong> khi thanh toán trực tuyến.</p>
+          <a href="contact.html" class="btn-primary-luxury" style="padding: 0.6rem 1.2rem; font-size: 0.75rem; width: 100%; justify-content: center; text-decoration: none;">Nhận Mã Ngay</a>
+        </div>
+      </aside>
+
+      <!-- NỘI DUNG CHÍNH (SẢN PHẨM) -->
+      <section class="d-main-content">
+        <div class="content-header">
+          <div class="content-title-wrapper">
+            <h2 class="content-title" id="catalog-title">Bộ Sưu Tập Nổi Bật</h2>
+            <p class="content-subtitle" id="catalog-subtitle">Hiển thị 20 sản phẩm thiết kế độc quyền (Click danh mục để lọc)</p>
+          </div>
+
+          <div class="content-header-actions">
+            <button class="mobile-filter-btn" id="mobile-filter-toggle">
+              <i class="fa-solid fa-sliders"></i> Lọc Sản Phẩm
+            </button>
+
+            <div class="content-sort">
+              <span>Sắp xếp:</span>
+              <select aria-label="Sắp xếp sản phẩm">
+                <option>Mới nhất 2026</option>
+                <option>Giá: Thấp đến Cao</option>
+                <option>Giá: Cao đến Thấp</option>
+                <option>Bán chạy nhất</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- LƯỚI SẢN PHẨM (CLICK ĐỂ MỞ DETAIL MODAL & ĐÁNH GIÁ) -->
+        <div class="product-grid-3col" id="product-grid-container">
+
+          <!-- ================= 1. ÁO VEST & BLAZER (4 SẢN PHẨM) ================= -->
+          <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Double-Breasted Tailored Suit" data-category="Áo Vest & Blazer" data-price="12.500.000 ₫" data-rating="4.9" data-img="assets/card_1.jpg" data-desc="Áo Vest may đo độc bản từ len Cashmere nhập khẩu Ý. Thiết kế Double-Breasted mang đến diện mạo quyền lực, chuẩn phom dáng Châu Âu.">
+            <div class="card-img-wrap">
+              <img src="assets/card_1.jpg" alt="Áo Vest Tailored Double-Breasted">
+              <span class="card-tag">NEW ARRIVAL</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Vest & Blazer</span>
+                <h3 class="card-title">Double-Breasted Tailored Suit</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">12.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem 128 Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Black Blazer & High Boots Set" data-category="Áo Vest & Blazer" data-price="16.800.000 ₫" data-rating="4.9" data-img="assets/card_5.jpg" data-desc="Bộ Blazer đen huyền bí phối cùng boots cổ cao hiện đại. Điểm nhấn đường chiết eo thon gọn, tôn vinh vóc dáng người phụ nữ thành đạt.">
+            <div class="card-img-wrap">
+              <img src="assets/card_5.jpg" alt="Bộ Vest Nữ Blazer & Boots">
+              <span class="card-tag">TRENDING</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Vest & Blazer</span>
+                <h3 class="card-title">Black Blazer & High Boots Set</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">16.800.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Royal Cashmere Velvet Tuxedo" data-category="Áo Vest & Blazer" data-price="19.500.000 ₫" data-rating="5.0" data-img="assets/card_6.jpg" data-desc="Tuxedo nhung cao cấp phối ve áo lụa bóng. Thiết kế dành riêng cho các buổi dạ tiệc Black Tie quý phái.">
+            <div class="card-img-wrap">
+              <img src="assets/card_6.jpg" alt="Royal Cashmere Velvet Tuxedo">
+              <span class="card-tag">VIP EXCLUSIVE</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Vest & Blazer</span>
+                <h3 class="card-title">Royal Cashmere Velvet Tuxedo</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">19.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 5.0</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Italian Wool Tailored Blazer" data-category="Áo Vest & Blazer" data-price="14.800.000 ₫" data-rating="4.8" data-img="assets/card_1.jpg" data-desc="Blazer may thủ công từ len cừu Ý cao cấp. Gam màu trung tính thanh lịch, phom dáng công sở thượng lưu.">
+            <div class="card-img-wrap">
+              <img src="assets/card_1.jpg" alt="Italian Wool Tailored Blazer">
+              <span class="card-tag">HAUTE COUTURE</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Vest & Blazer</span>
+                <h3 class="card-title">Italian Wool Tailored Blazer</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">14.800.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.8</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= 2. VÁY & ĐẦM DẠ HỘI (4 SẢN PHẨM) ================= -->
+          <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Minimalist Silk Trench Dress" data-category="Váy & Đầm Dạ Hội" data-price="18.900.000 ₫" data-rating="5.0" data-img="assets/card_2.jpg" data-desc="Đầm dạ hội phong cách Trench Dress may từ lụa tơ tằm nguyên chất. Đường cắt tỉ mỉ tôn vinh nét quyến rũ kiêu sa.">
+            <div class="card-img-wrap">
+              <img src="assets/card_2.jpg" alt="Đầm Lụa Minimalist Silk Trench">
+              <span class="card-tag">BESTSELLER</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Váy & Đầm Dạ Hội</span>
+                <h3 class="card-title">Minimalist Silk Trench Dress</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">18.900.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 5.0</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Auralia Emerald Velvet Gown" data-category="Váy & Đầm Dạ Hội" data-price="21.500.000 ₫" data-rating="5.0" data-img="assets/card_2.jpg" data-desc="Đầm dạ hội chất liệu nhung đỏ tuyền quyến rũ. Cổ xẻ sâu tinh tế kết hợp đai lưng đính đá Swarovsky xa xỉ.">
+            <div class="card-img-wrap">
+              <img src="assets/card_2.jpg" alt="Đầm Nhung Đỏ Emerald Velvet Gown">
+              <span class="card-tag">HAUTE COUTURE</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Váy & Đầm Dạ Hội</span>
+                <h3 class="card-title">Auralia Emerald Velvet Gown</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">21.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 5.0</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Midnight Satin Evening Gown" data-category="Váy & Đầm Dạ Hội" data-price="25.000.000 ₫" data-rating="4.9" data-img="assets/card_2.jpg" data-desc="Đầm satin xanh đêm dạ tiệc Haute Couture. Thiết kế tà váy dài thướt tha, lộng lẫy trên mọi thảm đỏ.">
+            <div class="card-img-wrap">
+              <img src="assets/card_2.jpg" alt="Midnight Satin Evening Gown">
+              <span class="card-tag">RUNWAY 2026</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Váy & Đầm Dạ Hội</span>
+                <h3 class="card-title">Midnight Satin Evening Gown</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">25.000.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Chiffon Silk Cocktail Dress" data-category="Váy & Đầm Dạ Hội" data-price="15.500.000 ₫" data-rating="4.8" data-img="assets/card_2.jpg" data-desc="Đầm cocktail lụa Chiffon xếp ly mềm mại. Phù hợp cho các buổi tiệc champagne và gala sang trọng.">
+            <div class="card-img-wrap">
+              <img src="assets/card_2.jpg" alt="Chiffon Silk Cocktail Dress">
+              <span class="card-tag">LIMITED</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Váy & Đầm Dạ Hội</span>
+                <h3 class="card-title">Chiffon Silk Cocktail Dress</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">15.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.8</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= 3. ÁO KHOÁC THU ĐÔNG (4 SẢN PHẨM) ================= -->
+          <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Oversized Cashmere Wool Sweater" data-category="Áo Khoác Thu Đông" data-price="8.200.000 ₫" data-rating="4.8" data-img="assets/card_3.jpg" data-desc="Áo len dáng rộng dệt từ 100% sợi Cashmere nguyên chất. Ấm áp, siêu nhẹ và êm ái trên làn da.">
+            <div class="card-img-wrap">
+              <img src="assets/card_3.jpg" alt="Áo Len Oversized Wool Sweater">
+              <span class="card-tag">LIMITED</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Khoác Thu Đông</span>
+                <h3 class="card-title">Oversized Cashmere Wool Sweater</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">8.200.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.8</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Midnight Navy Tailored Jacket" data-category="Áo Khoác Thu Đông" data-price="14.200.000 ₫" data-rating="4.7" data-img="assets/card_6.jpg" data-desc="Áo khoác dạ ngắn tông màu Navy chìm quý phái. Chất vải chống nhăn và giữ ấm tuyệt đối.">
+            <div class="card-img-wrap">
+              <img src="assets/card_6.jpg" alt="Áo Khoác Nam Navy Wool Blazer">
+              <span class="card-tag">HOT ITEM</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Khoác Thu Đông</span>
+                <h3 class="card-title">Midnight Navy Tailored Jacket</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">14.200.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.7</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Alpine Cashmere Trench Coat" data-category="Áo Khoác Thu Đông" data-price="22.800.000 ₫" data-rating="5.0" data-img="assets/card_3.jpg" data-desc="Áo khoác dạ Măng-tô dáng dài Thượng Hải. Chi tiết đai da bò thật và lớp lót lụa cao cấp.">
+            <div class="card-img-wrap">
+              <img src="assets/card_3.jpg" alt="Alpine Cashmere Trench Coat">
+              <span class="card-tag">LUXURY WINTER</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Khoác Thu Đông</span>
+                <h3 class="card-title">Alpine Cashmere Trench Coat</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">22.800.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 5.0</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Double-Faced Wool Long Coat" data-category="Áo Khoác Thu Đông" data-price="17.900.000 ₫" data-rating="4.9" data-img="assets/card_6.jpg" data-desc="Áo khoác dạ hai mặt thủ công cao cấp. Thiết kế tối giản mang đến vẻ đẹp vĩnh cửu thời trang Thu Đông.">
+            <div class="card-img-wrap">
+              <img src="assets/card_6.jpg" alt="Double-Faced Wool Long Coat">
+              <span class="card-tag">NEW COLLECTION</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Áo Khoác Thu Đông</span>
+                <h3 class="card-title">Double-Faced Wool Long Coat</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">17.900.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= 4. TÚI XÁCH DA CAO CẤP (4 SẢN PHẨM) ================= -->
+          <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Heritage Tan Leather Handbag" data-category="Túi Xách Da Cao Cấp" data-price="24.000.000 ₫" data-rating="4.9" data-img="assets/card_4.jpg" data-desc="Túi xách da thuộc thủ công màu nâu di sản. Khóa kim loại mạ vàng 18K khâu tay theo tiêu chuẩn Ý.">
+            <div class="card-img-wrap">
+              <img src="assets/card_4.jpg" alt="Túi Xách Da Handbag Luna">
+              <span class="card-tag">EXCLUSIVE</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Túi Xách Da Cao Cấp</span>
+                <h3 class="card-title">Heritage Tan Leather Handbag</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">24.000.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Monogram Ostrich Leather Tote" data-category="Túi Xách Da Cao Cấp" data-price="32.500.000 ₫" data-rating="5.0" data-img="assets/card_4.jpg" data-desc="Túi Tote da đà điểu tự nhiên khắc họa tiết Monogram độc quyền. Đạt chứng nhận da xa xỉ quốc tế.">
+            <div class="card-img-wrap">
+              <img src="assets/card_4.jpg" alt="Monogram Ostrich Leather Tote">
+              <span class="card-tag">VIP CRAFT</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Túi Xách Da Cao Cấp</span>
+                <h3 class="card-title">Monogram Ostrich Leather Tote</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">32.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 5.0</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Auralia Mini Flap Crossbody Bag" data-category="Túi Xách Da Cao Cấp" data-price="18.500.000 ₫" data-rating="4.8" data-img="assets/card_4.jpg" data-desc="Túi đeo chéo nắp gập cỡ nhỏ nhỏ gọn sang trọng. Dây xích mạ vàng bóng bẩy tôn dáng phái đẹp.">
+            <div class="card-img-wrap">
+              <img src="assets/card_4.jpg" alt="Auralia Mini Flap Crossbody Bag">
+              <span class="card-tag">BESTSELLER</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Túi Xách Da Cao Cấp</span>
+                <h3 class="card-title">Auralia Mini Flap Crossbody Bag</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">18.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.8</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Crocodile Embossed Clutch" data-category="Túi Xách Da Cao Cấp" data-price="21.000.000 ₫" data-rating="4.9" data-img="assets/card_4.jpg" data-desc="Ví cầm tay Clutch da cá sấu cao cấp dự tiệc. Phom dáng vuông vắn, cứng cáp thể hiện sự kiêu hãnh.">
+            <div class="card-img-wrap">
+              <img src="assets/card_4.jpg" alt="Crocodile Embossed Clutch">
+              <span class="card-tag">LIMITED</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Túi Xách Da Cao Cấp</span>
+                <h3 class="card-title">Crocodile Embossed Clutch</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">21.000.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- ================= 5. GIÀY & PHỤ KIỆN (4 SẢN PHẨM) ================= -->
+          <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="Royale Gold Buckle Boots" data-category="Giày & Phụ Kiện" data-price="15.800.000 ₫" data-rating="4.9" data-img="assets/card_5.jpg" data-desc="Boots da bò thật khóa mạ vàng 18K. Đế cao su chống trượt cao cấp cùng lót đệm êm ái.">
+            <div class="card-img-wrap">
+              <img src="assets/card_5.jpg" alt="Giày Boots Khóa Mạ Vàng">
+              <span class="card-tag">NEW ACCESSORIES</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Giày & Phụ Kiện</span>
+                <h3 class="card-title">Royale Gold Buckle Boots</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">15.800.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="Handcrafted Calfskin Loafers" data-category="Giày & Phụ Kiện" data-price="11.200.000 ₫" data-rating="4.8" data-img="assets/card_5.jpg" data-desc="Giày Loafer da bê may thủ công tỉ mỉ. Tông màu đen bóng thanh lịch cho quý ông & quý cô thành thị.">
+            <div class="card-img-wrap">
+              <img src="assets/card_5.jpg" alt="Handcrafted Calfskin Loafers">
+              <span class="card-tag">GENTLEMAN</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Giày & Phụ Kiện</span>
+                <h3 class="card-title">Handcrafted Calfskin Loafers</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">11.200.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.8</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="18K Gold Plated Silk Scarf Ring" data-category="Giày & Phụ Kiện" data-price="5.500.000 ₫" data-rating="5.0" data-img="assets/card_4.jpg" data-desc="Nẫn cài khăn lụa mạ vàng 18K đính đá quý. Phụ kiện tinh tế điểm xuyết cho trang phục thời thượng.">
+            <div class="card-img-wrap">
+              <img src="assets/card_4.jpg" alt="18K Gold Plated Silk Scarf Ring">
+              <span class="card-tag">LUXURY GIFT</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Giày & Phụ Kiện</span>
+                <h3 class="card-title">18K Gold Plated Silk Scarf Ring</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">5.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 5.0</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="Classic Leather Stiletto Heels" data-category="Giày & Phụ Kiện" data-price="13.500.000 ₫" data-rating="4.9" data-img="assets/card_5.jpg" data-desc="Giày cao gót 9cm da thuộc bóng kiêu kỳ. Phom dáng ôm chân chuẩn xác, khẳng định bước tiến kiêu hãnh.">
+            <div class="card-img-wrap">
+              <img src="assets/card_5.jpg" alt="Classic Leather Stiletto Heels">
+              <span class="card-tag">HAUTE COUTURE</span>
+              <div class="card-quick-actions">
+                <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div>
+                <span class="card-category">Giày & Phụ Kiện</span>
+                <h3 class="card-title">Classic Leather Stiletto Heels</h3>
+              </div>
+              <div class="card-price-row">
+                <span class="card-price">13.500.000 ₫</span>
+                <span class="card-rating open-reviews-btn" title="Click để xem Đánh Giá"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+            </div>
+          </article>
+        </div><!-- end #product-grid-container -->
+      </section><!-- end .d-main-content -->
+    </div><!-- end .d-body-layout -->
+
+    <!-- SECTION AURALIÈ JOURNAL / EDITORIAL MAGAZINE -->
+    <section class="page-section" style="background: #FAF7F2; border-top: 1px solid var(--border-light); margin-top: 4rem;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span style="color: var(--accent-gold); font-size: 0.8rem; font-weight: 700; letter-spacing: 2px;">AURALIÈ EDITORIAL JOURNAL</span>
+          <h2 class="section-title" style="margin-top: 0.4rem; margin-bottom: 0;">Tạp Chí Thời Trang & Phong Cách Sống</h2>
+        </div>
+        <a href="blog.html" class="btn-primary-luxury" style="padding: 0.6rem 1.4rem; font-size: 0.8rem; text-decoration: none;">Xem Tất Cả Bài Viết <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+
+      <div class="product-grid-3col">
+        <!-- Article Card 1 -->
+        <article class="fashion-card">
+          <div class="card-img-wrap" style="height: 260px;">
+            <img src="assets/card_1.jpg" alt="Bí quyết chọn Suit Tailored">
+            <span class="card-tag">CRAFTSMANSHIP</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <span class="card-category"><i class="fa-regular fa-calendar"></i> 04/10/2026 • 5 phút đọc</span>
+              <h3 class="card-title" style="font-size: 1.15rem; margin-top: 0.3rem;"><a href="blog-detail.html" style="color: inherit; text-decoration: none;">Bí Quyết Phối Đồ Với Suit Double-Breasted Tôn Vinh Quyền Lực</a></h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.6;">Khám phá nghệ thuật cắt may chuẩn Ý và cách phối đồ với áo vest Double-Breasted nâng tầm phong cách nữ chủ nhân.</p>
+            </div>
+            <a href="blog-detail.html" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold); text-decoration: none; margin-top: 1rem; display: inline-block;">Đọc Tiếp <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i></a>
+          </div>
+        </article>
+
+        <!-- Article Card 2 -->
+        <article class="fashion-card">
+          <div class="card-img-wrap" style="height: 260px;">
+            <img src="assets/card_2.jpg" alt="Xu hướng đầm dạ hội lụa">
+            <span class="card-tag">STYLE GUIDE</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <span class="card-category"><i class="fa-regular fa-calendar"></i> 28/09/2026 • 4 phút đọc</span>
+              <h3 class="card-title" style="font-size: 1.15rem; margin-top: 0.3rem;"><a href="blog-detail.html" style="color: inherit; text-decoration: none;">Xu Hướng Đầm Dạ Hội Lụa Tơ Tằm Bảo Lộc Trên Thảm Đỏ Châu Âu</a></h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.6;">Lụa tơ tằm Việt Nam chinh phục các sàn diễn Haute Couture thế giới bằng sự mềm mại và quý phái vượt thời gian.</p>
+            </div>
+            <a href="blog-detail.html" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold); text-decoration: none; margin-top: 1rem; display: inline-block;">Đọc Tiếp <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i></a>
+          </div>
+        </article>
+
+        <!-- Article Card 3 -->
+        <article class="fashion-card">
+          <div class="card-img-wrap" style="height: 260px;">
+            <img src="assets/card_4.jpg" alt="Nghệ thuật bảo quản đồ da">
+            <span class="card-tag">VIP LIFESTYLE</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <span class="card-category"><i class="fa-regular fa-calendar"></i> 20/09/2026 • 6 phút đọc</span>
+              <h3 class="card-title" style="font-size: 1.15rem; margin-top: 0.3rem;"><a href="blog-detail.html" style="color: inherit; text-decoration: none;">Nghệ Thuật Chăm Sóc & Bảo Quản Túi Da Đà Điểu Mạ Vàng 18K</a></h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.6;">Những bí kíp dưỡng da thuộc và bảo dưỡng phụ kiện xa xỉ giúp sản phẩm luôn sáng bóng và bền đẹp qua hàng thập kỷ.</p>
+            </div>
+            <a href="blog-detail.html" style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold); text-decoration: none; margin-top: 1rem; display: inline-block;">Đọc Tiếp <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i></a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="d-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h2>AURALIÈ</h2>
+        <p>Thương hiệu thời trang cao cấp định hình phong cách sống hiện đại và tinh tế. Thiết kế chuẩn Châu Âu cho trải nghiệm xa xỉ.</p>
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col collapsible-footer">
+        <h4 class="accordion-header">Chính Sách <i class="fa-solid fa-chevron-down accordion-icon"></i></h4>
+        <ul class="footer-links accordion-content">
+          <li><a href="warranty-policy.html">Chính sách bảo hành</a></li>
+          <li><a href="return-policy.html">Đổi trả trong 30 ngày</a></li>
+          <li><a href="shipping-policy.html">Vận chuyển hỏa tốc</a></li>
+          <li><a href="privacy-policy.html">Bảo mật thông tin</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col collapsible-footer">
+        <h4 class="accordion-header">Thông Tin Liên Hệ <i class="fa-solid fa-chevron-down accordion-icon"></i></h4>
+        <ul class="footer-links accordion-content">
+          <li><a href="contact.html">Showroom: Đồng Khởi, Q.1, TP.HCM</a></li>
+          <li><a href="contact.html">Hotline: 1900 8888</a></li>
+          <li><a href="contact.html">Email: vip@auralie.fashion</a></li>
+          <li><a href="contact.html">Giờ mở cửa: 09:00 - 22:00</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Đăng Ký Nhận Tin</h4>
+        <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 1rem;">Nhận thông tin bộ sưu tập mới và ưu đãi đặc quyền VIP.</p>
+        <div class="newsletter-box">
+          <input type="email" placeholder="Email của bạn...">
+          <button class="btn-primary-luxury" style="padding: 0.6rem 1rem; border-radius: 20px; font-size: 0.75rem;">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 AURALIÈ HAUTE COUTURE. All Rights Reserved.</p>
+      <p>Website Thương Mại Điện Tử Thời Trang Cao Cấp.</p>
+    </div>
+  </footer>
+
+  <!-- MOBILE STICKY BOTTOM NAVIGATION -->
+  <nav class="m-bottom-nav">
+    <a href="index.html" class="m-nav-item active"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
+    <a href="index.html#catalog" class="m-nav-item"><i class="fa-solid fa-shirt"></i><span>Sản phẩm</span></a>
+    <a href="collections.html" class="m-nav-item"><i class="fa-solid fa-layer-group"></i><span>Bộ sưu tập</span></a>
+    <a href="cart.html" class="m-nav-item"><i class="fa-solid fa-bag-shopping"></i><span>Giỏ hàng</span></a>
+    <a href="contact.html" class="m-nav-item"><i class="fa-solid fa-envelope"></i><span>Liên hệ</span></a>
+  </nav>
+
+  <!-- PRODUCT DETAIL & REVIEWS MODAL (HƯỚNG THỰC TẾ) -->
+  <div id="product-detail-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-container">
+      <button id="close-product-modal" class="modal-close-btn" aria-label="Đóng modal">&times;</button>
+      
+      <div class="modal-content-grid">
+        <!-- BÊN TRÁI: HÌNH ẢNH SẢN PHẨM & GALLERY -->
+        <div class="modal-gallery-col">
+          <div class="modal-main-img-wrap">
+            <img id="modal-main-img" src="assets/card_1.jpg" alt="Chi tiết sản phẩm AURALIÈ">
+            <span id="modal-product-tag" class="modal-badge-tag">NEW ARRIVAL</span>
+          </div>
+          <div class="modal-thumbnails">
+            <img src="assets/card_1.jpg" class="modal-thumb active" alt="Góc 1">
+            <img src="assets/card_2.jpg" class="modal-thumb" alt="Góc 2">
+            <img src="assets/card_3.jpg" class="modal-thumb" alt="Góc 3">
+          </div>
+          <div class="modal-guarantees">
+            <div class="guarantee-item"><i class="fa-solid fa-truck-fast"></i> Giao hàng hỏa tốc 2h</div>
+            <div class="guarantee-item"><i class="fa-solid fa-shield-halved"></i> Bảo hành phom dáng 12 tháng</div>
+            <div class="guarantee-item"><i class="fa-solid fa-rotate-left"></i> Đổi trả tận nơi 30 ngày</div>
+          </div>
+        </div>
+
+        <!-- BÊN PHẢI: THÔNG TIN SẢN PHẨM & TÁC VỤ -->
+        <div class="modal-info-col">
+          <span id="modal-category" class="modal-category-text">Áo Vest Nam</span>
+          <h2 id="modal-title" class="modal-product-title">Double-Breasted Tailored Suit</h2>
+          
+          <div class="modal-rating-header" id="modal-rating-scroll-trigger" style="cursor: pointer;" title="Click để chuyển đến phần Đánh Giá">
+            <div class="stars-stars" id="modal-stars-render">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <span class="rating-num" id="modal-rating-val">4.9</span>
+            <span class="review-count-badge" id="modal-review-count">(128 Đánh giá từ khách hàng)</span>
+          </div>
+
+          <div class="modal-price-wrap">
+            <span id="modal-price" class="modal-current-price">12.500.000 ₫</span>
+            <span class="modal-old-price">14.800.000 ₫</span>
+            <span class="modal-save-badge">Tiết kiệm 15%</span>
+          </div>
+
+          <p class="modal-description" id="modal-desc">
+            Áo Vest may đo độc bản từ len Cashmere nhập khẩu Ý. Thiết kế Double-Breasted mang đến diện mạo quyền lực, chuẩn phom dáng Châu Âu với đường cắt thủ công tinh xảo.
+          </p>
+
+          <!-- KHỐI THUỘC TÍNH PHỤ SẢN PHẨM (SECONDARY ATTRIBUTES GRID) -->
+          <div class="product-attributes-specs">
+            <h4 class="attributes-title"><i class="fa-solid fa-sliders"></i> Thuộc Tính & Thông Số Kỹ Thuật:</h4>
+            <div class="attributes-grid">
+              <div class="attr-item"><span class="attr-label">Chất Liệu:</span> <strong class="attr-value" id="attr-material">100% Cashmere Lụa Ý</strong></div>
+              <div class="attr-item"><span class="attr-label">Phom Dáng:</span> <strong class="attr-value" id="attr-fit">European Tailored Fit</strong></div>
+              <div class="attr-item"><span class="attr-label">Lớp Lót:</span> <strong class="attr-value" id="attr-lining">Lụa Cupro Cao Cấp</strong></div>
+              <div class="attr-item"><span class="attr-label">Phụ Kiện:</span> <strong class="attr-value" id="attr-hardware">Khuy Sừng / Khóa Mạ Vàng 18K</strong></div>
+              <div class="attr-item"><span class="attr-label">Xuất Xứ:</span> <strong class="attr-value" id="attr-origin">Atelier AURALIÈ</strong></div>
+              <div class="attr-item"><span class="attr-label">Mã Sản Phẩm:</span> <strong class="attr-value" id="attr-sku">AUR-2026-VIP</strong></div>
+            </div>
+          </div>
+
+          <!-- TÙY CHỌN MÀU SẮC & KÍCH THƯỚC -->
+          <div class="modal-options">
+            <div class="modal-option-row">
+              <span class="modal-option-title">Màu Sắc: <strong id="modal-selected-color">Đen Tuyền (Jet Black)</strong></span>
+              <div class="modal-color-dots">
+                <span class="color-dot selected" style="background:#121212" data-color="Đen Tuyền (Jet Black)"></span>
+                <span class="color-dot" style="background:#c9a24d" data-color="Vàng Hoàng Gia (Royal Gold)"></span>
+                <span class="color-dot" style="background:#8b0000" data-color="Đỏ Đô (Burgundy)"></span>
+              </div>
+            </div>
+
+            <div class="modal-option-row">
+              <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                <span class="modal-option-title">Kích Cỡ: <strong id="modal-selected-size">M</strong></span>
+                <a href="#size-guide" onclick="alert('Bảng quy đổi size chuẩn AURALIÈ:\n- Size S: 45-55kg (1m55-1m65)\n- Size M: 55-68kg (1m65-1m75)\n- Size L: 68-78kg (1m75-1m82)\n- Size XL: >78kg (>1m82)')" style="font-size:0.75rem; color:var(--accent-gold); text-decoration:none;"><i class="fa-solid fa-ruler-horizontal"></i> Bảng Size</a>
+              </div>
+              <div class="modal-size-btns">
+                <button class="size-btn">S</button>
+                <button class="size-btn active">M</button>
+                <button class="size-btn">L</button>
+                <button class="size-btn">XL</button>
+              </div>
+            </div>
+
+            <div class="modal-option-row">
+              <span class="modal-option-title">Số Lượng:</span>
+              <div class="modal-qty-picker">
+                <button class="qty-btn" id="qty-minus">-</button>
+                <input type="number" id="qty-input" value="1" min="1" max="10" readonly>
+                <button class="qty-btn" id="qty-plus">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-action-row">
+            <button class="btn-primary-luxury modal-add-cart-btn" id="modal-btn-add-cart">
+              <i class="fa-solid fa-bag-shopping"></i> Thêm Vào Giỏ Hàng
+            </button>
+            <button class="modal-btn-wishlist" id="modal-btn-wishlist" title="Thêm vào yêu thích">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+          </div>
+
+          <!-- TABS NỘI DUNG MÔ TẢ & ĐÁNH GIÁ THỰC TẾ -->
+          <div class="modal-tabs-wrapper">
+            <div class="modal-tab-headers">
+              <button class="modal-tab-btn active" data-tab="tab-reviews" id="tab-btn-reviews">Đánh Giá Từ Khách Hàng (<span id="modal-tab-count">128</span>)</button>
+              <button class="modal-tab-btn" data-tab="tab-details" id="tab-btn-details">Chi Tiết & Bảo Quản</button>
+            </div>
+
+            <div class="modal-tab-content active" id="tab-reviews">
+              <!-- KHU VỰC TỔNG QUAN ĐÁNH GIÁ SẢN PHẨM -->
+              <div class="reviews-summary-card">
+                <div class="reviews-score-col">
+                  <div class="score-big" id="review-score-big">4.9</div>
+                  <div class="score-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                  </div>
+                  <div class="score-text">Đánh giá trung bình từ 128 khách hàng đã mua</div>
+                  <div class="recommend-tag"><i class="fa-solid fa-circle-check"></i> 98% Khách hàng đề xuất mua</div>
+                </div>
+
+                <div class="reviews-bars-col">
+                  <div class="bar-row">
+                    <span>5 <i class="fa-solid fa-star"></i></span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 88%;"></div></div>
+                    <span>88%</span>
+                  </div>
+                  <div class="bar-row">
+                    <span>4 <i class="fa-solid fa-star"></i></span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 10%;"></div></div>
+                    <span>10%</span>
+                  </div>
+                  <div class="bar-row">
+                    <span>3 <i class="fa-solid fa-star"></i></span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 2%;"></div></div>
+                    <span>2%</span>
+                  </div>
+                  <div class="bar-row">
+                    <span>2 <i class="fa-solid fa-star"></i></span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 0%;"></div></div>
+                    <span>0%</span>
+                  </div>
+                  <div class="bar-row">
+                    <span>1 <i class="fa-solid fa-star"></i></span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 0%;"></div></div>
+                    <span>0%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LỌC ĐÁNH GIÁ -->
+              <div class="reviews-filter-pills">
+                <button class="review-pill active">Tất cả (128)</button>
+                <button class="review-pill">Có Hình Ảnh (45)</button>
+                <button class="review-pill">5 Sao (112)</button>
+                <button class="review-pill">4 Sao (14)</button>
+              </div>
+
+              <!-- NÚT VIẾT ĐÁNH GIÁ MỚI -->
+              <div class="write-review-trigger-wrap">
+                <button class="btn-primary-luxury" id="toggle-write-review-btn" style="padding: 0.6rem 1.2rem; font-size: 0.8rem; background: var(--secondary-dark);">
+                  <i class="fa-solid fa-pen-to-square"></i> Viết Đánh Giá Của Bạn
+                </button>
+              </div>
+
+              <!-- FORM VIẾT ĐÁNH GIÁ MỚI -->
+              <form id="write-review-form" class="write-review-form hidden">
+                <h4>Đánh Giá Sản Phẩm Này</h4>
+                <div class="form-star-rating">
+                  <span class="label-star">Chọn số sao:</span>
+                  <div class="interactive-stars" id="form-star-picker">
+                    <i class="fa-solid fa-star selected" data-value="1"></i>
+                    <i class="fa-solid fa-star selected" data-value="2"></i>
+                    <i class="fa-solid fa-star selected" data-value="3"></i>
+                    <i class="fa-solid fa-star selected" data-value="4"></i>
+                    <i class="fa-solid fa-star selected" data-value="5"></i>
+                  </div>
+                  <span id="star-picker-label" style="font-size:0.8rem; color:var(--accent-gold); font-weight:bold;">5/5 - Tuyệt vời</span>
+                </div>
+
+                <div class="form-group-review">
+                  <input type="text" id="review-user-name" placeholder="Họ và tên của bạn *" required>
+                  <input type="email" id="review-user-email" placeholder="Email nhận xác thực mua hàng *" required>
+                </div>
+                <div class="form-group-review">
+                  <textarea id="review-user-comment" rows="3" placeholder="Chia sẻ cảm nhận thực tế của bạn về chất liệu, phom dáng và dịch vụ giao hàng..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary-luxury" style="padding: 0.7rem 1.5rem; font-size: 0.8rem;">Gửi Đánh Giá Ngay</button>
+              </form>
+
+              <!-- DANH SÁCH REVIEW KHÁCH HÀNG THỰC TẾ -->
+              <div class="reviews-list-container" id="reviews-list">
+                <!-- Review Item 1 -->
+                <div class="review-item">
+                  <div class="review-user-header">
+                    <div class="review-avatar">NT</div>
+                    <div class="review-user-info">
+                      <div class="review-user-name">Nguyễn Thành Trung <span class="verified-buyer"><i class="fa-solid fa-shield-check"></i> Đã mua hàng tại AURALIÈ</span></div>
+                      <div class="review-meta">Màu: Đen Tuyền | Kích cỡ: M | Ngày: 02/10/2026</div>
+                    </div>
+                    <div class="review-stars-given">
+                      <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                  <p class="review-text">Áo vest may phom rất chuẩn, mặc lên đứng dáng và cực kỳ tôn vai. Vải len Cashmere mềm mịn, mặc thoáng mát không lo bị nóng. Đóng gói chỉn chu có cả móc treo bọc da xa xỉ.</p>
+                  <div class="review-actions">
+                    <button class="btn-helpful"><i class="fa-regular fa-thumbs-up"></i> Hữu ích (18)</button>
+                  </div>
+                </div>
+
+                <!-- Review Item 2 -->
+                <div class="review-item">
+                  <div class="review-user-header">
+                    <div class="review-avatar gold-av">LN</div>
+                    <div class="review-user-info">
+                      <div class="review-user-name">Lê Phương Anh <span class="verified-buyer"><i class="fa-solid fa-shield-check"></i> Đã mua hàng tại AURALIÈ</span></div>
+                      <div class="review-meta">Màu: Đen Tuyền | Kích cỡ: S | Ngày: 28/09/2026</div>
+                    </div>
+                    <div class="review-stars-given">
+                      <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                  </div>
+                  <p class="review-text">Mua làm quà tặng sinh nhật cho sếp. Sếp rất khen chất liệu và đường kim mũi chỉ tỉ mỉ. Nhân viên CSKH AURALIÈ gọi điện tư vấn size cực kỳ am hiểu thời trang.</p>
+                  <div class="review-actions">
+                    <button class="btn-helpful"><i class="fa-regular fa-thumbs-up"></i> Hữu ích (12)</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="modal-tab-content" id="tab-details">
+              <div class="details-tab-text">
+                <h4 style="margin-bottom:0.75rem; color:var(--primary-dark);"><i class="fa-solid fa-clipboard-list" style="color:var(--accent-gold);"></i> Bảng Chi Tiết Thuộc Tính & Bảo Quản</h4>
+                
+                <table class="tab-attributes-table" style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.88rem;">
+                  <tbody>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                      <td style="padding: 0.6rem 0; color: var(--text-muted); width: 35%;">Chất Liệu Chính:</td>
+                      <td style="padding: 0.6rem 0; font-weight: 600; color: var(--primary-dark);" id="tab-attr-material">100% Cashmere Lụa Ý</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                      <td style="padding: 0.6rem 0; color: var(--text-muted);">Phom Dáng Thiết Kế:</td>
+                      <td style="padding: 0.6rem 0; font-weight: 600; color: var(--primary-dark);" id="tab-attr-fit">European Tailored Fit</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                      <td style="padding: 0.6rem 0; color: var(--text-muted);">Vải Lót Trong:</td>
+                      <td style="padding: 0.6rem 0; font-weight: 600; color: var(--primary-dark);" id="tab-attr-lining">Lụa Cupro Thượng Hạng</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                      <td style="padding: 0.6rem 0; color: var(--text-muted);">Chi Tiết Phụ Kiện:</td>
+                      <td style="padding: 0.6rem 0; font-weight: 600; color: var(--primary-dark);" id="tab-attr-hardware">Khuy Sừng / Khóa Mạ Vàng 18K</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-light);">
+                      <td style="padding: 0.6rem 0; color: var(--text-muted);">Nơi Chế Tác:</td>
+                      <td style="padding: 0.6rem 0; font-weight: 600; color: var(--primary-dark);" id="tab-attr-origin">May đo thủ công tại Atelier AURALIÈ</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 0.6rem 0; color: var(--text-muted);">Mã Định Danh SKU:</td>
+                      <td style="padding: 0.6rem 0; font-weight: 600; color: var(--accent-gold);" id="tab-attr-sku">AUR-2026-VIP</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h4 style="margin-bottom:0.5rem; color:var(--primary-dark);"><i class="fa-solid fa-soap" style="color:var(--accent-gold);"></i> Hướng Dẫn Bảo Quản:</h4>
+                <ul style="line-height:1.8; color:var(--text-main); font-size:0.88rem; padding-left:1.25rem;">
+                  <li>Giặt khô chuyên nghiệp (Dry clean only) để bảo vệ cấu trúc phom dáng.</li>
+                  <li>Bảo quản bằng móc gỗ chuyên dụng bọc vải lót chống đùn vai.</li>
+                  <li>Tránh ủi trực tiếp ở nhiệt độ cao; sử dụng bàn ủi hơi nước dạng đứng.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

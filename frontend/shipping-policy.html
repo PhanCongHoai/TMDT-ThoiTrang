@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chính Sách Vận Chuyển Hỏa Tốc & Dịch Vụ VIP | AURALIÈ Haute Couture</title>
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="top-announcement-bar">
+    <div class="announcement-content">
+      <span><i class="fa-solid fa-gem"></i> Bộ Sưu Tập Thu Đông 2026 Mới Nhất Đã Ra Mắt</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-truck-fast"></i> Miễn Phí Vận Chuyển Hỏa Tốc Đơn Trên 5.000.000đ</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-phone"></i> Hotline VIP: 1900 8888</span>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVIGATION -->
+  <header class="d-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <a href="index.html" class="d-logo">AURALIÈ<span>HAUTE COUTURE</span></a>
+    
+    <nav class="desktop-nav-wrapper">
+      <ul class="d-nav">
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="index.html#catalog">Sản phẩm</a></li>
+        <li><a href="collections.html">Bộ sưu tập</a></li>
+        <li><a href="blog.html">Tạp chí</a></li>
+        <li><a href="about.html">Về chúng tôi</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+
+    <div class="d-user-actions">
+      <div class="d-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+      </div>
+
+      <button class="d-btn-icon mobile-search-btn" id="mobile-search-toggle" title="Tìm kiếm">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+
+      <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
+        <i class="fa-regular fa-heart"></i>
+        <span class="badge-count">2</span>
+      </a>
+
+      <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count" id="cart-count">3</span>
+      </a>
+
+      <div class="user-dropdown-wrapper">
+        <a href="profile.html" class="d-btn-icon desktop-user-btn" id="user-menu-trigger" title="Tài khoản cá nhân VIP">
+          <i class="fa-regular fa-user"></i>
+        </a>
+        <div class="user-dropdown-menu">
+          <div class="user-dropdown-header">
+            <div class="user-avatar-small">TV</div>
+            <div class="user-info-text">
+              <strong class="user-name">Bà Nguyễn Thanh Vân</strong>
+              <span class="user-rank"><i class="fa-solid fa-crown"></i> PLATINUM VIP</span>
+            </div>
+          </div>
+          
+          <div class="user-vip-progress">
+            <div class="vip-progress-label">
+              <span>Tích điểm: <strong>2.450 VIP</strong></span>
+              <span>Hạng: <strong>Diamond (75%)</strong></span>
+            </div>
+            <div class="vip-progress-bar"><div class="vip-progress-fill" style="width: 75%;"></div></div>
+          </div>
+
+          <ul class="user-dropdown-links">
+            <li><a href="profile.html#info"><i class="fa-solid fa-user-gear"></i> Thông Tin & Số Đo</a></li>
+            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi <span class="dropdown-badge gold">1 đang giao</span></a></li>
+            <li><a href="profile.html#address"><i class="fa-solid fa-location-dot"></i> Sổ Địa Chỉ Giao Hàng</a></li>
+            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích <span class="dropdown-badge">2</span></a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-gem"></i> Đặc Quyền VIP Lounge</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a href="login.html" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE SEARCH OVERLAY -->
+  <div class="mobile-search-overlay" id="mobile-search-overlay">
+    <div class="mobile-search-container">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Tìm kiếm sản phẩm..." id="mobile-search-input">
+      <button class="close-search-btn" id="close-search-btn">&times;</button>
+    </div>
+  </div>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <div class="drawer-header">
+      <span class="d-logo" style="font-size: 1.5rem;">AURALIÈ</span>
+      <button class="close-drawer-btn" id="close-drawer-btn">&times;</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="index.html"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+      <li><a href="index.html#catalog"><i class="fa-solid fa-shirt"></i> Sản phẩm</a></li>
+      <li><a href="collections.html"><i class="fa-solid fa-layer-group"></i> Bộ sưu tập</a></li>
+      <li><a href="about.html"><i class="fa-solid fa-building"></i> Về chúng tôi</a></li>
+      <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
+    </ul>
+  </div>
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+
+  <main class="site-main">
+
+    <!-- HERO BANNER VẬN CHUYỂN -->
+    <section class="d-hero-banner" style="height: 360px;">
+      <img src="assets/hero_banner.jpg" alt="AURALIE Express Shipping Banner" class="d-hero-img">
+      <div class="d-hero-overlay">
+        <div class="d-hero-content">
+          <p class="d-hero-tag">DỊCH VỤ GIAO HÀNG ĐẲNG CẤP</p>
+          <h1 class="d-hero-title">Vận Chuyển Hỏa Tốc & Giao Hàng VIP</h1>
+          <p class="d-hero-subtitle">Giao trang phục nguyên phom dáng tận tay quý khách trong vòng 2 giờ cùng bao bì xa xỉ tiêu chuẩn Châu Âu.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- POLICY CONTENT LAYOUT -->
+    <section class="page-section">
+      <div style="display: grid; grid-template-columns: 280px 1fr; gap: 3rem;" class="responsive-grid">
+        
+        <!-- SIDEBAR CHUYỂN ĐỔI CHÍNH SÁCH -->
+        <aside class="d-sidebar">
+          <div class="sidebar-widget">
+            <h3 class="widget-title">Các Chính Sách VIP</h3>
+            <ul class="category-list">
+              <li><a href="warranty-policy.html"><i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> <span>Bảo Hành & Chỉnh Sửa</span></a></li>
+              <li><a href="return-policy.html"><i class="fa-solid fa-rotate-left" style="margin-right: 8px;"></i> <span>Đổi Trả Trong 30 Ngày</span></a></li>
+              <li><a href="shipping-policy.html" class="active"><i class="fa-solid fa-truck-fast" style="margin-right: 8px;"></i> <span>Vận Chuyển Hỏa Tốc</span></a></li>
+              <li><a href="privacy-policy.html"><i class="fa-solid fa-user-lock" style="margin-right: 8px;"></i> <span>Bảo Mặt Thông Tin</span></a></li>
+            </ul>
+          </div>
+
+          <div class="promo-widget">
+            <p class="promo-badge">GIAO HÀNG HỎA TỐC 2H</p>
+            <h4 class="promo-title">Nội Thành TP.HCM & Hà Nội</h4>
+            <p class="promo-desc">Giao hàng bằng xe riêng chuyên dụng bảo vệ phom dáng trang phục.</p>
+          </div>
+        </aside>
+
+        <!-- NỘI DUNG CHI TIẾT VẬN CHUYỂN -->
+        <article class="policy-article" style="background: #fff; padding: 2.5rem; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);">
+          <span style="color: var(--accent-gold); font-size: 0.8rem; font-weight: 700; letter-spacing: 2px;">EXPRESS LUXURY DELIVERY</span>
+          <h2 class="section-title" style="margin-top: 0.5rem; margin-bottom: 1.5rem;">Phương Thức & Thời Gian Vận Chuyển</h2>
+
+          <div style="line-height: 1.8; color: var(--text-main); font-size: 0.95rem;">
+            
+            <h3 style="color: var(--primary-dark); font-size: 1.25rem; margin: 1.5rem 0 0.75rem;"><i class="fa-solid fa-bolt" style="color: var(--accent-gold);"></i> 1. Dịch Vụ Giao Hàng Hỏa Tốc VIP Concierge (2 Giờ)</h3>
+            <p>Áp dụng cho tất cả các đơn hàng thuộc khu vực nội thành TP. Hồ Chí Minh và Hà Nội:</p>
+            <ul style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+              <li><strong>Thời gian đáp ứng:</strong> Nhận hàng ngay trong <strong>2 giờ</strong> kể từ khi xác nhận đơn hàng thành công.</li>
+              <li><strong>Bảo vệ phom dáng chuyên nghiệp:</strong> Trang phục Áo Vest, Tuxedo và Đầm Dạ Hội được treo trên móc gỗ tự nhiên cao cấp, bọc túi vải chống bụi chuyên dụng và vận chuyển bằng ô tô riêng của AURALIÈ.</li>
+              <li><strong>Dịch vụ Thử Đồ Tại Nhà (Home Fitting):</strong> Nhân viên tư vấn trang phục sẵn sàng hỗ trợ quý khách thử đồ và căn chỉnh kích thước trực tiếp tại gia.</li>
+            </ul>
+
+            <h3 style="color: var(--primary-dark); font-size: 1.25rem; margin: 1.5rem 0 0.75rem;"><i class="fa-solid fa-plane" style="color: var(--accent-gold);"></i> 2. Giao Hàng Chuyển Phát Nhanh Toàn Quốc</h3>
+            <p>Đối với quý khách hàng tại các tỉnh thành khác trên toàn quốc:</p>
+            <ul style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+              <li><strong>Thời gian vận chuyển:</strong> Từ <strong>24h - 48h</strong> làm việc qua đối tác vận chuyển hàng không uy tín.</li>
+              <li><strong>Quy cách đóng gói:</strong> Hộp quà xa xỉ cứng cáp đính logo mạ vàng, bảo vệ sản phẩm tuyệt đối khỏi độ ẩm và va đập trong quá trình di chuyển.</li>
+            </ul>
+
+            <h3 style="color: var(--primary-dark); font-size: 1.25rem; margin: 1.5rem 0 0.75rem;"><i class="fa-solid fa-gift" style="color: var(--accent-gold);"></i> 3. Biểu Phí Vận Chuyển</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem;">
+              <thead>
+                <tr style="background: var(--primary-dark); color: #fff;">
+                  <th style="padding: 0.8rem; text-align: left; border: 1px solid #333;">Giá Trị Đơn Hàng</th>
+                  <th style="padding: 0.8rem; text-align: left; border: 1px solid #333;">Nội Thành Hỏa Tốc (2H)</th>
+                  <th style="padding: 0.8rem; text-align: left; border: 1px solid #333;">Toàn Quốc (Chuyển Phát Nhanh)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 0.8rem; border: 1px solid var(--border-light);">Đơn hàng trên 5.000.000 ₫</td>
+                  <td style="padding: 0.8rem; border: 1px solid var(--border-light); color: var(--accent-gold); font-weight: bold;">MIỄN PHÍ VIP</td>
+                  <td style="padding: 0.8rem; border: 1px solid var(--border-light); color: var(--accent-gold); font-weight: bold;">MIỄN PHÍ VIP</td>
+                </tr>
+                <tr style="background: var(--bg-cream);">
+                  <td style="padding: 0.8rem; border: 1px solid var(--border-light);">Đơn hàng dưới 5.000.000 ₫</td>
+                  <td style="padding: 0.8rem; border: 1px solid var(--border-light);">100.000 ₫</td>
+                  <td style="padding: 0.8rem; border: 1px solid var(--border-light);">50.000 ₫</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3 style="color: var(--primary-dark); font-size: 1.25rem; margin: 1.5rem 0 0.75rem;"><i class="fa-solid fa-box-open" style="color: var(--accent-gold);"></i> 4. Kiểm Tra Hàng Trước Khi Thanh Toán</h3>
+            <p>Quý khách hoàn toàn được quyền mở hộp kiểm tra trang phục, chất liệu và thử đồ trước khi thanh toán cho nhân viên giao hàng.</p>
+
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="d-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h2>AURALIÈ</h2>
+        <p>Thương hiệu thời trang cao cấp định hình phong cách sống hiện đại và tinh tế. Thiết kế chuẩn Châu Âu cho trải nghiệm xa xỉ.</p>
+        <div class="social-icons">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col collapsible-footer">
+        <h4 class="accordion-header">Chính Sách <i class="fa-solid fa-chevron-down accordion-icon"></i></h4>
+        <ul class="footer-links accordion-content">
+          <li><a href="warranty-policy.html">Chính sách bảo hành</a></li>
+          <li><a href="return-policy.html">Đổi trả trong 30 ngày</a></li>
+          <li><a href="shipping-policy.html">Vận chuyển hỏa tốc</a></li>
+          <li><a href="privacy-policy.html">Bảo mật thông tin</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col collapsible-footer">
+        <h4 class="accordion-header">Thông Tin Liên Hệ <i class="fa-solid fa-chevron-down accordion-icon"></i></h4>
+        <ul class="footer-links accordion-content">
+          <li><a href="contact.html">Showroom: Đồng Khởi, Q.1, TP.HCM</a></li>
+          <li><a href="contact.html">Hotline: 1900 8888</a></li>
+          <li><a href="contact.html">Email: vip@auralie.fashion</a></li>
+          <li><a href="contact.html">Giờ mở cửa: 09:00 - 22:00</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Đăng Ký Nhận Tin</h4>
+        <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 1rem;">Nhận thông tin bộ sưu tập mới và ưu đãi đặc quyền VIP.</p>
+        <div class="newsletter-box">
+          <input type="email" placeholder="Email của bạn...">
+          <button class="btn-primary-luxury" style="padding: 0.6rem 1rem; border-radius: 20px; font-size: 0.75rem;">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 AURALIÈ HAUTE COUTURE. All Rights Reserved.</p>
+      <p>Website Thương Mại Điện Tử Thời Trang Cao Cấp.</p>
+    </div>
+  </footer>
+
+  <!-- MOBILE STICKY BOTTOM NAVIGATION -->
+  <nav class="m-bottom-nav">
+    <a href="index.html" class="m-nav-item"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
+    <a href="collections.html" class="m-nav-item"><i class="fa-solid fa-layer-group"></i><span>Bộ sưu tập</span></a>
+    <a href="#" class="m-nav-item" id="bottom-search-trigger"><i class="fa-solid fa-magnifying-glass"></i><span>Tìm kiếm</span></a>
+    <a href="cart.html" class="m-nav-item"><i class="fa-solid fa-bag-shopping"></i><span>Giỏ hàng</span></a>
+    <a href="contact.html" class="m-nav-item"><i class="fa-solid fa-envelope"></i><span>Liên hệ</span></a>
+  </nav>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

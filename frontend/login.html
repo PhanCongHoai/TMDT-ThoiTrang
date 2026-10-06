@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập & Đăng Ký VIP | AURALIÈ Haute Couture</title>
+  <!-- Font Awesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- TOP ANNOUNCEMENT BAR -->
+  <div class="top-announcement-bar">
+    <div class="announcement-content">
+      <span><i class="fa-solid fa-gem"></i> Trở Thành Hội Viên VIP Để Nhận Chiết Khấu 20% Cho Đơn Đầu Tiên</span>
+      <span class="announcement-divider">|</span>
+      <span><i class="fa-solid fa-phone"></i> Hotline VIP: 1900 8888</span>
+    </div>
+  </div>
+
+  <!-- MAIN HEADER / NAVIGATION -->
+  <header class="d-header">
+    <div class="header-left">
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <a href="index.html" class="d-logo">AURALIÈ<span>HAUTE COUTURE</span></a>
+    
+    <nav class="desktop-nav-wrapper">
+      <ul class="d-nav">
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="index.html#catalog">Sản phẩm</a></li>
+        <li><a href="collections.html">Bộ sưu tập</a></li>
+        <li><a href="about.html">Về chúng tôi</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+
+    <div class="d-user-actions">
+      <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
+        <i class="fa-regular fa-heart"></i>
+        <span class="badge-count">2</span>
+      </a>
+
+      <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count" id="cart-count">3</span>
+      </a>
+
+      <a href="login.html" class="d-btn-icon desktop-user-btn active" title="Tài khoản">
+        <i class="fa-regular fa-user"></i>
+      </a>
+    </div>
+  </header>
+
+  <main class="site-main" style="display:flex; align-items:center; justify-content:center; padding: 4rem 1rem; background: var(--bg-light);">
+
+    <div style="background:#fff; border:1px solid var(--border-light); border-radius: var(--radius-md); box-shadow: var(--shadow-hover); width:100%; max-width: 520px; overflow:hidden; padding: 2.5rem;">
+
+      <div style="text-align:center; margin-bottom: 2rem;">
+        <span style="color:var(--accent-gold); font-size: 0.8rem; font-weight:700; letter-spacing: 2px;">TÀI KHOẢN XA XỈ</span>
+        <h2 style="font-family: var(--font-serif); font-size: 2.2rem; color:var(--primary-dark); margin-top:0.25rem;">Chào Mừng Tới AURALIÈ</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Đăng nhập để trải nghiệm mua sắm và quản lý đơn hàng thượng lưu</p>
+      </div>
+
+      <!-- TAB HEADERS -->
+      <div style="display:flex; border-bottom: 2px solid var(--border-light); margin-bottom: 1.75rem;">
+        <button id="tab-login-btn" class="modal-tab-btn active" style="flex:1; text-align:center; font-size: 1rem;">Đăng Nhập</button>
+        <button id="tab-register-btn" class="modal-tab-btn" style="flex:1; text-align:center; font-size: 1rem;">Đăng Ký Tài Khoản</button>
+      </div>
+
+      <!-- FORM ĐĂNG NHẬP -->
+      <form id="form-login" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
+          <label style="font-size: 0.85rem; font-weight: 600;">Email Hoặc Số Điện Thoại *</label>
+          <input type="email" id="login-email-input" placeholder="nhap.email@auralie.fashion" value="khachhang.vip@auralie.fashion" required style="width:100%; padding:0.75rem;">
+          <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Nhập email chứa <strong>admin</strong> (ví dụ: <code>admin@auralie.fashion</code>) để chuyển vào Trang Quản Trị, hoặc email bất kỳ để vào Trang Cá Nhân.</span>
+        </div>
+
+        <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label style="font-size: 0.85rem; font-weight: 600;">Mật Khẩu *</label>
+            <a href="#" style="font-size:0.78rem; color:var(--accent-gold); text-decoration:none;">Quên mật khẩu?</a>
+          </div>
+          <input type="password" value="12345678" required style="width:100%; padding:0.75rem;">
+        </div>
+
+        <button type="submit" class="btn-primary-luxury" style="padding: 0.9rem; justify-content: center; font-size: 0.9rem; margin-top: 0.5rem;">
+          Đăng Nhập Tài Khoản <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <!-- FORM ĐĂNG KÝ (MẶC ĐỊNH ẨN) -->
+      <form id="form-register" style="display: none; flex-direction: column; gap: 1.25rem;">
+        <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
+          <label style="font-size: 0.85rem; font-weight: 600;">Họ Và Tên *</label>
+          <input type="text" placeholder="Nguyễn Văn A" required style="width:100%; padding:0.75rem;">
+        </div>
+
+        <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
+          <label style="font-size: 0.85rem; font-weight: 600;">Địa Chỉ Email *</label>
+          <input type="email" placeholder="email@domain.com" required style="width:100%; padding:0.75rem;">
+        </div>
+
+        <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
+          <label style="font-size: 0.85rem; font-weight: 600;">Số Điện Thoại *</label>
+          <input type="tel" placeholder="0901 234 567" required style="width:100%; padding:0.75rem;">
+        </div>
+
+        <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
+          <label style="font-size: 0.85rem; font-weight: 600;">Tạo Mật Khẩu *</label>
+          <input type="password" placeholder="Tối thiểu 8 ký tự" required style="width:100%; padding:0.75rem;">
+        </div>
+
+        <button type="submit" class="btn-primary-luxury" style="padding: 0.9rem; justify-content: center; font-size: 0.9rem; margin-top: 0.5rem;">
+          Tạo Tài Khoản VIP <i class="fa-solid fa-crown"></i>
+        </button>
+      </form>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="d-footer">
+    <div class="footer-bottom" style="text-align: center;">
+      <p>© 2026 AURALIÈ HAUTE COUTURE. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabLoginBtn = document.getElementById('tab-login-btn');
+      const tabRegisterBtn = document.getElementById('tab-register-btn');
+      const formLogin = document.getElementById('form-login');
+      const formRegister = document.getElementById('form-register');
+
+      if (tabLoginBtn && tabRegisterBtn) {
+        tabLoginBtn.addEventListener('click', () => {
+          tabLoginBtn.classList.add('active');
+          tabRegisterBtn.classList.remove('active');
+          formLogin.style.display = 'flex';
+          formRegister.style.display = 'none';
+        });
+
+        tabRegisterBtn.addEventListener('click', () => {
+          tabRegisterBtn.classList.add('active');
+          tabLoginBtn.classList.remove('active');
+          formRegister.style.display = 'flex';
+          formLogin.style.display = 'none';
+        });
+      }
+
+      if (formLogin) {
+        formLogin.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const emailInput = document.getElementById('login-email-input');
+          const emailVal = emailInput ? emailInput.value.toLowerCase() : '';
+
+          // Role-based automatic redirect: ADMIN vs CUSTOMER
+          if (emailVal.includes('admin')) {
+            localStorage.setItem('userRole', 'ADMIN');
+            alert('Nhận diện quyền tài khoản: QUẢN TRỊ VIÊN (ADMIN). Đang chuyển hướng tới Bảng Quản Trị Hệ Thống...');
+            window.location.href = 'admin.html';
+          } else {
+            localStorage.setItem('userRole', 'CUSTOMER');
+            alert('Nhận diện quyền tài khoản: KHÁCH HÀNG VIP. Đang chuyển hướng tới Trang Cá Nhân...');
+            window.location.href = 'profile.html';
+          }
+        });
+      }
+
+      if (formRegister) {
+        formRegister.addEventListener('submit', (e) => {
+          e.preventDefault();
+          localStorage.setItem('userRole', 'CUSTOMER');
+          alert('Đăng ký tài khoản VIP thành công! Đang chuyển hướng tới Trang Cá Nhân...');
+          window.location.href = 'profile.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>
