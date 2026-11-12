@@ -3,6 +3,7 @@ const { PORT, NODE_ENV } = require('./config/env');
 const { poolPromise } = require('./config/db');
 const logger = require('./utils/logger');
 const { startExpiredOrdersCron } = require('./jobs/expiredOrders.job');
+const { startMLLifecycleCron } = require('./jobs/mlLifecycle.job');
 
 // Kiểm tra kết nối CSDL và lắng nghe port
 poolPromise
@@ -13,6 +14,8 @@ poolPromise
       
       // Bắt đầu Background Worker giải phóng đơn hàng SePay hết hạn 15 phút
       startExpiredOrdersCron(60000);
+      // Bắt đầu Scheduler vòng đời dữ liệu & mô hình AI (6 giờ/lần)
+      startMLLifecycleCron(6 * 60 * 60 * 1000);
     });
   })
   .catch((err) => {

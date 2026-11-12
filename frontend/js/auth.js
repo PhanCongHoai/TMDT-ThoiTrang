@@ -45,12 +45,18 @@ window.saveAuthSession = function (token, user) {
   localStorage.setItem('userId', String(user.id));
   // Đảm bảo KHÔNG lưu password plaintext
   localStorage.removeItem('savedUserPassword');
+  if (window.AuralieTracking && typeof window.AuralieTracking.onUserAuthenticated === 'function') {
+    window.AuralieTracking.onUserAuthenticated();
+  }
 };
 
 /**
  * Đăng xuất — xóa token và chuyển về login
  */
 window.logout = function () {
+  if (window.AuralieTracking && typeof window.AuralieTracking.track === 'function') {
+    window.AuralieTracking.track('logout');
+  }
   sessionStorage.removeItem('auralie_token');
   sessionStorage.removeItem('auralie_user');
   sessionStorage.removeItem('cartReminderShownAfterLogin');

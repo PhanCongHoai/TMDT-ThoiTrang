@@ -20,6 +20,8 @@ const blogRoutes = require('./modules/blogs/blogs.routes');
 const inquiryRoutes = require('./modules/inquiries/inquiries.routes');
 const adminRoutes = require('./modules/admin/admin.routes');
 const aiRoutes = require('./modules/ai/ai.routes');
+const trackingRoutes = require('./modules/tracking/tracking.routes');
+const analyticsRoutes = require('./modules/analytics/analytics.routes');
 
 const app = express();
 
@@ -86,6 +88,9 @@ app.use('/api/v1/blogs', blogRoutes);
 app.use('/api/v1', inquiryRoutes); // bao gồm /api/v1/contact, /api/v1/newsletter/subscribe
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/ai', aiRoutes);
+app.use('/api/tracking', trackingRoutes);
+app.use('/api/admin', analyticsRoutes);
+app.use('/api/v1/admin', analyticsRoutes);
 
 // ====================================================================
 // 404 CATCH-ALL ROUTE

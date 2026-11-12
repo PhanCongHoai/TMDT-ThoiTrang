@@ -14,3 +14,9 @@ backend/.env
 Thumbs.db
 .vscode/
 .idea/
+
+__pycache__/
+*.pyc
+ai-service/__pycache__/
+ai-service/app/__pycache__/
+ai-service/.env

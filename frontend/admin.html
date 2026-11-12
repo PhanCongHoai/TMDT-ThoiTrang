@@ -624,6 +624,8 @@
         <li><a href="#orders" class="admin-tab-link" data-tab="orders"><i class="fa-solid fa-cart-shopping"></i> <span>Quản Lý Đơn Hàng</span></a></li>
         <li><a href="#reviews" class="admin-tab-link" data-tab="reviews"><i class="fa-solid fa-star"></i> <span>Duyệt Đánh Giá (Reviews)</span></a></li>
         <li><a href="#customers" class="admin-tab-link" data-tab="customers"><i class="fa-solid fa-users"></i> <span>Khách Hàng VIP</span></a></li>
+        <li><a href="#behavior" class="admin-tab-link" data-tab="behavior"><i class="fa-solid fa-eye"></i> <span>Phân Tích Hành Vi</span></a></li>
+        <li><a href="#ai-forecast" class="admin-tab-link" data-tab="ai-forecast"><i class="fa-solid fa-wand-magic-sparkles"></i> <span>AI Dự Báo Nhu Cầu</span></a></li>
       </ul>
 
       <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 0.75rem;">
@@ -1129,6 +1131,162 @@
         </div>
       </div>
 
+      <!-- CUSTOMER BEHAVIOR ANALYTICS SECTION -->
+      <div class="admin-table-card admin-section-tab" id="tab-sec-behavior" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:1.25rem;">
+          <div>
+            <h3 style="margin:0; font-family:var(--font-serif);">Phân Tích Hành Vi Khách Hàng (30 Ngày Gần Nhất)</h3>
+            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Theo dõi phiên truy cập, phễu chuyển đổi, tương tác sản phẩm và từ khóa tìm kiếm</p>
+          </div>
+          <button onclick="window.loadBehaviorAnalytics()" class="admin-action-btn" style="background:var(--primary-dark); color:#d4af37; padding:8px 14px; border-radius:6px; border:1px solid #d4af37;">
+            <i class="fa-solid fa-rotate"></i> Làm Mới Số Liệu
+          </button>
+        </div>
+
+        <div id="behavior-kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:1.5rem;">
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Tổng Lượt Xem Trang</div>
+            <div id="beh-pageviews" style="font-size:22px; font-weight:700; margin-top:4px;">0</div>
+          </div>
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Khách Truy Cập (Mới / Quay lại)</div>
+            <div id="beh-visitors" style="font-size:20px; font-weight:700; margin-top:4px;">0</div>
+          </div>
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Xem Sản Phẩm / Thêm Giỏ</div>
+            <div id="beh-prod-cart" style="font-size:20px; font-weight:700; margin-top:4px;">0 / 0</div>
+          </div>
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Tỷ Lệ Chuyển Đổi Mua</div>
+            <div id="beh-conv-rate" style="font-size:22px; font-weight:700; color:#1f7a4c; margin-top:4px;">0%</div>
+          </div>
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Thời Gian Phiên TB</div>
+            <div id="beh-duration" style="font-size:22px; font-weight:700; margin-top:4px;">0s</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:1.5rem;">
+          <div style="padding:16px; border:1px solid #eee; border-radius:8px; background:#fff;">
+            <h4 style="margin:0 0 10px;">Phễu Chuyển Đổi (Conversion Funnel)</h4>
+            <canvas id="behavior-funnel-chart" height="190"></canvas>
+          </div>
+          <div style="padding:16px; border:1px solid #eee; border-radius:8px; background:#fff;">
+            <h4 style="margin:0 0 10px;">Từ Khóa Tìm Kiếm Nổi Bật & Không Có Kết Quả</h4>
+            <div id="beh-search-lists" style="font-size:13px; line-height:1.7;">Đang tải...</div>
+          </div>
+        </div>
+
+        <h4 style="margin:0 0 10px;">Top Sản Phẩm Tương Tác Nhiều Nhất</h4>
+        <div class="admin-table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Sản Phẩm</th>
+                <th>Danh Mục</th>
+                <th>Lượt Xem</th>
+                <th>Thêm Giỏ</th>
+                <th>Yêu Thích</th>
+                <th>Đã Bán</th>
+              </tr>
+            </thead>
+            <tbody id="beh-top-products-tbody">
+              <tr><td colspan="6" style="text-align:center;">Đang tải dữ liệu hành vi...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AI PRODUCT DEMAND FORECASTING & MODEL LIFECYCLE SECTION -->
+      <div class="admin-table-card admin-section-tab" id="tab-sec-ai-forecast" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:1.25rem;">
+          <div>
+            <h3 style="margin:0; font-family:var(--font-serif);">AI Product Demand Forecasting & Model Lifecycle</h3>
+            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Dự báo nhu cầu 7 / 14 / 30 ngày, gợi ý nhập kho và giám sát độ chính xác mô hình LightGBM</p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <select id="ai-horizon-select" onchange="window.loadAIForecasting(this.value)" style="padding:7px 12px; border-radius:6px; border:1px solid #ccc; font-weight:600;">
+              <option value="7">Dự báo 7 ngày tới</option>
+              <option value="14">Dự báo 14 ngày tới</option>
+              <option value="30">Dự báo 30 ngày tới</option>
+            </select>
+            <button onclick="window.triggerAIAction('predict')" class="admin-action-btn" style="background:var(--primary-dark); color:#d4af37; padding:7px 12px; border-radius:6px;">
+              <i class="fa-solid fa-bolt"></i> Chạy Dự Báo
+            </button>
+            <button onclick="window.triggerAIAction('evaluate')" class="admin-action-btn" style="background:#2c5282; color:#fff; padding:7px 12px; border-radius:6px;">
+              <i class="fa-solid fa-scale-balanced"></i> Đánh Giá Tuần
+            </button>
+            <button onclick="window.triggerAIAction('train')" class="admin-action-btn" style="background:#744210; color:#fff; padding:7px 12px; border-radius:6px;">
+              <i class="fa-solid fa-brain"></i> Huấn Luyện Mô Hình
+            </button>
+          </div>
+        </div>
+
+        <div id="ai-kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:1.5rem;">
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Sản Phẩm Được Dự Báo</div>
+            <div id="ai-total-products" style="font-size:22px; font-weight:700; margin-top:4px;">0</div>
+          </div>
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Xu Hướng Tăng / Giảm</div>
+            <div id="ai-trend-split" style="font-size:20px; font-weight:700; margin-top:4px;">0 / 0</div>
+          </div>
+          <div style="padding:14px; background:#fff5f5; border:1px solid #fed7d7; border-radius:8px;">
+            <div style="font-size:12px; color:#9b2c2c;">Nguy Cơ Thiếu Hàng</div>
+            <div id="ai-low-stock-count" style="font-size:22px; font-weight:700; color:#c53030; margin-top:4px;">0</div>
+          </div>
+          <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
+            <div style="font-size:12px; color:#666;">Mô Hình Đang Chạy</div>
+            <div id="ai-active-version" style="font-size:15px; font-weight:700; color:#111; margin-top:6px;">—</div>
+          </div>
+        </div>
+
+        <div id="ai-alerts-box" style="margin-bottom:1.25rem;"></div>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:1.5rem;">
+          <div style="padding:16px; border:1px solid #eee; border-radius:8px; background:#fff;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <h4 id="ai-chart-title" style="margin:0;">Biểu Đồ Doanh Số Thực Tế & Dự Báo Nhu Cầu</h4>
+              <span style="font-size:12px; color:#666;">Nhấn vào 1 sản phẩm ở bảng dưới để xem chi tiết</span>
+            </div>
+            <canvas id="ai-forecast-chart" height="90"></canvas>
+          </div>
+        </div>
+
+        <h4 style="margin:0 0 10px;">Top Sản Phẩm Dự Báo Bán Chạy & Đề Xuất Nhập Kho</h4>
+        <div class="admin-table-responsive" style="margin-bottom:1.5rem;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Sản Phẩm</th>
+                <th>Danh Mục</th>
+                <th>Tồn Kho</th>
+                <th>Bán 7d Qua</th>
+                <th>Dự Báo Kỳ Này</th>
+                <th>Khoảng Tin Cậy</th>
+                <th>Tăng Trưởng</th>
+                <th>Xu Hướng</th>
+                <th>Đề Xuất Nhập</th>
+              </tr>
+            </thead>
+            <tbody id="ai-forecast-tbody">
+              <tr><td colspan="9" style="text-align:center;">Đang tải dự báo AI...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px;">
+          <div style="padding:16px; border:1px solid #eee; border-radius:8px; background:#fff;">
+            <h4 style="margin:0 0 10px;">Quản Lý Phiên Bản Mô Hình (Model Versions & Rollback)</h4>
+            <div id="ai-versions-list" style="font-size:13px;">Đang tải...</div>
+          </div>
+          <div style="padding:16px; border:1px solid #eee; border-radius:8px; background:#fff;">
+            <h4 style="margin:0 0 10px;">Nhật Ký Huấn Luyện & Đánh Giá Tuần (MAE / WAPE / Bias)</h4>
+            <div id="ai-logs-list" style="font-size:13px;">Đang tải...</div>
+          </div>
+        </div>
+      </div>
+
     </main>
 
   </div>
@@ -1211,14 +1369,18 @@
         'products': { title: 'Quản Lý Danh Sách Sản Phẩm', desc: 'Quản lý 8 mẫu thiết kế phom dáng, tồn kho & giá bán sản phẩm' },
         'orders': { title: 'Quản Lý Đơn Hàng & Vận Chuyển', desc: 'Theo dõi 142 đơn hàng, trạng thái thanh toán VNPAY & giao hỏa tốc' },
         'reviews': { title: 'Duyệt & Kiểm Duyệt Đánh Giá', desc: 'Kiểm duyệt nhận xét thực tế từ khách hàng mua trang phục Haute Couture' },
-        'customers': { title: 'Quản Lý Khách Hàng & Thẻ VIP', desc: 'Quản lý danh sách 1,280 hội viên tích lũy và đặc quyền VIP' }
+        'customers': { title: 'Quản Lý Khách Hàng & Thẻ VIP', desc: 'Quản lý danh sách 1,280 hội viên tích lũy và đặc quyền VIP' },
+        'behavior': { title: 'Phân Tích Hành Vi Khách Hàng', desc: 'Theo dõi phễu chuyển đổi, lượt xem, giỏ hàng và từ khóa tìm kiếm' },
+        'ai-forecast': { title: 'AI Dự Báo Nhu Cầu & Quản Lý Mô Hình', desc: 'Dự báo LightGBM/Baseline 7-14-30 ngày, gợi ý nhập kho & giám sát drift' }
       };
 
       const tabSections = {
         'products': document.getElementById('tab-sec-products'),
         'orders': document.getElementById('tab-sec-orders'),
         'reviews': document.getElementById('tab-sec-reviews'),
-        'customers': document.getElementById('tab-sec-customers')
+        'customers': document.getElementById('tab-sec-customers'),
+        'behavior': document.getElementById('tab-sec-behavior'),
+        'ai-forecast': document.getElementById('tab-sec-ai-forecast')
       };
 
       const switchTab = (tabKey) => {
@@ -1247,6 +1409,13 @@
           if (tabSections[tabKey]) {
             tabSections[tabKey].scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
+        }
+
+        if (tabKey === 'behavior' && typeof window.loadBehaviorAnalytics === 'function') {
+          window.loadBehaviorAnalytics();
+        }
+        if (tabKey === 'ai-forecast' && typeof window.loadAIForecasting === 'function') {
+          window.loadAIForecasting();
         }
 
         closeMobileSidebar();
@@ -1998,5 +2167,215 @@
       </form>
     </div>
   </div>
+  <script>
+    let funnelChartInst = null;
+    let forecastChartInst = null;
+
+    window.loadBehaviorAnalytics = async function () {
+      try {
+        const [ovRes, funnelRes, searchRes, topRes] = await Promise.all([
+          ApiClient.get('/api/admin/analytics/overview?days=30'),
+          ApiClient.get('/api/admin/analytics/conversion-funnel?days=30'),
+          ApiClient.get('/api/admin/analytics/search?days=30'),
+          ApiClient.get('/api/admin/analytics/top-products?days=30')
+        ]);
+
+        if (ovRes.status === 'success' && ovRes.data) {
+          const d = ovRes.data;
+          document.getElementById('beh-pageviews').textContent = d.totalPageViews.toLocaleString('vi-VN');
+          document.getElementById('beh-visitors').textContent = `${d.uniqueVisitors} (${d.newVisitors} / ${d.returningVisitors})`;
+          document.getElementById('beh-prod-cart').textContent = `${d.totalProductViews} / ${d.totalCartAdds}`;
+          document.getElementById('beh-conv-rate').textContent = `${d.purchaseConversionRate}%`;
+          document.getElementById('beh-duration').textContent = `${d.avgSessionDurationSec}s`;
+        }
+
+        if (funnelRes.status === 'success' && funnelRes.data) {
+          const f = funnelRes.data;
+          const ctx = document.getElementById('behavior-funnel-chart');
+          if (ctx && typeof Chart !== 'undefined') {
+            if (funnelChartInst) funnelChartInst.destroy();
+            funnelChartInst = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                labels: ['Truy Cập', 'Xem SP', 'Thêm Giỏ', 'Checkout', 'Mua Hàng'],
+                datasets: [{
+                  label: 'Số Phiên (Sessions)',
+                  data: [f.website_visits || 0, f.product_views || 0, f.add_to_cart || 0, f.checkout_start || 0, f.purchase_events || 0],
+                  backgroundColor: ['#111', '#333', '#9a7b2c', '#d4af37', '#1f7a4c']
+                }]
+              },
+              options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+          }
+        }
+
+        if (searchRes.status === 'success' && searchRes.data) {
+          const { topKeywords, noResultKeywords } = searchRes.data;
+          const topHtml = topKeywords.length
+            ? topKeywords.map(k => `<span style="display:inline-block;padding:2px 8px;margin:2px;background:#f4efe6;border-radius:12px;">${k.keyword} (${k.search_count})</span>`).join('')
+            : '<span style="color:#888;">Chưa có dữ liệu tìm kiếm</span>';
+          const noHtml = noResultKeywords.length
+            ? noResultKeywords.map(k => `<span style="display:inline-block;padding:2px 8px;margin:2px;background:#fff5f5;color:#c53030;border-radius:12px;">${k.keyword} (${k.miss_count})</span>`).join('')
+            : '<span style="color:#888;">Không có từ khóa rỗng</span>';
+          document.getElementById('beh-search-lists').innerHTML = `
+            <div><strong>Từ khóa phổ biến:</strong><div style="margin-top:4px;">${topHtml}</div></div>
+            <div style="margin-top:10px;"><strong>Tìm không thấy kết quả:</strong><div style="margin-top:4px;">${noHtml}</div></div>
+          `;
+        }
+
+        if (topRes.status === 'success' && Array.isArray(topRes.data)) {
+          const tbody = document.getElementById('beh-top-products-tbody');
+          tbody.innerHTML = topRes.data.map(p => `
+            <tr>
+              <td><strong>${p.name}</strong></td>
+              <td>${p.category_name || '—'}</td>
+              <td>${p.views}</td>
+              <td>${p.cart_adds}</td>
+              <td>${p.wishlist_count}</td>
+              <td><strong>${p.units_sold}</strong></td>
+            </tr>
+          `).join('') || '<tr><td colspan="6" style="text-align:center;">Chưa có dữ liệu</td></tr>';
+        }
+      } catch (err) {
+        console.error('Lỗi tải Behavior Analytics:', err);
+      }
+    };
+
+    window.loadAIForecasting = async function (days) {
+      const horizon = Number(days || document.getElementById('ai-horizon-select')?.value || 7);
+      try {
+        const [fcRes, perfRes] = await Promise.all([
+          ApiClient.get(`/api/admin/ai/forecast?days=${horizon}`),
+          ApiClient.get('/api/admin/ai/model-performance')
+        ]);
+
+        if (fcRes.status === 'success' && fcRes.data) {
+          const items = fcRes.data.items || [];
+          const upCount = items.filter(i => i.trend_direction === 'UP').length;
+          const downCount = items.filter(i => i.trend_direction === 'DOWN').length;
+          const lowStockCount = items.filter(i => i.low_stock_risk).length;
+
+          document.getElementById('ai-total-products').textContent = items.length;
+          document.getElementById('ai-trend-split').textContent = `${upCount} Tăng / ${downCount} Giảm`;
+          document.getElementById('ai-low-stock-count').textContent = lowStockCount;
+
+          const tbody = document.getElementById('ai-forecast-tbody');
+          tbody.innerHTML = items.slice(0, 20).map(item => {
+            const trendBadge = item.trend_direction === 'UP'
+              ? '<span style="color:#1f7a4c;font-weight:700;">▲ TĂNG</span>'
+              : (item.trend_direction === 'DOWN' ? '<span style="color:#c53030;font-weight:700;">▼ GIẢM</span>' : '<span style="color:#666;">● ỔN ĐỊNH</span>');
+            const restockBadge = item.low_stock_risk
+              ? `<span style="background:#fff5f5;color:#c53030;padding:3px 8px;border-radius:4px;font-weight:600;">Nhập +${item.recommended_restock_qty}</span>`
+              : '<span style="color:#1f7a4c;">Đủ hàng</span>';
+            return `
+              <tr style="cursor:pointer;" onclick="window.loadProductForecastChart(${item.product_id}, '${String(item.product_name).replace(/'/g, "\\'")}')">
+                <td><strong>${item.product_name}</strong></td>
+                <td>${item.category_name || '—'}</td>
+                <td>${item.current_stock}</td>
+                <td>${item.sales_last_7d}</td>
+                <td><strong>${item.predicted_quantity}</strong></td>
+                <td style="font-size:12px;color:#666;">${item.confidence_low} – ${item.confidence_high}</td>
+                <td>${item.growth_rate_percent > 0 ? '+' : ''}${item.growth_rate_percent}%</td>
+                <td>${trendBadge}</td>
+                <td>${restockBadge}</td>
+              </tr>
+            `;
+          }).join('') || '<tr><td colspan="9" style="text-align:center;">Chưa có dữ liệu dự báo. Nhấn "Chạy Dự Báo" để khởi tạo.</td></tr>';
+
+          if (items.length > 0) {
+            window.loadProductForecastChart(items[0].product_id, items[0].product_name);
+          }
+        }
+
+        if (perfRes.status === 'success' && perfRes.data) {
+          const { versions, logs, alerts } = perfRes.data;
+          const active = versions.find(v => v.is_production);
+          document.getElementById('ai-active-version').textContent = active ? `${active.model_version} (${active.model_type})` : 'Chưa kích hoạt';
+
+          const alertBox = document.getElementById('ai-alerts-box');
+          const activeAlerts = (alerts || []).filter(a => !a.is_resolved);
+          alertBox.innerHTML = activeAlerts.map(a => `
+            <div style="padding:10px 14px;background:#fffaf0;border-left:4px solid #dd6b20;border-radius:6px;margin-bottom:8px;font-size:13px;">
+              <strong>[${a.alert_type}]</strong> ${a.message}
+            </div>
+          `).join('');
+
+          document.getElementById('ai-versions-list').innerHTML = (versions || []).map(v => `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;">
+              <div>
+                <strong>${v.model_version}</strong> <span style="font-size:11px;color:#666;">(${v.model_type})</span>
+                <div style="font-size:11px;color:#888;">Trạng thái: ${v.is_production ? '<strong style="color:#1f7a4c;">PRODUCTION</strong>' : v.status}</div>
+              </div>
+              ${!v.is_production ? `<button onclick="window.rollbackModel('${v.model_version}')" style="padding:4px 10px;font-size:11px;border:1px solid #ccc;border-radius:4px;cursor:pointer;">Rollback</button>` : ''}
+            </div>
+          `).join('') || '<div style="color:#888;">Chưa có phiên bản nào</div>';
+
+          document.getElementById('ai-logs-list').innerHTML = (logs || []).slice(0, 6).map(l => `
+            <div style="padding:8px 0;border-bottom:1px solid #f0f0f0;">
+              <div><strong>${l.trigger_type}</strong> — <span style="color:${l.status === 'SUCCESS' ? '#1f7a4c' : '#b7791f'};">${l.status}</span></div>
+              <div style="font-size:12px;color:#555;">${l.message || ''} ${l.mae !== null ? `(MAE: ${l.mae}, WAPE: ${(l.wape * 100).toFixed(1)}%)` : ''}</div>
+            </div>
+          `).join('') || '<div style="color:#888;">Chưa có nhật ký huấn luyện/đánh giá</div>';
+        }
+      } catch (err) {
+        console.error('Lỗi tải AI Forecasting:', err);
+      }
+    };
+
+    window.loadProductForecastChart = async function (productId, productName) {
+      try {
+        const res = await ApiClient.get(`/api/admin/ai/product/${productId}/forecast`);
+        if (res.status !== 'success' || !res.data) return;
+        const { dailyHistory, forecasts } = res.data;
+        document.getElementById('ai-chart-title').textContent = `Biểu Đồ Thực Tế & Dự Báo: ${productName || ('SP #' + productId)}`;
+
+        const labels = (dailyHistory || []).map(h => String(h.metric_date).slice(5, 10));
+        const actuals = (dailyHistory || []).map(h => h.total_units_sold);
+        const fc7 = (forecasts || []).find(f => f.horizon_days === 7);
+        const fc14 = (forecasts || []).find(f => f.horizon_days === 14);
+        const fc30 = (forecasts || []).find(f => f.horizon_days === 30);
+
+        const chartLabels = [...labels, '+7d', '+14d', '+30d'];
+        const actualSeries = [...actuals, null, null, null];
+        const forecastSeries = [...actuals.map(() => null), fc7 ? fc7.predicted_quantity : null, fc14 ? fc14.predicted_quantity : null, fc30 ? fc30.predicted_quantity : null];
+
+        const ctx = document.getElementById('ai-forecast-chart');
+        if (ctx && typeof Chart !== 'undefined') {
+          if (forecastChartInst) forecastChartInst.destroy();
+          forecastChartInst = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: chartLabels,
+              datasets: [
+                { label: 'Bán Thực Tế (Ngày)', data: actualSeries, borderColor: '#111', backgroundColor: 'rgba(17,17,17,0.1)', tension: 0.3 },
+                { label: 'Tổng Nhu Cầu Dự Báo (7/14/30d)', data: forecastSeries, borderColor: '#d4af37', backgroundColor: 'rgba(212,175,55,0.2)', borderDash: [5, 5], tension: 0.3 }
+              ]
+            },
+            options: { responsive: true }
+          });
+        }
+      } catch (err) {
+        console.error('Lỗi tải biểu đồ sản phẩm:', err);
+      }
+    };
+
+    window.triggerAIAction = async function (action) {
+      const endpointMap = {
+        predict: '/api/admin/ai/trigger-predict',
+        evaluate: '/api/admin/ai/trigger-evaluate',
+        train: '/api/admin/ai/trigger-train'
+      };
+      const res = await ApiClient.post(endpointMap[action], {});
+      alert(res.message || (res.data && res.data.message) || 'Đã thực thi xong!');
+      window.loadAIForecasting();
+    };
+
+    window.rollbackModel = async function (modelVersion) {
+      if (!confirm(`Xác nhận rollback mô hình Production về phiên bản ${modelVersion}?`)) return;
+      const res = await ApiClient.post('/api/admin/ai/model/rollback', { modelVersion });
+      alert(res.message || 'Đã rollback thành công!');
+      window.loadAIForecasting();
+    };
+  </script>
 </body>
 </html>

@@ -204,6 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
     window.saveCart(cart);
+    if (window.AuralieTracking) {
+      window.AuralieTracking.track('add_to_cart', {
+        productId: !isNaN(Number(id)) ? Number(id) : null,
+        properties: { size, color, quantity: qty, unit_price: price }
+      });
+      window.AuralieTracking.syncCart(cart);
+    }
     window.showLuxuryAlert({
       title: 'Đã Thêm Vào Giỏ Hàng',
       message: `Đã thêm <strong>${name}</strong> (Size ${size}, SL: ${qty}) vào giỏ hàng thành công!`,
@@ -399,6 +406,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (result.status === 'success' && result.data) {
         const products = result.data;
+        if (searchQuery && window.AuralieTracking) {
+          window.AuralieTracking.track(products.length === 0 ? 'search_no_result' : 'search', {
+            properties: { keyword: searchQuery, result_count: products.length, filters: { category: categorySlug } }
+          });
+        } else if (categorySlug && categorySlug !== 'all' && window.AuralieTracking) {
+          window.AuralieTracking.track('category_view', { properties: { category_slug: categorySlug } });
+        }
         if (products.length === 0) {
           grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
@@ -467,6 +481,14 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.querySelectorAll('.product-clickable').forEach(card => {
           card.addEventListener('click', (e) => {
             if (e.target.closest('.btn-add-cart')) return;
+            const pid = Number(card.getAttribute('data-id'));
+            if (pid && window.AuralieTracking) {
+              window.AuralieTracking.track('product_view', {
+                productId: pid,
+                properties: { category: card.getAttribute('data-category'), title: card.getAttribute('data-title') },
+                dedupeKey: `pview:${pid}`
+              });
+            }
             openProductModal(card, e.target.closest('.open-reviews-btn') ? 'tab-reviews' : 'tab-details');
           });
         });
