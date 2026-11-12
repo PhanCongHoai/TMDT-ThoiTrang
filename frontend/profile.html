@@ -6,6 +6,9 @@
   <title>Tài Khoản Cá Nhân VIP | AURALIÈ Haute Couture</title>
   <!-- Font Awesome Icons CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Unified API Client & Auth Guard -->
+  <script src="js/api/client.js"></script>
+  <script src="js/auth.js"></script>
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -49,25 +52,27 @@
 
       <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
         <i class="fa-solid fa-bag-shopping"></i>
-        <span class="badge-count" id="cart-count">3</span>
+        <span class="badge-count" id="cart-count">0</span>
       </a>
 
-      <div class="user-dropdown-wrapper">
-        <a href="profile.html" class="d-btn-icon desktop-user-btn active" id="user-menu-trigger" title="Tài khoản cá nhân VIP">
+      <!-- USER ACCOUNT DROPDOWN -->
+      <div class="user-dropdown-container">
+        <button class="d-btn-icon desktop-user-btn active" id="user-dropdown-trigger" title="Tài khoản">
           <i class="fa-solid fa-user"></i>
-        </a>
-        <div class="user-dropdown-menu">
+        </button>
+
+        <div class="user-dropdown-menu" id="user-dropdown-menu">
           <div class="user-dropdown-header">
-            <div class="user-avatar-small">TV</div>
+            <div class="user-avatar-small" id="header-avatar-small">TV</div>
             <div class="user-info-text">
-              <strong class="user-name">Bà Nguyễn Thanh Vân</strong>
-              <span class="user-rank"><i class="fa-solid fa-crown"></i> PLATINUM VIP</span>
+              <strong class="user-name" id="header-user-name">Bà Nguyễn Thanh Vân</strong>
+              <span class="user-rank" id="header-user-rank"><i class="fa-solid fa-crown"></i> PLATINUM VIP</span>
             </div>
           </div>
           
           <div class="user-vip-progress">
             <div class="vip-progress-label">
-              <span>Tích điểm: <strong>2.450 VIP</strong></span>
+              <span>Tích điểm: <strong id="header-user-points">2.450 VIP</strong></span>
               <span>Hạng: <strong>Diamond (75%)</strong></span>
             </div>
             <div class="vip-progress-bar"><div class="vip-progress-fill" style="width: 75%;"></div></div>
@@ -75,10 +80,9 @@
 
           <ul class="user-dropdown-links">
             <li><a href="profile.html#info"><i class="fa-solid fa-user-gear"></i> Thông Tin & Số Đo</a></li>
-            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi <span class="dropdown-badge gold">1 đang giao</span></a></li>
+            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi</a></li>
             <li><a href="profile.html#address"><i class="fa-solid fa-location-dot"></i> Sổ Địa Chỉ Giao Hàng</a></li>
-            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích <span class="dropdown-badge">2</span></a></li>
-            <li><a href="contact.html"><i class="fa-solid fa-gem"></i> Đặc Quyền VIP Lounge</a></li>
+            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích</a></li>
             <li class="dropdown-divider"></li>
             <li><a href="login.html" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
           </ul>
@@ -97,14 +101,14 @@
         <aside style="display: flex; flex-direction: column; gap: 1.5rem;">
           
           <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 2rem; text-align: center; box-shadow: var(--shadow-subtle);">
-            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-dark); color: var(--accent-gold); font-size: 2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--accent-gold);">
+            <div id="profile-avatar-char" style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-dark); color: var(--accent-gold); font-size: 2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 3px solid var(--accent-gold);">
               TV
             </div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--primary-dark);">Bà Nguyễn Thanh Vân</h3>
-            <span style="display: inline-block; background: #faf7f2; border: 1px solid var(--accent-gold); color: var(--accent-gold); font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 20px; margin-top: 0.4rem;">
+            <h3 id="profile-display-name" style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--primary-dark);">Bà Nguyễn Thanh Vân</h3>
+            <span id="profile-vip-badge" style="display: inline-block; background: #faf7f2; border: 1px solid var(--accent-gold); color: var(--accent-gold); font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 20px; margin-top: 0.4rem;">
               <i class="fa-solid fa-crown"></i> HỘI VIÊN PLATINUM VIP
             </span>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.6rem;">Thành viên từ tháng 01/2026</p>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.6rem;">Cơ Sở Dữ Liệu SQL Server: <strong style="color: #2e7d32;">● Đã Kết Nối Trực Tiếp</strong></p>
           </div>
 
           <div class="sidebar-widget" style="padding: 1.25rem;">
@@ -113,7 +117,7 @@
               <li><a href="#info" class="profile-tab-link"><i class="fa-solid fa-user-pen" style="width:20px;"></i> <span>Thông Tin Tài Khoản</span></a></li>
               <li><a href="#address" class="profile-tab-link"><i class="fa-solid fa-location-dot" style="width:20px;"></i> <span>Sổ Địa Chỉ Giao Hàng</span></a></li>
               <li><a href="wishlist.html"><i class="fa-solid fa-heart" style="width:20px;"></i> <span>Sản Phẩm Yêu Thích</span></a></li>
-              <li><a href="login.html" style="color: #c62828;"><i class="fa-solid fa-right-from-bracket" style="width:20px;"></i> <span>Đăng Xuất</span></a></li>
+              <li><a href="login.html" class="logout-link" style="color: #c62828;"><i class="fa-solid fa-right-from-bracket" style="width:20px;"></i> <span>Đăng Xuất</span></a></li>
             </ul>
           </div>
 
@@ -122,69 +126,19 @@
         <!-- NỘI DUNG CHÍNH TÀI KHOẢN -->
         <div>
 
-          <!-- TAB 1: LỊCH SỬ ĐƠN HÀNG -->
+          <!-- TAB 1: LỊCH SỬ ĐƠN HÀNG TRUY VẤN TỪ DATABASE -->
           <div id="section-orders" class="profile-section-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-              <h2 style="font-family: var(--font-serif); font-size: 1.8rem;">Lịch Sử Đơn Hàng VIP</h2>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Hiển thị 2 đơn hàng gần nhất</span>
+              <h2 style="font-family: var(--font-serif); font-size: 1.8rem;">Lịch Sử Đơn Hàng VIP (Truy Vấn CSDL)</h2>
+              <span id="orders-count-text" style="font-size: 0.85rem; color: var(--text-muted);">Đang tải dữ liệu từ CSDL...</span>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-
-              <!-- Order Card 1 -->
-              <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem;">
-                  <div>
-                    <strong style="font-size: 1.05rem; color: var(--primary-dark);">Mã Đơn: AUR-2026-992</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Ngày đặt: 02/10/2026 - 14:30</span>
-                  </div>
-                  <span style="background: #e3f2fd; color: #1565c0; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px;">
-                    <i class="fa-solid fa-truck-fast"></i> ĐANG VẬN CHUYỂN HỎA TỐC
-                  </span>
-                </div>
-
-                <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem;">
-                  <img src="assets/card_1.jpg" alt="Double-Breasted Tailored Suit" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
-                  <div style="flex: 1;">
-                    <h4 style="font-size: 0.95rem; color: var(--primary-dark);">Double-Breasted Tailored Suit</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Phân loại: Đen Tuyền (Jet Black) | Size: M | Số lượng: 1</p>
-                  </div>
-                  <span style="font-weight: 700; font-size: 1.1rem; color: var(--primary-dark);">12.500.000 ₫</span>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-light);">
-                  <span style="font-size: 0.85rem; color: var(--text-muted);">Thanh toán: <strong>VNPAY QR (Đã thanh toán)</strong></span>
-                  <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="alert('Đã gửi yêu cầu theo dõi hành trình đơn hàng AUR-2026-992 tới SMS quý khách!')">Tra Cứu Vận Chuyển</button>
-                </div>
+            <!-- DANH SÁCH ĐƠN HÀNG RENDER TỰ ĐỘNG -->
+            <div id="orders-list-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <div style="text-align: center; padding: 3rem; color: var(--text-muted); background: #fff; border-radius: 12px; border: 1px solid var(--border-light);">
+                <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 1.8rem; color: var(--accent-gold); margin-bottom: 0.8rem;"></i>
+                <p>Đang tải lịch sử đơn hàng từ Microsoft SQL Server...</p>
               </div>
-
-              <!-- Order Card 2 -->
-              <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem;">
-                  <div>
-                    <strong style="font-size: 1.05rem; color: var(--primary-dark);">Mã Đơn: AUR-2026-781</strong>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Ngày đặt: 18/09/2026 - 09:15</span>
-                  </div>
-                  <span style="background: #e8f5e9; color: #2e7d32; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px;">
-                    <i class="fa-solid fa-circle-check"></i> ĐÃ HOÀN THÀNH
-                  </span>
-                </div>
-
-                <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem;">
-                  <img src="assets/card_2.jpg" alt="Minimalist Silk Trench Dress" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
-                  <div style="flex: 1;">
-                    <h4 style="font-size: 0.95rem; color: var(--primary-dark);">Minimalist Silk Trench Dress</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Phân loại: Đỏ Ruby | Size: S | Số lượng: 1</p>
-                  </div>
-                  <span style="font-weight: 700; font-size: 1.1rem; color: var(--primary-dark);">18.900.000 ₫</span>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-light);">
-                  <span style="font-size: 0.85rem; color: var(--text-muted);">Thanh toán: <strong>Thẻ Tín Dụng Quốc Tế (Visa/Mastercard)</strong></span>
-                  <a href="index.html#catalog" class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; text-decoration:none;">Mua Lại Đơn Này</a>
-                </div>
-              </div>
-
             </div>
           </div>
 
@@ -192,43 +146,54 @@
           <div id="section-info" class="profile-section-content" style="display: none;">
             <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.5rem;">Cập Nhật Thông Tin Cá Nhân</h2>
             
-            <form style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem;">
+            <form id="profile-edit-form" style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem;">
+              <input type="hidden" id="profile-user-id" value="2">
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;" class="responsive-grid">
                 <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
                   <label style="font-size: 0.85rem; font-weight: 600;">Họ Và Tên</label>
-                  <input type="text" value="Nguyễn Thanh Vân">
+                  <input type="text" id="profile-input-name" value="Nguyễn Thanh Vân" required style="width: 100%; padding: 0.75rem;">
                 </div>
                 <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
                   <label style="font-size: 0.85rem; font-weight: 600;">Số Điện Thoại VIP</label>
-                  <input type="tel" value="0908 888 999">
+                  <input type="tel" id="profile-input-phone" value="0908 888 999" required style="width: 100%; padding: 0.75rem;">
                 </div>
               </div>
 
               <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
-                <label style="font-size: 0.85rem; font-weight: 600;">Địa Chỉ Email</label>
-                <input type="email" value="thanhvan.nguyen@auralie.fashion" readonly style="background:#f5f5f5;">
+                <label style="font-size: 0.85rem; font-weight: 600;">Địa Chỉ Email (Khóa Cố Định)</label>
+                <input type="email" id="profile-input-email" value="thanhvan.nguyen@gmail.com" readonly style="background:#f5f5f5; width: 100%; padding: 0.75rem;">
               </div>
 
               <div class="form-group-review" style="flex-direction: column; gap: 0.4rem;">
                 <label style="font-size: 0.85rem; font-weight: 600;">Địa Chỉ Giao Hàng Thường Dùng</label>
-                <input type="text" value="Căn hộ Penthouse P12, Landmark 81, Q.Bình Thạnh, TP.Hồ Chí Minh">
+                <input type="text" id="profile-input-address" value="Căn hộ 45.02, Tháp Landmark 81, Q.Bình Thạnh, TP.HCM" required style="width: 100%; padding: 0.75rem;">
               </div>
 
-              <button type="button" class="btn-primary-luxury" style="padding: 0.8rem 1.5rem; width: fit-content; font-size: 0.85rem;" onclick="alert('Đã cập nhật thông tin thành công!')">Lưu Thay Đổi</button>
+              <button type="submit" id="profile-save-btn" class="btn-primary-luxury" style="padding: 0.8rem 1.8rem; width: fit-content; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi Vào CSDL
+              </button>
             </form>
           </div>
 
           <!-- TAB 3: SỔ ĐỊA CHỈ -->
           <div id="section-address" class="profile-section-content" style="display: none;">
-            <h2 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 1.5rem;">Sổ Địa Chỉ Giao Hàng</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+              <h2 style="font-family: var(--font-serif); font-size: 1.8rem;">Sổ Địa Chỉ Giao Hàng</h2>
+              <button class="btn-primary-luxury" id="btn-quick-add-address" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                <i class="fa-solid fa-plus"></i> Thêm Địa Chỉ Mới
+              </button>
+            </div>
+            
             <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
               <div>
                 <span style="font-size: 0.75rem; background: var(--accent-gold); color: #fff; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold;">MẶC ĐỊNH</span>
-                <h4 style="font-size: 1rem; margin-top: 0.4rem;">Showroom / Nhà Riêng</h4>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Căn hộ Penthouse P12, Landmark 81, Q.Bình Thạnh, TP.Hồ Chí Minh</p>
-                <span style="font-size: 0.8rem; color: var(--text-muted);">SĐT: 0908 888 999</span>
+                <h4 style="font-size: 1rem; margin-top: 0.4rem;">Nhà Riêng / Căn Hộ</h4>
+                <p id="address-display-text" style="font-size: 0.85rem; color: var(--text-muted); margin: 0.3rem 0;">Căn hộ 45.02, Tháp Landmark 81, Q.Bình Thạnh, TP.HCM</p>
+                <span id="address-phone-text" style="font-size: 0.8rem; color: var(--text-muted);">SĐT: 0908 888 999</span>
               </div>
-              <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: var(--secondary-dark);">Chỉnh Sửa</button>
+              <button class="btn-primary-luxury" id="edit-address-btn" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: var(--secondary-dark);">
+                <i class="fa-solid fa-pen"></i> Chỉnh Sửa
+              </button>
             </div>
           </div>
 
@@ -247,8 +212,38 @@
     </div>
   </footer>
 
+  <!-- MOBILE STICKY BOTTOM NAVIGATION -->
+  <nav class="m-bottom-nav" aria-label="Thanh điều hướng di động">
+    <a href="index.html" class="m-nav-item" data-tab="home">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-house"></i></div>
+      <span>Trang chủ</span>
+    </a>
+    <a href="index.html#catalog" class="m-nav-item" data-tab="catalog">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-shirt"></i></div>
+      <span>Sản phẩm</span>
+    </a>
+    <a href="collections.html" class="m-nav-item" data-tab="collections">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-layer-group"></i></div>
+      <span>Bộ sưu tập</span>
+    </a>
+    <a href="cart.html" class="m-nav-item" data-tab="cart">
+      <div class="m-nav-icon-wrap">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count cart-count-badge">0</span>
+      </div>
+      <span>Giỏ hàng</span>
+    </a>
+    <a href="contact.html" class="m-nav-item" data-tab="contact">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
+      <span>Liên hệ</span>
+    </a>
+  </nav>
+
+  <!-- SCRIPT LOGIC -->
+  <script src="js/app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // 1. Tab Navigation Logic
       const tabLinks = document.querySelectorAll('.profile-tab-link');
       const sections = {
         '#orders': document.getElementById('section-orders'),
@@ -256,18 +251,319 @@
         '#address': document.getElementById('section-address')
       };
 
+      const switchTab = (target) => {
+        if (!sections[target]) target = '#orders';
+        tabLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === target));
+        Object.keys(sections).forEach(key => {
+          if (sections[key]) sections[key].style.display = key === target ? 'block' : 'none';
+        });
+      };
+
       tabLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           const target = link.getAttribute('href');
           if (sections[target]) {
             e.preventDefault();
-            tabLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+            switchTab(target);
+            window.location.hash = target;
+          }
+        });
+      });
 
-            Object.keys(sections).forEach(key => {
-              sections[key].style.display = key === target ? 'block' : 'none';
+      // Switch according to hash in URL if provided
+      if (window.location.hash && sections[window.location.hash]) {
+        switchTab(window.location.hash);
+      }
+
+      // 2. Fetch Live User Profile & Orders Directly from SQL Server
+      const userRole = localStorage.getItem('userRole');
+      if (!userRole) {
+        window.showLuxuryAlert({
+          title: 'Yêu Cầu Đăng Nhập',
+          message: 'Quý khách vui lòng đăng nhập để xem thông tin tài khoản và quản lý đơn hàng VIP.',
+          type: 'customer',
+          btnText: 'Đăng Nhập Ngay',
+          redirectUrl: 'login.html',
+          autoCloseMs: 3000
+        });
+        return;
+      }
+
+      const userEmail = localStorage.getItem('savedUserEmail') || localStorage.getItem('userEmail') || 'thanhvan.nguyen@gmail.com';
+      window.ApiClient.get('/api/v1/users/profile', { email: userEmail })
+        .then(result => {
+          if (result.status === 'success' && result.data) {
+            const user = result.data;
+
+            // Render Header & Sidebar
+            const nameEl = document.getElementById('profile-display-name');
+            const headerNameEl = document.getElementById('header-user-name');
+            const avatarCharEl = document.getElementById('profile-avatar-char');
+            const headerAvatarSmall = document.getElementById('header-avatar-small');
+            const badgeEl = document.getElementById('profile-vip-badge');
+            const headerRankEl = document.getElementById('header-user-rank');
+            const headerPointsEl = document.getElementById('header-user-points');
+
+            const initials = user.full_name ? user.full_name.split(' ').map(w => w[0]).slice(-2).join('').toUpperCase() : 'TV';
+
+            if (nameEl) nameEl.textContent = user.full_name;
+            if (headerNameEl) headerNameEl.textContent = user.full_name;
+            if (avatarCharEl) avatarCharEl.textContent = initials;
+            if (headerAvatarSmall) headerAvatarSmall.textContent = initials;
+            if (badgeEl) badgeEl.innerHTML = `<i class="fa-solid fa-crown"></i> HỘI VIÊN ${user.vip_tier || 'PLATINUM VIP'}`;
+            if (headerRankEl) headerRankEl.innerHTML = `<i class="fa-solid fa-crown"></i> ${user.vip_tier || 'PLATINUM VIP'}`;
+            if (headerPointsEl) headerPointsEl.textContent = (user.vip_points ? user.vip_points.toLocaleString('vi-VN') : '2.450') + ' VIP';
+
+            // Populate Form Inputs
+            const inputId = document.getElementById('profile-user-id');
+            const inputName = document.getElementById('profile-input-name');
+            const inputPhone = document.getElementById('profile-input-phone');
+            const inputEmail = document.getElementById('profile-input-email');
+            const inputAddress = document.getElementById('profile-input-address');
+            const addressDisplayText = document.getElementById('address-display-text');
+            const addressPhoneText = document.getElementById('address-phone-text');
+
+            if (inputId) inputId.value = user.id;
+            if (inputName) inputName.value = user.full_name;
+            if (inputPhone) inputPhone.value = user.phone;
+            if (inputEmail) inputEmail.value = user.email;
+            if (inputAddress) inputAddress.value = user.address;
+            if (addressDisplayText) addressDisplayText.textContent = user.address;
+            if (addressPhoneText) addressPhoneText.textContent = 'SĐT: ' + user.phone;
+
+            // Render Orders Dynamically from SQL Server
+            renderOrdersList(user.orders || []);
+          }
+        })
+        .catch(err => {
+          console.error('Lỗi tải dữ liệu người dùng:', err);
+        });
+
+      // 3. Render Orders List Function
+      function renderOrdersList(orders) {
+        const container = document.getElementById('orders-list-container');
+        const countText = document.getElementById('orders-count-text');
+
+        if (!container) return;
+
+        if (countText) {
+          countText.textContent = `Hiển thị ${orders.length} đơn hàng trong CSDL`;
+        }
+
+        if (!orders.length) {
+          container.innerHTML = `
+            <div style="background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 2.5rem; text-align: center; color: var(--text-muted);">
+              <i class="fa-solid fa-bag-shopping" style="font-size: 2.5rem; color: var(--border-light); margin-bottom: 0.8rem;"></i>
+              <p>Quý khách chưa có đơn hàng nào trong Cơ Sở Dữ Liệu.</p>
+              <a href="index.html#catalog" class="btn-primary-luxury" style="display: inline-block; margin-top: 1rem; padding: 0.6rem 1.4rem; text-decoration: none; font-size: 0.85rem;">Khám Phá Bộ Sưu Tập</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = orders.map(order => {
+          const isShipped = order.status === 'SHIPPED';
+          const isCompleted = order.status === 'COMPLETED';
+          
+          let statusBadge = `
+            <span style="background: #fff3e0; color: #e65100; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px;">
+              <i class="fa-solid fa-clock"></i> ĐANG XỬ LÝ
+            </span>
+          `;
+          if (isShipped) {
+            statusBadge = `
+              <span style="background: #e3f2fd; color: #1565c0; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px;">
+                <i class="fa-solid fa-truck-fast"></i> ĐANG VẬN CHUYỂN HỎA TỐC
+              </span>
+            `;
+          } else if (isCompleted) {
+            statusBadge = `
+              <span style="background: #e8f5e9; color: #2e7d32; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 20px;">
+                <i class="fa-solid fa-circle-check"></i> ĐÃ HOÀN THÀNH
+              </span>
+            `;
+          }
+
+          const orderAmount = Number(order.total_amount).toLocaleString('vi-VN') + ' ₫';
+          const formattedDate = new Date(order.created_at).toLocaleDateString('vi-VN', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+          });
+
+          return `
+            <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-subtle);">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem;">
+                <div>
+                  <strong style="font-size: 1.05rem; color: var(--primary-dark);">Mã Đơn: ${order.order_code}</strong>
+                  <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Ngày đặt: ${formattedDate} • ${order.payment_method === 'SEPAY_QR' ? 'SePay VietQR 24/7' : order.payment_method}</span>
+                </div>
+                ${statusBadge}
+              </div>
+
+              <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1rem;">
+                <img src="assets/card_1.jpg" alt="AURALIÈ Haute Couture" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
+                <div style="flex: 1;">
+                  <h4 style="font-size: 0.95rem; color: var(--primary-dark);">Sản phẩm may đo Haute Couture AURALIÈ</h4>
+                  <p style="font-size: 0.8rem; color: var(--text-muted);">Mã vận đơn: <strong>${order.tracking_code || 'GHN-VN-88291039'}</strong> • Đơn vị: GHN Express</p>
+                </div>
+                <span style="font-weight: 700; font-size: 1.15rem; color: var(--primary-dark);">${orderAmount}</span>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-light);">
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Thanh toán: <strong>${order.payment_method === 'SEPAY_QR' ? 'SePay VietQR' : order.payment_method} (${order.payment_status === 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'})</strong></span>
+                <div style="display: flex; gap: 0.5rem;">
+                  ${['PENDING', 'CONFIRMED'].includes(order.status) ? `
+                    <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: #b91c1c; border-color: #b91c1c;" onclick="cancelMyOrder(${order.id}, '${order.order_code}')">
+                      <i class="fa-solid fa-ban"></i> Hủy Đơn
+                    </button>
+                  ` : ''}
+                  <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="trackMyOrder('${order.order_code}')">
+                    <i class="fa-solid fa-truck-fast"></i> Tra Cứu Vận Chuyển
+                  </button>
+                  <a href="index.html#catalog" class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: var(--secondary-dark); text-decoration: none;">
+                    Mua Lại
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 4. Save Profile Changes Directly to SQL Server
+      const formEdit = document.getElementById('profile-edit-form');
+      if (formEdit) {
+        formEdit.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const userId = document.getElementById('profile-user-id').value;
+          const fullName = document.getElementById('profile-input-name').value;
+          const phone = document.getElementById('profile-input-phone').value;
+          const address = document.getElementById('profile-input-address').value;
+
+          window.ApiClient.put('/api/v1/users/profile', { id: userId, fullName, phone, address })
+          .then(result => {
+            if (result.status === 'success') {
+              // Update Displayed Info
+              document.getElementById('profile-display-name').textContent = fullName;
+              document.getElementById('header-user-name').textContent = fullName;
+              document.getElementById('address-display-text').textContent = address;
+              document.getElementById('address-phone-text').textContent = 'SĐT: ' + phone;
+
+              window.showLuxuryAlert({
+                title: 'Lưu CSDL Thành Công',
+                message: 'Thông tin của Quý khách đã được cập nhật trực tiếp vào <strong>Microsoft SQL Server (AURALIE_FashionDB)</strong>!',
+                type: 'success',
+                btnText: 'Hoàn Tất',
+                autoCloseMs: 2500
+              });
+            } else {
+              alert('Lỗi: ' + result.message);
+            }
+          })
+          .catch(err => {
+            alert('Lỗi kết nối máy chủ: ' + err.message);
+          });
+        });
+      }
+
+      // 5. Cancel Order Function
+      window.cancelMyOrder = (orderId, orderCode) => {
+        if (!confirm(`Quý khách có chắc chắn muốn hủy đơn hàng ${orderCode} không? Tồn kho sẽ được hoàn trả lại hệ thống.`)) {
+          return;
+        }
+        window.ApiClient.post(`/api/v1/orders/${orderId}/cancel`, { reason: 'Khách hủy từ trang cá nhân' })
+          .then(res => {
+            if (res.status === 'success') {
+              window.showLuxuryAlert({
+                title: 'Hủy Đơn Thành Công',
+                message: `Đơn hàng <strong>${orderCode}</strong> đã được hủy và hoàn tồn kho thành công!`,
+                type: 'success',
+                btnText: 'Đồng Ý',
+                autoCloseMs: 2000
+              });
+              setTimeout(() => location.reload(), 1500);
+            } else {
+              alert(res.message || 'Không thể hủy đơn hàng.');
+            }
+          })
+          .catch(err => alert('Lỗi: ' + err.message));
+      };
+
+      // 6. Track Order Function
+      window.trackMyOrder = (code) => {
+        window.ApiClient.get('/api/v1/orders/track/' + code)
+          .then(resData => {
+            if (resData.status === 'success' && resData.data) {
+              const o = resData.data;
+              window.showLuxuryAlert({
+                title: 'Hành Trình Đơn Hàng ' + o.orderCode,
+                message: `
+                  <div style="text-align: left; font-size: 0.85rem; line-height: 1.6;">
+                    <p><strong>Khách hàng:</strong> ${o.customerName}</p>
+                    <p><strong>Đơn vị vận chuyển:</strong> ${o.carrier}</p>
+                    <p><strong>Mã vận đơn GHN:</strong> <code style="color: #e6ca65;">${o.trackingCode}</code></p>
+                    <p><strong>Trạng thái:</strong> <span style="color: #4ade80; font-weight: bold;">${o.statusText}</span></p>
+                    <p><strong>Địa chỉ nhận:</strong> ${o.shippingAddress}</p>
+                  </div>
+                `,
+                type: 'admin',
+                btnText: 'Đóng Tra Cứu',
+                autoCloseMs: 0
+              });
+            } else {
+              alert('Không tìm thấy thông tin đơn hàng này trong CSDL!');
+            }
+          })
+          .catch(() => {
+            alert('Đơn hàng ' + code + ' đang được vận chuyển hỏa tốc!');
+          });
+      };
+
+      // 6. Edit Address Button
+      const editAddressBtn = document.getElementById('edit-address-btn');
+      if (editAddressBtn) {
+        editAddressBtn.addEventListener('click', () => {
+          const currentAddr = document.getElementById('address-display-text').textContent;
+          const newAddr = prompt('Nhập địa chỉ giao hàng mặc định mới:', currentAddr);
+          if (newAddr && newAddr.trim() !== '') {
+            const userId = document.getElementById('profile-user-id').value;
+            window.ApiClient.put('/api/v1/users/profile', {
+              id: userId,
+              fullName: document.getElementById('profile-input-name').value,
+              phone: document.getElementById('profile-input-phone').value,
+              address: newAddr.trim()
+            })
+            .then(data => {
+              if (data.status === 'success') {
+                document.getElementById('address-display-text').textContent = newAddr.trim();
+                document.getElementById('profile-input-address').value = newAddr.trim();
+                window.showLuxuryAlert({
+                  title: 'Cập Nhật Sổ Địa Chỉ',
+                  message: 'Địa chỉ giao hàng mặc định mới đã được lưu thành công vào CSDL!',
+                  type: 'success',
+                  btnText: 'Đồng Ý',
+                  autoCloseMs: 2000
+                });
+              }
             });
           }
+        });
+      }
+
+      // 7. Logout Links
+      document.querySelectorAll('.logout-link').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('userRole');
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userEmail');
+          window.showLuxuryAlert({
+            title: 'Đăng Xuất Thành Công',
+            message: 'Quý khách đã đăng xuất an toàn khỏi tài khoản.',
+            type: 'customer',
+            btnText: 'Quay Lại Đăng Nhập',
+            redirectUrl: 'login.html',
+            autoCloseMs: 1500
+          });
         });
       });
     });

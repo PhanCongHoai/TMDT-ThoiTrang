@@ -53,15 +53,15 @@
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
 
-      <button class="d-btn-icon" title="Yêu thích">
+      <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
         <i class="fa-regular fa-heart"></i>
         <span class="badge-count">2</span>
-      </button>
+      </a>
 
-      <button class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
+      <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
         <i class="fa-solid fa-bag-shopping"></i>
-        <span class="badge-count" id="cart-count">3</span>
-      </button>
+        <span class="badge-count" id="cart-count">0</span>
+      </a>
 
       <div class="user-dropdown-wrapper">
         <a href="profile.html" class="d-btn-icon desktop-user-btn" id="user-menu-trigger" title="Tài khoản cá nhân VIP">
@@ -158,12 +158,12 @@
       <div class="product-grid-3col" style="margin-top: 2.5rem;">
 
         <!-- Lookbook 1 -->
-        <article class="fashion-card">
+        <article class="fashion-card lookbook-card" data-lookbook-id="1">
           <div class="card-img-wrap" style="height: 380px;">
             <img src="assets/card_1.jpg" alt="Bộ Sưu Tập Winter Cashmere Tailored">
             <span class="card-tag">LOOKBOOK #01</span>
             <div class="card-quick-actions">
-              <a href="index.html#catalog" class="btn-add-cart" style="text-decoration: none;"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</a>
+              <button type="button" class="btn-explore-lookbook" data-lookbook-id="1"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</button>
             </div>
           </div>
           <div class="card-body">
@@ -176,12 +176,12 @@
         </article>
 
         <!-- Lookbook 2 -->
-        <article class="fashion-card">
+        <article class="fashion-card lookbook-card" data-lookbook-id="2">
           <div class="card-img-wrap" style="height: 380px;">
             <img src="assets/card_2.jpg" alt="Bộ Sưu Tập Auralia Silk Runway">
             <span class="card-tag">LOOKBOOK #02</span>
             <div class="card-quick-actions">
-              <a href="index.html#catalog" class="btn-add-cart" style="text-decoration: none;"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</a>
+              <button type="button" class="btn-explore-lookbook" data-lookbook-id="2"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</button>
             </div>
           </div>
           <div class="card-body">
@@ -194,12 +194,12 @@
         </article>
 
         <!-- Lookbook 3 -->
-        <article class="fashion-card">
+        <article class="fashion-card lookbook-card" data-lookbook-id="3">
           <div class="card-img-wrap" style="height: 380px;">
             <img src="assets/card_3.jpg" alt="Bộ Sưu Tập Minimalist Cashmere Sweaters">
             <span class="card-tag">LOOKBOOK #03</span>
             <div class="card-quick-actions">
-              <a href="index.html#catalog" class="btn-add-cart" style="text-decoration: none;"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</a>
+              <button type="button" class="btn-explore-lookbook" data-lookbook-id="3"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</button>
             </div>
           </div>
           <div class="card-body">
@@ -212,12 +212,12 @@
         </article>
 
         <!-- Lookbook 4 -->
-        <article class="fashion-card">
+        <article class="fashion-card lookbook-card" data-lookbook-id="4">
           <div class="card-img-wrap" style="height: 380px;">
             <img src="assets/card_4.jpg" alt="Bộ Sưu Tập Heritage Leather Handbags">
             <span class="card-tag">LOOKBOOK #04</span>
             <div class="card-quick-actions">
-              <a href="index.html#catalog" class="btn-add-cart" style="text-decoration: none;"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</a>
+              <button type="button" class="btn-explore-lookbook" data-lookbook-id="4"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</button>
             </div>
           </div>
           <div class="card-body">
@@ -230,12 +230,12 @@
         </article>
 
         <!-- Lookbook 5 -->
-        <article class="fashion-card">
+        <article class="fashion-card lookbook-card" data-lookbook-id="5">
           <div class="card-img-wrap" style="height: 380px;">
             <img src="assets/card_5.jpg" alt="Bộ Sưu Tập Power Suit Woman">
             <span class="card-tag">LOOKBOOK #05</span>
             <div class="card-quick-actions">
-              <a href="index.html#catalog" class="btn-add-cart" style="text-decoration: none;"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</a>
+              <button type="button" class="btn-explore-lookbook" data-lookbook-id="5"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</button>
             </div>
           </div>
           <div class="card-body">
@@ -248,12 +248,12 @@
         </article>
 
         <!-- Lookbook 6 -->
-        <article class="fashion-card">
+        <article class="fashion-card lookbook-card" data-lookbook-id="6">
           <div class="card-img-wrap" style="height: 380px;">
             <img src="assets/card_6.jpg" alt="Bộ Sưu Tập Midnight Navy Tailored">
             <span class="card-tag">LOOKBOOK #06</span>
             <div class="card-quick-actions">
-              <a href="index.html#catalog" class="btn-add-cart" style="text-decoration: none;"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</a>
+              <button type="button" class="btn-explore-lookbook" data-lookbook-id="6"><i class="fa-solid fa-eye"></i> Khám Phá Lookbook</button>
             </div>
           </div>
           <div class="card-body">
@@ -278,6 +278,83 @@
         <a href="contact.html" class="btn-primary-luxury">Đặt Lịch Hẹn VIP <i class="fa-solid fa-calendar-check"></i></a>
       </div>
     </section>
+
+    <!-- LOOKBOOK EDITORIAL SHOWCASE MODAL -->
+    <div id="lookbook-modal" class="modal-overlay lookbook-modal-overlay" aria-hidden="true">
+      <div class="modal-container lookbook-modal-container">
+        <button id="close-lookbook-modal" class="modal-close-btn" aria-label="Đóng Lookbook">&times;</button>
+        
+        <div class="lookbook-modal-body">
+          <!-- Cột Trái: Lookbook Gallery & Visuals -->
+          <div class="lookbook-modal-gallery">
+            <div class="lookbook-main-img-wrap">
+              <img id="lookbook-modal-img" src="assets/card_1.jpg" alt="Lookbook Editorial Showcase">
+              <span id="lookbook-modal-tag" class="card-tag">LOOKBOOK #01</span>
+            </div>
+            <div class="lookbook-modal-thumbs" id="lookbook-modal-thumbs">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Cột Phải: Editorial Concept, Craftsmanship & Styling Notes -->
+          <div class="lookbook-modal-info">
+            <div class="lookbook-header-section">
+              <span id="lookbook-modal-category" class="card-category">BỘ SƯU TẬP THU ĐÔNG</span>
+              <h2 id="lookbook-modal-title" class="lookbook-modal-title">Winter Cashmere Tailored 2026</h2>
+              <div class="lookbook-season-badge"><i class="fa-solid fa-sparkles"></i> Edition Haute Couture 2026</div>
+            </div>
+
+            <div class="lookbook-editorial-content">
+              <h4 class="lookbook-section-label"><i class="fa-solid fa-feather-pointed"></i> Cảm Hứng & Tuyên Ngôn Nghệ Thuật:</h4>
+              <p id="lookbook-modal-concept" class="lookbook-concept-text"></p>
+            </div>
+
+            <div class="lookbook-highlights-grid">
+              <div class="highlight-box">
+                <span class="hl-label"><i class="fa-solid fa-scissors"></i> Kỹ Thuật May Đo:</span>
+                <strong id="lookbook-modal-tailoring" class="hl-val"></strong>
+              </div>
+              <div class="highlight-box">
+                <span class="hl-label"><i class="fa-solid fa-certificate"></i> Chất Liệu Thượng Hạng:</span>
+                <strong id="lookbook-modal-fabric" class="hl-val"></strong>
+              </div>
+              <div class="highlight-box">
+                <span class="hl-label"><i class="fa-solid fa-palette"></i> Bảng Màu Chủ Đạo:</span>
+                <strong id="lookbook-modal-palette" class="hl-val"></strong>
+              </div>
+              <div class="highlight-box">
+                <span class="hl-label"><i class="fa-solid fa-location-dot"></i> Nguồn Cội Thiết Kế:</span>
+                <strong id="lookbook-modal-origin" class="hl-val"></strong>
+              </div>
+            </div>
+
+            <!-- Stylist Advice -->
+            <div class="lookbook-stylist-box">
+              <div class="stylist-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Gợi Ý Phối Đồ Từ Stylist AURALIÈ:</div>
+              <p id="lookbook-modal-stylist" class="stylist-desc"></p>
+            </div>
+
+            <!-- Lookbook Actions -->
+            <div class="lookbook-modal-actions">
+              <a id="lookbook-shop-collection-btn" href="index.html#catalog" class="btn-primary-luxury">
+                <i class="fa-solid fa-bag-shopping"></i> Mua Thiết Kế Thuộc BST Này
+              </a>
+              <a href="contact.html" class="btn-primary-luxury btn-vip-consult">
+                <i class="fa-solid fa-calendar-check"></i> Đặt Lịch VIP Lounge
+              </a>
+            </div>
+
+            <!-- Previous / Next Navigation -->
+            <div class="lookbook-nav-arrows">
+              <button id="lookbook-prev-btn" class="lookbook-arrow-btn" title="Lookbook Trước"><i class="fa-solid fa-arrow-left"></i> Lookbook Trước</button>
+              <span id="lookbook-counter-indicator" class="lookbook-counter-text">01 / 06</span>
+              <button id="lookbook-next-btn" class="lookbook-arrow-btn" title="Lookbook Tiếp Theo">Lookbook Tiếp Theo <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
 
   </main>
 
@@ -332,12 +409,30 @@
   </footer>
 
   <!-- MOBILE STICKY BOTTOM NAVIGATION -->
-  <nav class="m-bottom-nav">
-    <a href="index.html" class="m-nav-item"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
-    <a href="collections.html" class="m-nav-item active"><i class="fa-solid fa-layer-group"></i><span>Bộ sưu tập</span></a>
-    <a href="#" class="m-nav-item" id="bottom-search-trigger"><i class="fa-solid fa-magnifying-glass"></i><span>Tìm kiếm</span></a>
-    <a href="#" class="m-nav-item"><i class="fa-solid fa-bag-shopping"></i><span>Giỏ hàng</span></a>
-    <a href="contact.html" class="m-nav-item"><i class="fa-solid fa-envelope"></i><span>Liên hệ</span></a>
+  <nav class="m-bottom-nav" aria-label="Thanh điều hướng di động">
+    <a href="index.html" class="m-nav-item" data-tab="home">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-house"></i></div>
+      <span>Trang chủ</span>
+    </a>
+    <a href="index.html#catalog" class="m-nav-item" data-tab="catalog">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-shirt"></i></div>
+      <span>Sản phẩm</span>
+    </a>
+    <a href="collections.html" class="m-nav-item active" data-tab="collections">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-layer-group"></i></div>
+      <span>Bộ sưu tập</span>
+    </a>
+    <a href="cart.html" class="m-nav-item" data-tab="cart">
+      <div class="m-nav-icon-wrap">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count cart-count-badge">0</span>
+      </div>
+      <span>Giỏ hàng</span>
+    </a>
+    <a href="contact.html" class="m-nav-item" data-tab="contact">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
+      <span>Liên hệ</span>
+    </a>
   </nav>
 
   <script src="js/app.js"></script>

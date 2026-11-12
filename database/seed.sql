@@ -1,68 +1,177 @@
 -- ===================================================================
--- AURALIÈ Haute Couture - Seed Data (Dữ liệu mẫu đồ án)
+-- AURALIÈ Haute Couture - Full Seed Data (Dữ liệu mẫu 100% cho Đồ án)
+-- Tương thích PostgreSQL / MySQL / Supabase / Neon
 -- ===================================================================
 
--- 1. Thêm Roles
+-- 1. Thêm Roles (Phân quyền)
 INSERT INTO roles (id, role_name) VALUES 
 (1, 'ADMIN'),
 (2, 'CUSTOMER')
-ON CONFLICT DO NOTHING;
+ON CONFLICT (id) DO NOTHING;
 
--- 2. Thêm 5 Danh mục sản phẩm
+-- 2. Thêm Users (Quản trị viên & Khách hàng VIP thân thiết)
+INSERT INTO users (id, full_name, email, password_hash, phone, address, role_id, vip_tier, vip_points, total_spent) VALUES
+(1, 'Quản Trị Viên Executive', 'admin@auralie.fashion', '$2b$10$wB9L1yX50vHsqJ9lK8u2eO8XWp.vC7/U.BwQ58G78Z1jZg1cZk1kO', '0909000111', 'Atelier AURALIÈ, 15 Đồng Khởi, Q.1, TP.HCM', 1, 'PLATINUM VIP', 9999, 500000000.00),
+(2, 'Nguyễn Thanh Vân', 'thanhvan.nguyen@gmail.com', '$2b$10$wB9L1yX50vHsqJ9lK8u2eO8XWp.vC7/U.BwQ58G78Z1jZg1cZk1kO', '0908888999', 'Căn hộ 45.02, Tháp Landmark 81, Q.Bình Thạnh, TP.HCM', 2, 'PLATINUM VIP', 2450, 125000000.00),
+(3, 'Phạm Hoàng My', 'hoangmy.pham@hotmail.com', '$2b$10$wB9L1yX50vHsqJ9lK8u2eO8XWp.vC7/U.BwQ58G78Z1jZg1cZk1kO', '0912345678', 'Villa Golden River Aqua 1, Q.1, TP.HCM', 2, 'GOLD VIP', 1350, 68500000.00),
+(4, 'Trần Đình Trọng', 'trong.tran@outlook.com', '$2b$10$wB9L1yX50vHsqJ9lK8u2eO8XWp.vC7/U.BwQ58G78Z1jZg1cZk1kO', '0933112233', 'Khu Đô Thị Sala, TP.Thủ Đức, TP.HCM', 2, 'SILVER VIP', 450, 24000000.00),
+(5, 'Lê Bảo Long', 'long.le@gmail.com', '$2b$10$wB9L1yX50vHsqJ9lK8u2eO8XWp.vC7/U.BwQ58G78Z1jZg1cZk1kO', '0977665544', 'Khu Biệt Thự Thảo Điền, Q.2, TP.HCM', 2, 'SILVER VIP', 250, 12500000.00)
+ON CONFLICT (id) DO NOTHING;
+
+-- 3. Thêm 5 Danh mục sản phẩm thời trang xa xỉ
 INSERT INTO categories (id, name, slug, description) VALUES
-(1, 'Áo Vest & Blazer', 'vest-blazer', 'Bộ sưu tập áo vest và blazer tailored thiết kế thượng lưu Châu Âu'),
-(2, 'Váy & Đầm Dạ Hội', 'vay-dam', 'Đầm lụa cao cấp, đầm dạ hội sang trọng quyến rũ'),
-(3, 'Áo Khoác Thu Đông', 'ao-khoac', 'Áo khoác dạ măng-tô và len Cashmere Thu Đông'),
-(4, 'Túi Xách Da Cao Cấp', 'tui-xach', 'Túi xách da thuộc thủ công và ví da cao cấp'),
-(5, 'Giày & Phụ Kiện', 'giay-phu-kien', 'Giày boots, loafers da bò thật và phụ kiện mạ vàng')
-ON CONFLICT DO NOTHING;
+(1, 'Áo Vest & Blazer', 'vest-blazer', 'Bộ sưu tập áo vest và blazer tailored may đo chuẩn Châu Âu cho phong cách thượng lưu'),
+(2, 'Váy & Đầm Dạ Hội', 'vay-dam', 'Đầm lụa tơ tằm, đầm dạ hội sang trọng kiêu sa đính đá quý thủ công'),
+(3, 'Áo Khoác Thu Đông', 'ao-khoac', 'Áo khoác dạ măng-tô, áo choàng len Cashmere ấm áp và đẳng cấp'),
+(4, 'Túi Xách Da Cao Cấp', 'tui-xach', 'Túi xách da bò thuộc Ý, da đà điểu và ví cầm tay khâu tay tinh xảo'),
+(5, 'Giày & Phụ Kiện', 'giay-phu-kien', 'Boots da bò, Loafers da bê cao cấp và phụ kiện trang sức mạ vàng 18K')
+ON CONFLICT (id) DO NOTHING;
 
--- 3. Thêm 20 Sản phẩm cho 5 Danh mục (mỗi danh mục 4 sản phẩm)
-INSERT INTO products (id, name, slug, description, base_price, category_id) VALUES
--- Áo Vest & Blazer
-(1, 'Double-Breasted Tailored Suit', 'double-breasted-tailored-suit', 'Áo Vest may đo độc bản từ len Cashmere nhập khẩu Ý. Thiết kế Double-Breasted mang đến diện mạo quyền lực.', 12500000.00, 1),
-(2, 'Black Blazer & High Boots Set', 'black-blazer-high-boots-set', 'Bộ Blazer đen huyền bí phối cùng boots cổ cao hiện đại. Điểm nhấn chiết eo thon gọn.', 16800000.00, 1),
-(3, 'Royal Cashmere Velvet Tuxedo', 'royal-cashmere-velvet-tuxedo', 'Tuxedo nhung cao cấp phối ve áo lụa bóng. Dành riêng cho các buổi dạ tiệc Black Tie.', 19500000.00, 1),
-(4, 'Italian Wool Tailored Blazer', 'italian-wool-tailored-blazer', 'Blazer may thủ công từ len cừu Ý cao cấp. Phom dáng công sở thượng lưu.', 14800000.00, 1),
+-- 4. Thêm 20 Sản phẩm đặc trưng (4 sản phẩm mỗi danh mục)
+INSERT INTO products (id, name, slug, description, base_price, category_id, tag) VALUES
+-- Danh mục 1: Áo Vest & Blazer
+(1, 'Double-Breasted Tailored Suit', 'double-breasted-tailored-suit', 'Áo Vest may đo độc bản từ len Cashmere nhập khẩu Ý. Thiết kế Double-Breasted mang đến diện mạo quyền lực chuẩn phom Châu Âu.', 12500000.00, 1, 'NEW ARRIVAL'),
+(2, 'Black Blazer & High Boots Set', 'black-blazer-high-boots-set', 'Bộ Blazer đen huyền bí phối cùng boots cổ cao hiện đại. Điểm nhấn chiết eo thon gọn và đường cắt may thủ công tinh xảo.', 16800000.00, 1, 'BESTSELLER'),
+(3, 'Royal Cashmere Velvet Tuxedo', 'royal-cashmere-velvet-tuxedo', 'Tuxedo nhung cao cấp phối ve áo lụa satin bóng. Trang phục hoàn hảo cho các đêm dạ tiệc Black Tie quý phái.', 19500000.00, 1, 'EXCLUSIVE'),
+(4, 'Italian Wool Tailored Blazer', 'italian-wool-tailored-blazer', 'Blazer may thủ công từ len cừu Ý cao cấp. Phom dáng quyền lực dành riêng cho quý cô công sở thượng lưu.', 14800000.00, 1, 'NEW ARRIVAL'),
 
--- Váy & Đầm Dạ Hội
-(5, 'Minimalist Silk Trench Dress', 'minimalist-silk-trench-dress', 'Đầm dạ hội phong cách Trench Dress may từ lụa tơ tằm nguyên chất.', 18900000.00, 2),
-(6, 'Auralia Emerald Velvet Gown', 'auralia-emerald-velvet-gown', 'Đầm dạ hội chất liệu nhung đỏ tuyền quyến rũ. Cổ xẻ sâu đính đá Swarovsky.', 21500000.00, 2),
-(7, 'Midnight Satin Evening Gown', 'midnight-satin-evening-gown', 'Đầm satin xanh đêm dạ tiệc Haute Couture. Thiết kế tà váy dài lộng lẫy.', 25000000.00, 2),
-(8, 'Chiffon Silk Cocktail Dress', 'chiffon-silk-cocktail-dress', 'Đầm cocktail lụa Chiffon xếp ly mềm mại cho các buổi tiệc gala.', 15500000.00, 2),
+-- Danh mục 2: Váy & Đầm Dạ Hội
+(5, 'Minimalist Silk Trench Dress', 'minimalist-silk-trench-dress', 'Đầm dạ hội phong cách Trench Dress may từ lụa tơ tằm nguyên chất với gam màu thanh lịch tôn vinh thần thái kiêu sa.', 18900000.00, 2, 'BESTSELLER'),
+(6, 'Auralia Emerald Velvet Gown', 'auralia-emerald-velvet-gown', 'Đầm dạ hội chất liệu nhung đỏ tuyền quyến rũ. Đường xẻ tà quyến rũ đính kết đá Swarovsky thủ công lấp lánh.', 21500000.00, 2, 'LIMITED'),
+(7, 'Midnight Satin Evening Gown', 'midnight-satin-evening-gown', 'Đầm satin xanh đêm dạ tiệc Haute Couture với thiết kế tà váy dài lộng lẫy và chi tiết hở lưng thanh thoát.', 25000000.00, 2, 'EXCLUSIVE'),
+(8, 'Chiffon Silk Cocktail Dress', 'chiffon-silk-cocktail-dress', 'Đầm cocktail lụa Chiffon dập ly mềm mại, uyển chuyển theo từng bước chân trong các buổi tiệc gala nhẹ nhàng.', 15500000.00, 2, 'NEW ARRIVAL'),
 
--- Áo Khoác Thu Đông
-(9, 'Oversized Cashmere Wool Sweater', 'oversized-cashmere-wool-sweater', 'Áo len dáng rộng dệt từ 100% sợi Cashmere nguyên chất siêu nhẹ.', 8200000.00, 3),
-(10, 'Midnight Navy Tailored Jacket', 'midnight-navy-tailored-jacket', 'Áo khoác dạ ngắn tông màu Navy chìm chống nhăn và giữ ấm tuyệt đối.', 14200000.00, 3),
-(11, 'Alpine Cashmere Trench Coat', 'alpine-cashmere-trench-coat', 'Áo khoác dạ Măng-tô dáng dài Thượng Hải đai da bò thật.', 22800000.00, 3),
-(12, 'Double-Faced Wool Long Coat', 'double-faced-wool-long-coat', 'Áo khoác dạ hai mặt thủ công mang vẻ đẹp vĩnh cửu Thu Đông.', 17900000.00, 3),
+-- Danh mục 3: Áo Khoác Thu Đông
+(9, 'Oversized Cashmere Wool Sweater', 'oversized-cashmere-wool-sweater', 'Áo len dáng rộng dệt từ 100% sợi Cashmere nguyên chất siêu nhẹ, giữ ấm vượt trội trong mùa đông lạnh giá.', 8200000.00, 3, 'NEW ARRIVAL'),
+(10, 'Midnight Navy Tailored Jacket', 'midnight-navy-tailored-jacket', 'Áo khoác dạ ngắn tông màu Navy hoàng gia chống nhăn và chống gió tuyệt đối cho các chuyến công du quốc tế.', 14200000.00, 3, 'BESTSELLER'),
+(11, 'Alpine Cashmere Trench Coat', 'alpine-cashmere-trench-coat', 'Áo khoác dạ Măng-tô dáng dài hai hàng khuy kinh điển, đai thắt eo da bò thuộc tôn trọn vóc dáng thanh thoát.', 22800000.00, 3, 'LIMITED'),
+(12, 'Double-Faced Wool Long Coat', 'double-faced-wool-long-coat', 'Áo khoác dạ hai mặt khâu tay không đường may lộ, tôn vinh kỹ thuật thủ công bậc thầy của thợ may Châu Âu.', 17900000.00, 3, 'EXCLUSIVE'),
 
--- Túi Xách Da Cao Cấp
-(13, 'Heritage Tan Leather Handbag', 'heritage-tan-leather-handbag', 'Túi xách da thuộc thủ công màu nâu di sản. Khóa mạ vàng 18K khâu tay tiêu chuẩn Ý.', 24000000.00, 4),
-(14, 'Monogram Ostrich Leather Tote', 'monogram-ostrich-leather-tote', 'Túi Tote da đà điểu tự nhiên khắc họa tiết Monogram độc quyền.', 32500000.00, 4),
-(15, 'Auralia Mini Flap Crossbody Bag', 'auralia-mini-flap-crossbody-bag', 'Túi đeo chéo nắp gập cỡ nhỏ nhỏ gọn sang trọng dây xích mạ vàng.', 18500000.00, 4),
-(16, 'Crocodile Embossed Clutch', 'crocodile-embossed-clutch', 'Ví cầm tay Clutch da cá sấu cao cấp dự tiệc phom vuông vắn cứng cáp.', 21000000.00, 4),
+-- Danh mục 4: Túi Xách Da Cao Cấp
+(13, 'Heritage Tan Leather Handbag', 'heritage-tan-leather-handbag', 'Túi xách da thuộc thảo mộc màu nâu di sản. Khóa xoay kim loại mạ vàng 18K khâu tay chỉ sáp tiêu chuẩn Atelier Ý.', 24000000.00, 4, 'BESTSELLER'),
+(14, 'Monogram Ostrich Leather Tote', 'monogram-ostrich-leather-tote', 'Túi Tote da đà điểu tự nhiên khắc họa tiết Monogram độc quyền, ngăn chứa rộng rãi bọc da nhung êm ái.', 32500000.00, 4, 'LIMITED'),
+(15, 'Auralia Mini Flap Crossbody Bag', 'auralia-mini-flap-crossbody-bag', 'Túi đeo chéo nắp gập cỡ nhỏ thanh lịch với dây đeo kim loại phối da mềm, lý tưởng cho dạ tiệc nhẹ nhàng.', 18500000.00, 4, 'NEW ARRIVAL'),
+(16, 'Crocodile Embossed Clutch', 'crocodile-embossed-clutch', 'Ví cầm tay Clutch dập vân cá sấu bóng bẩy, phom dáng cứng cáp giữ trọn phong thái quyền lực trên thảm đỏ.', 21000000.00, 4, 'EXCLUSIVE'),
 
--- Giày & Phụ Kiện
-(17, 'Royale Gold Buckle Boots', 'royale-gold-buckle-boots', 'Boots da bò thật khóa mạ vàng 18K đế cao su chống trượt.', 15800000.00, 5),
-(18, 'Handcrafted Calfskin Loafers', 'handcrafted-calfskin-loafers', 'Giày Loafer da bê may thủ công màu đen bóng thanh lịch.', 11200000.00, 5),
-(19, '18K Gold Plated Silk Scarf Ring', '18k-gold-plated-silk-scarf-ring', 'Nhẫn cài khăn lụa mạ vàng 18K đính đá quý tinh tế.', 5500000.00, 5),
-(20, 'Classic Leather Stiletto Heels', 'classic-leather-stiletto-heels', 'Giày cao gót 9cm da thuộc bóng kiêu kỳ phom dáng ôm chân chuẩn xác.', 13500000.00, 5)
-ON CONFLICT DO NOTHING;
+-- Danh mục 5: Giày & Phụ Kiện
+(17, 'Royale Gold Buckle Boots', 'royale-gold-buckle-boots', 'Boots da bò cao cổ mũi nhọn kiêu hãnh với điểm nhấn khóa kim loại mạ vàng 18K và đế cao su chống trượt.', 15800000.00, 5, 'BESTSELLER'),
+(18, 'Handcrafted Calfskin Loafers', 'handcrafted-calfskin-loafers', 'Giày Loafer may thủ công từ da bê nguyên tấm màu đen bóng, cấu trúc đế may Goodyear Welted bền bỉ vĩnh cửu.', 11200000.00, 5, 'NEW ARRIVAL'),
+(19, '18K Gold Plated Silk Scarf Ring', '18k-gold-plated-silk-scarf-ring', 'Nhẫn cài khăn lụa mạ vàng 18K đính đá quý tinh tế, món phụ kiện hoàn hảo nâng tầm trang phục dạ hội.', 5500000.00, 5, 'EXCLUSIVE'),
+(20, 'Classic Leather Stiletto Heels', 'classic-leather-stiletto-heels', 'Giày cao gót 9cm da thuộc bóng kiêu kỳ, thiết kế đế giày đỏ tạo điểm nhấn quyến rũ trong từng bước sải.', 13500000.00, 5, 'BESTSELLER')
+ON CONFLICT (id) DO NOTHING;
 
--- 4. Thêm Biến thể sản phẩm (Variants)
-INSERT INTO product_variants (product_id, size, color, stock_quantity, variant_price, sku) VALUES
-(1, 'S', 'Beige', 5, 12500000.00, 'AK-CASH-S-BE'),
-(1, 'M', 'Beige', 8, 12500000.00, 'AK-CASH-M-BE'),
-(1, 'L', 'Black', 3, 12500000.00, 'AK-CASH-L-BK'),
-(5, 'S', 'Silk White', 4, 18900000.00, 'VD-SILK-S-WH'),
-(13, 'F', 'Heritage Tan', 6, 24000000.00, 'TX-TAN-F-HN')
-ON CONFLICT DO NOTHING;
+-- 5. Thêm Biến thể sản phẩm (Size, Color, Tồn kho, SKU)
+INSERT INTO product_variants (id, product_id, size, color, stock_quantity, variant_price, sku) VALUES
+(1, 1, 'S', 'Đen Tuyền (Jet Black)', 8, 12500000.00, 'AUR-SUIT-S-BK'),
+(2, 1, 'M', 'Đen Tuyền (Jet Black)', 15, 12500000.00, 'AUR-SUIT-M-BK'),
+(3, 1, 'L', 'Đen Tuyền (Jet Black)', 10, 12500000.00, 'AUR-SUIT-L-BK'),
+(4, 1, 'M', 'Vàng Hoàng Gia (Royal Gold)', 6, 12500000.00, 'AUR-SUIT-M-GD'),
+(5, 5, 'S', 'Trắng Lụa (Silk White)', 6, 18900000.00, 'AUR-DRESS-S-WH'),
+(6, 5, 'M', 'Trắng Lụa (Silk White)', 8, 18900000.00, 'AUR-DRESS-M-WH'),
+(7, 5, 'L', 'Đỏ Ruby (Ruby Red)', 5, 18900000.00, 'AUR-DRESS-L-RD'),
+(8, 11, 'M', 'Nâu Lạc Đà (Camel)', 7, 22800000.00, 'AUR-COAT-M-CM'),
+(9, 13, 'FreeSize', 'Nâu Di Sản (Heritage Tan)', 12, 24000000.00, 'AUR-BAG-FS-TN'),
+(10, 13, 'FreeSize', 'Đen Tuyền (Jet Black)', 8, 24000000.00, 'AUR-BAG-FS-BK'),
+(11, 17, '37', 'Đen Tuyền (Jet Black)', 6, 15800000.00, 'AUR-BOOTS-37-BK'),
+(12, 17, '38', 'Đen Tuyền (Jet Black)', 9, 15800000.00, 'AUR-BOOTS-38-BK'),
+(13, 17, '39', 'Đen Tuyền (Jet Black)', 5, 15800000.00, 'AUR-BOOTS-39-BK')
+ON CONFLICT (id) DO NOTHING;
 
--- 5. Thêm Đánh giá mẫu (Product Reviews Seed)
-INSERT INTO product_reviews (product_id, user_name, user_email, rating, comment, variant_info, is_verified_buyer) VALUES
-(1, 'Nguyễn Thành Trung', 'trung.nguyen@gmail.com', 5, 'Áo vest may phom rất chuẩn, mặc lên đứng dáng và cực kỳ tôn vai. Vải len Cashmere mềm mịn, mặc thoáng mát.', 'Màu: Đen Tuyền | Kích cỡ: M', TRUE),
-(1, 'Lê Phương Anh', 'phuonganh.le@yahoo.com', 5, 'Mua làm quà tặng sinh nhật cho sếp. Sếp rất khen chất liệu và đường kim mũi chỉ tỉ mỉ.', 'Màu: Đen Tuyền | Kích cỡ: S', TRUE),
-(5, 'Phạm Hoàng My', 'hoangmy.pham@hotmail.com', 5, 'Đầm lụa sang trọng, xẻ tà quyến rũ thích hợp đi dạ tiệc thượng lưu.', 'Màu: Đỏ Ruby | Kích cỡ: S', TRUE);
+-- 6. Thêm Hình Ảnh Sản Phẩm (Product Images Gallery)
+INSERT INTO product_images (id, product_id, image_url, is_thumbnail) VALUES
+(1, 1, 'assets/card_1.jpg', TRUE),
+(2, 2, 'assets/card_5.jpg', TRUE),
+(3, 3, 'assets/card_1.jpg', TRUE),
+(4, 5, 'assets/card_2.jpg', TRUE),
+(5, 9, 'assets/card_3.jpg', TRUE),
+(6, 10, 'assets/card_6.jpg', TRUE),
+(7, 13, 'assets/card_4.jpg', TRUE),
+(8, 17, 'assets/card_5.jpg', TRUE)
+ON CONFLICT (id) DO NOTHING;
 
+-- 7. Thêm Đơn Hàng Mẫu (Orders từ Admin Dashboard & Khách VIP)
+INSERT INTO orders (id, user_id, order_code, total_amount, discount_amount, shipping_fee, shipping_address, phone_number, payment_method, payment_status, tracking_code, status, created_at) VALUES
+(1, 2, 'AUR-2026-992', 18900000.00, 3000000.00, 0, 'Căn hộ 45.02, Tháp Landmark 81, Q.Bình Thạnh, TP.HCM', '0908888999', 'VNPAY_QR', 'PAID', 'GHN-VN-99210088', 'SHIPPED', CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(2, 3, 'AUR-2026-781', 18900000.00, 0, 0, 'Villa Golden River Aqua 1, Q.1, TP.HCM', '0912345678', 'VISA', 'PAID', 'VNPOST-77123991', 'COMPLETED', CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(3, 4, 'AUR-2026-554', 25000000.00, 1000000.00, 0, 'Khu Đô Thị Sala, TP.Thủ Đức, TP.HCM', '0933112233', 'VISA', 'PAID', 'GHN-VN-55409122', 'PROCESSING', CURRENT_TIMESTAMP - INTERVAL '1 days'),
+(4, 5, 'AUR-2026-102', 12500000.00, 0, 0, 'Khu Biệt Thự Thảo Điền, Q.2, TP.HCM', '0977665544', 'COD', 'UNPAID', 'GHN-VN-10287411', 'PENDING', CURRENT_TIMESTAMP)
+ON CONFLICT (id) DO NOTHING;
 
+-- 8. Thêm Chi Tiết Đơn Hàng (Order Items)
+INSERT INTO order_items (id, order_id, variant_id, quantity, price) VALUES
+(1, 1, 5, 1, 18900000.00), -- Minimalist Silk Trench Dress
+(2, 2, 8, 1, 18900000.00), -- Alpine Cashmere Trench Coat
+(3, 3, 9, 1, 24000000.00), -- Heritage Tan Leather Handbag
+(4, 4, 2, 1, 12500000.00)  -- Double-Breasted Tailored Suit
+ON CONFLICT (id) DO NOTHING;
+
+-- 9. Thêm Mã Giảm Giá VIP (Coupons & Vouchers)
+INSERT INTO coupons (id, code, discount_type, discount_value, min_order_amount, max_discount_amount, usage_limit, used_count, expiry_date, is_active) VALUES
+(1, 'AURALIE2026', 'PERCENT', 20, 10000000.00, 3000000.00, 100, 14, CURRENT_TIMESTAMP + INTERVAL '180 days', TRUE),
+(2, 'WELCOME10', 'PERCENT', 10, 0, 1000000.00, 500, 48, CURRENT_TIMESTAMP + INTERVAL '90 days', TRUE),
+(3, 'FREESHIPLUX', 'FIXED', 100000.00, 5000000.00, 100000.00, 200, 29, CURRENT_TIMESTAMP + INTERVAL '365 days', TRUE),
+(4, 'VIPPLATINUM', 'PERCENT', 25, 15000000.00, 5000000.00, 50, 8, CURRENT_TIMESTAMP + INTERVAL '365 days', TRUE)
+ON CONFLICT (id) DO NOTHING;
+
+-- 10. Thêm Đánh Giá Khách Hàng (Product Reviews kèm Admin Reply)
+INSERT INTO product_reviews (id, product_id, user_name, user_email, rating, comment, variant_info, image_url, admin_reply, is_verified_buyer, created_at) VALUES
+(1, 1, 'Nguyễn Thành Trung', 'trung.nguyen@gmail.com', 5, 'Áo vest may phom rất chuẩn, mặc lên đứng dáng và cực kỳ tôn vai. Vải len Cashmere mềm mịn, mặc thoáng mát không lo bị nóng. Đóng gói chỉn chu có móc treo da xa xỉ.', 'Màu: Đen Tuyền | Kích cỡ: M', 'assets/card_1.jpg', 'AURALIÈ chân thành cảm ơn anh Trung đã tin chọn dòng sản phẩm may đo thủ công. Chúc anh luôn phong độ và thành công!', TRUE, CURRENT_TIMESTAMP - INTERVAL '12 days'),
+(2, 1, 'Lê Phương Anh', 'phuonganh.le@yahoo.com', 5, 'Mua làm quà tặng sinh nhật cho sếp. Sếp rất khen chất liệu và đường kim mũi chỉ tỉ mỉ. Nhân viên CSKH AURALIÈ gọi điện tư vấn size cực kỳ am hiểu thời trang.', 'Màu: Đen Tuyền | Kích cỡ: S', NULL, 'AURALIÈ rất vinh hạnh được đồng hành cùng chị Phương Anh trong món quà đặc biệt này!', TRUE, CURRENT_TIMESTAMP - INTERVAL '8 days'),
+(3, 5, 'Phạm Hoàng My', 'hoangmy.pham@hotmail.com', 5, 'Đầm lụa sang trọng, xẻ tà quyến rũ thích hợp đi dạ tiệc thượng lưu. Chất lụa tơ tằm mềm mại như làn mây, mặc rất êm da.', 'Màu: Trắng Lụa | Kích cỡ: S', 'assets/card_2.jpg', NULL, TRUE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(4, 13, 'Trần Đình Trọng', 'trong.tran@outlook.com', 5, 'Túi da thuộc thủ công màu nâu rất sang trọng, khóa kim loại mạ vàng bóng bẩy không một tì vết.', 'Màu: Nâu Di Sản | Kích cỡ: FreeSize', 'assets/card_4.jpg', 'Cảm ơn anh Trọng đã dành lời khen ngợi cho tay nghề chế tác từ các nghệ nhân Atelier Ý của AURALIÈ!', TRUE, CURRENT_TIMESTAMP - INTERVAL '3 days'),
+(5, 17, 'Nguyễn Thanh Vân', 'thanhvan.nguyen@gmail.com', 5, 'Boots da bò phom ôm chân vừa vặn, bước đi rất êm và tôn dáng. Khóa vàng 18K tạo điểm nhấn kiêu sa tuyệt đỉnh.', 'Màu: Đen Tuyền | Kích cỡ: 38', 'assets/card_5.jpg', 'Cảm ơn hội viên Platinum Nguyễn Thanh Vân luôn đồng hành cùng AURALIÈ!', TRUE, CURRENT_TIMESTAMP - INTERVAL '1 days')
+ON CONFLICT (id) DO NOTHING;
+
+-- 11. Thêm Danh Sách Yêu Thích (Wishlists)
+INSERT INTO wishlists (id, user_id, product_id, created_at) VALUES
+(1, 2, 1, CURRENT_TIMESTAMP),
+(2, 2, 5, CURRENT_TIMESTAMP),
+(3, 3, 13, CURRENT_TIMESTAMP),
+(4, 3, 17, CURRENT_TIMESTAMP)
+ON CONFLICT (id) DO NOTHING;
+
+-- 12. Thêm Toàn Bộ 6 Bài Viết Tạp Chí AURALIÈ Gazette (Blogs từ blog.html)
+INSERT INTO blogs (id, title, slug, category, summary, content, cover_image, author_name) VALUES
+(1, 'AURALIÈ Autumn Runway 2026: Tuyên Ngôn Khái Niệm "Power Dressing" Hiện Đại', 'auralie-autumn-runway-2026-power-dressing', 'XU HƯỚNG', 'Bộ sưu tập Thu Đông 2026 đánh dấu sự lên ngôi của phom dáng cắt may kiến trúc Double-Breasted kết hợp lụa tơ tằm Mulberry thượng hạng.', 'Nội dung chi tiết bài viết phân tích tầm nhìn đằng sau những nếp gấp kiêu hãnh của giám đốc sáng tạo Elena Vũ...', 'assets/card_1.jpg', 'Elena Vũ (Giám Đốc Sáng Tạo)'),
+(2, 'Hành Trình Dệt Nên Tấm Lụa Mulberry 100% Bảo Vật AURALIÈ', 'hanh-trinh-det-lua-mulberry-100', 'NGHỆ THUẬT CẮT MAY', 'Khám phá xưởng dệt thủ công lâu đời tại Ý, nơi mỗi sợi tơ tằm đều được tuyển chọn nghiêm ngặt qua 12 công đoạn tỉ mỉ.', 'Tại xưởng may Atelier AURALIÈ, mỗi tấm lụa tơ tằm nguyên bản được dệt theo mật độ sợi vàng để đạt được độ bóng mịn và rủ tự nhiên vĩnh cửu...', 'assets/card_2.jpg', 'Nghệ Nhân Dệt Lụa Atelier Ý'),
+(3, '5 Quy Tắc Vàng Giữ Đầm Lụa Haute Couture Luôn Như Mới', '5-quy-tac-vang-cham-soc-dam-lua', 'BÍ QUYẾT PHONG CÁCH', 'Hướng dẫn giặt khô chuyên sâu, phương pháp bảo quản trong tủ gỗ tuyết tùng và cách là hơi nước chuẩn couture.', 'Để giữ cho đầm lụa luôn giữ được phom dáng và sắc thái kiêu sa, quý khách cần tuân thủ việc giặt khô chuyên dụng và tránh tiếp xúc trực tiếp ánh nắng gay gắt...', 'assets/card_3.jpg', 'Chuyên Gia Phục Chế Y Phục AURALIÈ'),
+(4, 'Nghệ Thuật Chọn Phụ Kiện Kim Loại Mạ Vàng Nâng Tầm Suit Công Sở', 'nghe-thuat-chon-phu-kien-ma-vang', 'XU HƯỚNG', 'Điểm xuyết nút gài khăn lụa mạ vàng 18K để tạo điểm nhấn vừa thanh lịch vừa khẳng định gu thẩm mỹ tinh tế của nữ lãnh đạo.', 'Phụ kiện kim loại mạ vàng 18K không đơn thuần là trang sức, mà là điểm cân bằng hoàn mỹ cho những bộ âu phục mang sắc thái trầm mặc...', 'assets/card_4.jpg', 'Stylist Cao Cấp AURALIÈ'),
+(5, 'Khám Phá Lounge May Đo Riêng Cho Thành Viên Platinum & Diamond', 'lounge-may-do-rieng-platinum-diamond', 'ĐẶC QUYỀN VIP', 'Không gian riêng tư sang trọng với sự hỗ trợ từ Stylist cá nhân và rượu Champagne Moët & Chandon thượng hạng.', 'Đặc quyền trải nghiệm không gian đo may độc bản tại tầng 45 Landmark 81 dành riêng cho hội viên VIP đẳng cấp nhất...', 'assets/card_5.jpg', 'Giám Đốc Dịch Vụ Khách Hàng VIP'),
+(6, 'Bảng Màu Quiet Luxury: Sự Kết Hợp Giữa Tone Cream, Camel & Gold', 'bang-mau-quiet-luxury-cream-camel-gold', 'BÍ QUYẾT PHONG CÁCH', 'Cách lựa chọn sắc độ trang phục phù hợp với tông da Châu Á để toát lên khí chất quý phái không phô trương.', 'Phong cách Quiet Luxury năm 2026 khẳng định sự tối thượng của những gam màu trung tính sang trọng được dệt nên từ sợi tự nhiên nguyên chất...', 'assets/card_1.jpg', 'Nhà Thiết Kế Chính AURALIÈ')
+ON CONFLICT (id) DO NOTHING;
+
+-- 13. Thêm Phiên Chat AI Stylist (AI Chat Sessions)
+INSERT INTO ai_chat_sessions (id, session_code, user_id, channel, status) VALUES
+(1, 'SESS-AI-20261020-001', 2, 'WEB_WIDGET', 'ACTIVE')
+ON CONFLICT (id) DO NOTHING;
+
+-- 14. Thêm Tin Nhắn Trợ Lý AI Stylist (AI Chat Messages)
+INSERT INTO ai_chat_messages (id, session_id, sender_type, message_text, attachment_type, intent_detected) VALUES
+(1, 1, 'USER', 'Tư vấn giúp mình mẫu đầm đi dự dạ tiệc tối sang trọng với?', 'NONE', 'RECOMMEND_OUTFIT'),
+(2, 1, 'AI_BOT', 'Chào chị Vân! Đối với dạ tiệc sang trọng, em gợi ý mẫu Minimalist Silk Trench Dress phối cùng túi xách Heritage Tan Leather Handbag.', 'NONE', 'RECOMMEND_OUTFIT')
+ON CONFLICT (id) DO NOTHING;
+
+-- 15. Thêm Vector AI Phân Tích Hình Ảnh (AI Computer Vision Embedding)
+INSERT INTO ai_image_embeddings (id, product_id, image_url, feature_vector_json, detected_category, confidence_score) VALUES
+(1, 1, 'assets/card_1.jpg', '[0.125, 0.942, 0.881, 0.003, 0.514, 0.778, 0.334, 0.651]', 'Áo Vest Double-Breasted Tailored', 98.60),
+(2, 13, 'assets/card_4.jpg', '[0.884, 0.112, 0.449, 0.912, 0.051, 0.228, 0.814, 0.199]', 'Túi Xách Da Thuộc Heritage Tan', 99.10)
+ON CONFLICT (id) DO NOTHING;
+
+-- 16. Thêm Giỏ Hàng Bỏ Quên Cần Tiếp Thị Lại (Abandoned Carts Recovery)
+INSERT INTO abandoned_carts (id, user_id, user_email, cart_data_json, coupon_code_offered, status) VALUES
+(1, 2, 'thanhvan.nguyen@gmail.com', '[{"id": 13, "name": "Heritage Tan Leather Handbag", "price": 24000000, "qty": 1}]', 'AURALIE2026', 'NOTIFIED')
+ON CONFLICT (id) DO NOTHING;
+
+-- 17. Thêm Lô Hàng Nhập Kho Hàng Loạt (Inventory Batch Imports từ admin.html)
+INSERT INTO inventory_imports (id, batch_code, supplier_name, total_quantity, total_cost, imported_by, notes) VALUES
+(1, 'IMP-BATCH-2026-001', 'Nhà Cung Cấp Milano Leather S.p.A (Ý)', 50, 450000000.00, 'Admin Executive', 'Nhập lô hàng len Cashmere và da thuộc thủ công BST Thu Đông 2026'),
+(2, 'IMP-BATCH-2026-002', 'Atelier Da Thuộc Florence (Ý)', 100, 680000000.00, 'Admin Executive', 'Nhập da bê thuộc Nappa hảo hạng khâu túi xách và giày boots'),
+(3, 'IMP-BATCH-2026-003', 'Xưởng Lụa Tơ Tằm Bảo Lộc (Việt Nam)', 200, 320000000.00, 'Admin Executive', 'Lụa tơ tằm Mulberry 100% nguyên bản dệt đầm dạ hội')
+ON CONFLICT (id) DO NOTHING;
+
+-- 18. Thêm Lịch Sử Giao Dịch Thanh Toán (Payment Transactions - VNPAY, VISA, COD)
+INSERT INTO payment_transactions (id, transaction_code, order_id, payment_method, amount, gateway_response_code, status) VALUES
+(1, 'VNPAY-TRANS-99882211', 1, 'VNPAY_QR', 18900000.00, '00', 'SUCCESS'),
+(2, 'VISA-TRANS-77112233', 2, 'VISA', 18900000.00, '00', 'SUCCESS'),
+(3, 'VISA-TRANS-55449911', 3, 'VISA', 25000000.00, '00', 'SUCCESS')
+ON CONFLICT (id) DO NOTHING;

@@ -1,0 +1,352 @@
+[
+  {
+    "id": "MIG-01",
+    "name": "Kiểm tra tồn tại 4 cột snapshot trong order_items",
+    "input": "sys.columns WHERE object_id = OBJECT_ID(order_items)",
+    "expected": "4 cột (product_name, sku, size, color)",
+    "actual": "4 cột: color, product_name, size, sku",
+    "status": "PASS",
+    "evidence": [
+      {
+        "name": "color"
+      },
+      {
+        "name": "product_name"
+      },
+      {
+        "name": "size"
+      },
+      {
+        "name": "sku"
+      }
+    ]
+  },
+  {
+    "id": "MIG-02",
+    "name": "Đơn hàng mới lưu đầy đủ Snapshot sản phẩm vào order_items",
+    "input": "orderId: 95",
+    "expected": "product_name, sku, size, color khác NULL",
+    "actual": "product_name: \"Royale Gold Buckle Boots\", sku: \"AUR-BOOTS-38-BK\", size: \"38\", color: \"Đen Tuyền (Jet Black)\"",
+    "status": "PASS",
+    "evidence": {
+      "id": 56,
+      "order_id": 95,
+      "variant_id": 13,
+      "product_name": "Royale Gold Buckle Boots",
+      "sku": "AUR-BOOTS-38-BK",
+      "size": "38",
+      "color": "Đen Tuyền (Jet Black)",
+      "price": 15800000,
+      "quantity": 1
+    }
+  },
+  {
+    "id": "MIG-03",
+    "name": "API getOrderDetails trả về dữ liệu snapshot đầy đủ",
+    "input": "getOrderDetails(95)",
+    "expected": "items có productName, size, color, sku",
+    "actual": "items[0].productName: \"Royale Gold Buckle Boots\", sku: \"AUR-BOOTS-38-BK\"",
+    "status": "PASS",
+    "evidence": {
+      "id": 56,
+      "variantId": 13,
+      "productName": "Royale Gold Buckle Boots",
+      "size": "38",
+      "color": "Đen Tuyền (Jet Black)",
+      "sku": "AUR-BOOTS-38-BK",
+      "quantity": 1,
+      "price": 15800000,
+      "subtotal": 15800000
+    }
+  },
+  {
+    "id": "SEPAY-01",
+    "name": "Xác thực Webhook với API Key hợp lệ",
+    "input": "Authorization: Apikey sepay_ap...",
+    "expected": "success: true, payment_status: PAID, order_status: CONFIRMED",
+    "actual": "success: true, newStatus: CONFIRMED",
+    "status": "PASS",
+    "evidence": {
+      "success": true,
+      "orderCode": "AUR-20261105-E4P6DN",
+      "paymentStatus": "PAID",
+      "orderStatus": "CONFIRMED",
+      "paymentDetail": {
+        "type": "EXACT",
+        "totalPaid": 15800000,
+        "orderTotal": 15800000
+      },
+      "message": "Đơn hàng AUR-20261105-E4P6DN đã thanh toán thành công qua SePay (Đủ tiền)!"
+    }
+  },
+  {
+    "id": "SEPAY-02",
+    "name": "Chặn Webhook với API Key sai",
+    "input": "Authorization: Apikey WRONG_KEY_ABCXYZ",
+    "expected": "HTTP 401 Unauthorized",
+    "actual": "statusCode: 401, msg: \"Unauthorized SePay Webhook: API Key không hợp lệ hoặc bị thiếu.\"",
+    "status": "PASS",
+    "evidence": "Unauthorized SePay Webhook: API Key không hợp lệ hoặc bị thiếu."
+  },
+  {
+    "id": "SEPAY-03",
+    "name": "Chặn Webhook khi thiếu Header Authorization",
+    "input": "headers: {}",
+    "expected": "HTTP 401 Unauthorized",
+    "actual": "statusCode: 401, msg: \"Unauthorized SePay Webhook: API Key không hợp lệ hoặc bị thiếu.\"",
+    "status": "PASS",
+    "evidence": "Unauthorized SePay Webhook: API Key không hợp lệ hoặc bị thiếu."
+  },
+  {
+    "id": "SEPAY-04",
+    "name": "Chặn Webhook khi thiếu Transaction ID (id hoặc referenceCode)",
+    "input": "body: { transferAmount: 100000, content: \"Test\" }",
+    "expected": "HTTP 400 Bad Request",
+    "actual": "statusCode: 400, msg: \"Thiếu thông tin định danh giao dịch SePay (id hoặc referenceCode)\"",
+    "status": "PASS",
+    "evidence": "Thiếu thông tin định danh giao dịch SePay (id hoặc referenceCode)"
+  },
+  {
+    "id": "SEPAY-05",
+    "name": "Xử lý giao dịch nội dung không khớp bất kỳ đơn hàng nào",
+    "input": "content: \"Chuyen tien khong kem ma don hang\"",
+    "expected": "success: false, notFound: true",
+    "actual": "success: false, notFound: true",
+    "status": "PASS",
+    "evidence": {
+      "success": false,
+      "notFound": true,
+      "message": "Không tìm thấy đơn hàng khớp với nội dung chuyển khoản ngân hàng"
+    }
+  },
+  {
+    "id": "SEPAY-06",
+    "name": "Xử lý chuyển thiếu tiền (Underpaid)",
+    "input": "transferAmount: 7900000 / orderTotal: 15800000",
+    "expected": "payment_status: PARTIALLY_PAID, status: PENDING",
+    "actual": "DB payment_status: PARTIALLY_PAID, status: PENDING",
+    "status": "PASS",
+    "evidence": {
+      "resUnderpaid": {
+        "success": true,
+        "orderCode": "AUR-20261105-LGI5VF",
+        "paymentStatus": "PARTIALLY_PAID",
+        "orderStatus": "PENDING",
+        "paymentDetail": {
+          "type": "UNDERPAID",
+          "missingAmount": 7900000,
+          "totalPaid": 7900000,
+          "orderTotal": 15800000
+        },
+        "message": "Đã ghi nhận thanh toán một phần cho đơn AUR-20261105-LGI5VF. Còn thiếu 7.900.000 đ."
+      },
+      "dbStatus": "PARTIALLY_PAID"
+    }
+  },
+  {
+    "id": "SEPAY-07",
+    "name": "Xử lý chuyển đúng số tiền (Exact Payment)",
+    "input": "transferAmount: 15800000 / orderTotal: 15800000",
+    "expected": "payment_status: PAID, status: CONFIRMED",
+    "actual": "DB payment_status: PAID, status: CONFIRMED",
+    "status": "PASS",
+    "evidence": {
+      "resExact": {
+        "success": true,
+        "orderCode": "AUR-20261105-A02YHV",
+        "paymentStatus": "PAID",
+        "orderStatus": "CONFIRMED",
+        "paymentDetail": {
+          "type": "EXACT",
+          "totalPaid": 15800000,
+          "orderTotal": 15800000
+        },
+        "message": "Đơn hàng AUR-20261105-A02YHV đã thanh toán thành công qua SePay (Đủ tiền)!"
+      },
+      "dbStatus": "PAID"
+    }
+  },
+  {
+    "id": "SEPAY-08",
+    "name": "Xử lý chuyển thừa tiền (Overpaid)",
+    "input": "transferAmount: 16300000 / orderTotal: 15800000",
+    "expected": "payment_status: PAID, status: CONFIRMED, type: OVERPAID",
+    "actual": "DB payment_status: PAID, status: CONFIRMED, overpaidAmount: 500000",
+    "status": "PASS",
+    "evidence": {
+      "resOverpaid": {
+        "success": true,
+        "orderCode": "AUR-20261105-VOIWSI",
+        "paymentStatus": "PAID",
+        "orderStatus": "CONFIRMED",
+        "paymentDetail": {
+          "type": "OVERPAID",
+          "overpaidAmount": 500000,
+          "totalPaid": 16300000,
+          "orderTotal": 15800000
+        },
+        "message": "Đơn hàng AUR-20261105-VOIWSI đã thanh toán thành công qua SePay (Thừa 500.000 đ)!"
+      },
+      "dbStatus": "PAID"
+    }
+  },
+  {
+    "id": "SEPAY-09",
+    "name": "Chống xử lý trùng lặp giao dịch (Idempotency Sequential)",
+    "input": "Gọi lại cùng transactionCode: TX-1793857927239-7",
+    "expected": "idempotent: true, duplicate: true",
+    "actual": "idempotent: true, duplicate: true",
+    "status": "PASS",
+    "evidence": {
+      "success": true,
+      "idempotent": true,
+      "duplicate": true,
+      "transactionCode": "SEPAY-TX-1793857927239-7",
+      "message": "Giao dịch SEPAY-TX-1793857927239-7 đã được ghi nhận trước đó. Bỏ qua để bảo đảm Idempotency."
+    }
+  },
+  {
+    "id": "SEPAY-10",
+    "name": "Hai webhook giống hệt nhau gửi đến đồng thời (Concurrent Race Condition)",
+    "input": "2 requests song song với cùng transactionCode: TX-RACE-1793857927278",
+    "expected": "Chính xác 1 request thành công, 1 request trả về duplicate: true, DB chỉ có đúng 1 bản ghi",
+    "actual": "oneSuccess: true, oneDuplicate: true, DB total: 1",
+    "status": "PASS",
+    "evidence": {
+      "wb1": {
+        "success": true,
+        "orderCode": "AUR-20261105-G747IA",
+        "paymentStatus": "PAID",
+        "orderStatus": "CONFIRMED",
+        "paymentDetail": {
+          "type": "EXACT",
+          "totalPaid": 15800000,
+          "orderTotal": 15800000
+        },
+        "message": "Đơn hàng AUR-20261105-G747IA đã thanh toán thành công qua SePay (Đủ tiền)!"
+      },
+      "wb2": {
+        "success": true,
+        "idempotent": true,
+        "duplicate": true,
+        "transactionCode": "SEPAY-TX-RACE-1793857927278",
+        "message": "Giao dịch SEPAY-TX-RACE-1793857927278 đã được ghi nhận trước đó (Idempotent)."
+      },
+      "dbTxCount": 1
+    }
+  },
+  {
+    "id": "SEPAY-11",
+    "name": "Giao dịch đến sau khi đơn đã bị HỦY (Late Payment Arrival)",
+    "input": "Order status: CANCELLED, transferAmount: 15800000",
+    "expected": "latePayment: true, order status giữ nguyên CANCELLED (không được tự động hồi sinh)",
+    "actual": "latePayment: true, DB status: CANCELLED",
+    "status": "PASS",
+    "evidence": {
+      "resLate": {
+        "success": true,
+        "latePayment": true,
+        "orderCode": "AUR-20261105-44E614",
+        "status": "CANCELLED",
+        "message": "Đơn hàng AUR-20261105-44E614 đã bị hủy trước đó do hết hạn 15 phút. Giao dịch đã được ghi nhận (LATE_PAYMENT) để bộ phận kế toán đối soát hoàn tiền cho khách."
+      },
+      "dbStatus": "CANCELLED"
+    }
+  },
+  {
+    "id": "SEPAY-12",
+    "name": "Webhook thanh toán chạy song song với Expired Orders Worker",
+    "input": "Đơn đã quá hạn 20 phút, nhận webhook đồng thời khi Worker quét",
+    "expected": "Không deadlock, trạng thái cuối cùng nhất quán (CONFIRMED/PAID hoặc CANCELLED sạch)",
+    "actual": "DB status: CONFIRMED, payment_status: PAID",
+    "status": "PASS",
+    "evidence": {
+      "checkRaceDb": {
+        "id": 102,
+        "user_id": null,
+        "order_code": "AUR-20261105-OUPE65",
+        "total_amount": 15800000,
+        "discount_amount": 0,
+        "shipping_fee": 0,
+        "shipping_address": "TP.HCM",
+        "phone_number": "0909999888",
+        "payment_method": "SEPAY_QR",
+        "payment_status": "PAID",
+        "tracking_code": "GHN-VN-12506136",
+        "status": "CONFIRMED",
+        "created_at": "2026-11-05T12:32:07.317Z",
+        "customer_name": null,
+        "customer_email": null,
+        "customer_phone": null
+      },
+      "raceWbRes": {
+        "success": true,
+        "orderCode": "AUR-20261105-OUPE65",
+        "paymentStatus": "PAID",
+        "orderStatus": "CONFIRMED",
+        "paymentDetail": {
+          "type": "EXACT",
+          "totalPaid": 15800000,
+          "orderTotal": 15800000
+        },
+        "message": "Đơn hàng AUR-20261105-OUPE65 đã thanh toán thành công qua SePay (Đủ tiền)!"
+      },
+      "raceWorkerRes": [
+        {
+          "id": 102,
+          "orderCode": "AUR-20261105-OUPE65",
+          "success": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "ROLLBACK-01",
+    "name": "safeRollback bảo toàn lỗi database gốc và không sinh lỗi thứ cấp",
+    "input": "Cố ý truy vấn bảng không tồn tại trong SQL Transaction",
+    "expected": "Bắt được lỗi database gốc (Error 208), safeRollback không throw secondary exception",
+    "actual": "originalErrorPreserved: true, rollbackHandledCleanly: true",
+    "status": "PASS",
+    "evidence": {
+      "originalErrorPreserved": true,
+      "rollbackHandledCleanly": true
+    }
+  },
+  {
+    "id": "CONCUR-01",
+    "name": "10 khách tranh mua đồng thời sản phẩm chỉ còn tồn kho = 3",
+    "input": "10 Promise.all createOrder cùng lúc trên 1 variant_id",
+    "expected": "Chính xác 3 đơn thành công, 7 đơn bị từ chối hết hàng, tồn kho cuối cùng = 0 (không âm)",
+    "actual": "Thành công: 3, Thất bại: 7, Tồn kho DB: 0",
+    "status": "PASS",
+    "evidence": {
+      "tenSuccesses": 3,
+      "tenFailures": 7,
+      "finalStockVal": 0
+    }
+  },
+  {
+    "id": "CONCUR-02",
+    "name": "5 khách áp dụng mã Coupon đồng thời khi usage_limit = 2",
+    "input": "5 Promise.all createOrder với couponCode",
+    "expected": "Chính xác 2 đơn được áp dụng, used_count = 2 (không vượt giới hạn)",
+    "actual": "Thành công: 2/5, DB used_count: 2",
+    "status": "PASS",
+    "evidence": {
+      "cpSuccessCount": 2,
+      "finalUsedCount": 2
+    }
+  },
+  {
+    "id": "CONCUR-03",
+    "name": "Hai instance Worker quét đơn hết hạn chạy song song (UPDLOCK, READPAST)",
+    "input": "2 Promise.all releaseExpiredOrders(15)",
+    "expected": "Không xảy ra deadlock hoặc lỗi SQL khóa bảng",
+    "actual": "Worker 1: 0 đơn, Worker 2: 0 đơn, workersSucceeded: true",
+    "status": "PASS",
+    "evidence": {
+      "worker1Count": 0,
+      "worker2Count": 0
+    }
+  }
+]

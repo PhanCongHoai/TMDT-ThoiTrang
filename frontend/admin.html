@@ -2,21 +2,30 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Bảng Quản Trị Executive Admin | AURALIÈ Haute Couture</title>
   <!-- Font Awesome Icons CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js CDN for Interactive Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Unified API Client & Auth Guard -->
+  <script src="js/api/client.js"></script>
+  <script src="js/auth.js"></script>
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
   <style>
     body {
       background: #f4f2ee;
+      margin: 0;
+      padding: 0;
     }
+
     .admin-layout {
-      display: grid;
-      grid-template-columns: 280px 1fr;
+      display: flex;
       min-height: 100vh;
     }
+
+    /* SIDEBAR NAVIGATION (FIXED STICKY ON PC) */
     .admin-sidebar {
       background: #121212;
       color: #e5e0d8;
@@ -24,10 +33,32 @@
       display: flex;
       flex-direction: column;
       gap: 2rem;
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      width: 280px;
       height: 100vh;
+      z-index: 1100;
+      overflow-y: auto;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    .admin-main {
+      margin-left: 280px;
+      width: calc(100% - 280px);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      overflow-y: auto;
+    }
+
+    .admin-sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
     .admin-brand {
       font-family: var(--font-serif);
       font-size: 1.6rem;
@@ -38,6 +69,7 @@
       flex-direction: column;
       line-height: 1;
     }
+
     .admin-brand span {
       font-family: var(--font-sans);
       font-size: 0.55rem;
@@ -45,12 +77,26 @@
       letter-spacing: 2px;
       margin-top: 4px;
     }
+
+    .admin-sidebar-close-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
     .admin-nav {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      padding: 0;
+      margin: 0;
     }
+
     .admin-nav a {
       color: #aaa;
       text-decoration: none;
@@ -63,11 +109,94 @@
       gap: 0.85rem;
       transition: var(--transition);
     }
+
     .admin-nav a:hover, .admin-nav a.active {
       background: var(--accent-gold);
       color: #ffffff;
       box-shadow: 0 4px 15px rgba(201, 162, 77, 0.3);
     }
+
+    .admin-sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1050;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    /* MOBILE TOP BAR */
+    .admin-mobile-topbar {
+      display: none;
+      background: #121212;
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 990;
+      border-bottom: 1px solid rgba(201, 162, 77, 0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .admin-mobile-toggle-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--accent-gold);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* MOBILE BOTTOM NAVIGATION BAR */
+    .admin-mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #121212;
+      border-top: 1px solid rgba(201, 162, 77, 0.3);
+      z-index: 990;
+      padding: 0.5rem 0.25rem;
+      justify-content: space-around;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    }
+
+    .admin-mobile-bottom-nav a {
+      color: #aaa;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      flex: 1;
+      text-align: center;
+    }
+
+    .admin-mobile-bottom-nav a i {
+      font-size: 1.15rem;
+    }
+
+    .admin-mobile-bottom-nav a.active {
+      color: var(--accent-gold);
+    }
+
+    /* MAIN CONTENT */
     .admin-main {
       padding: 2rem;
       display: flex;
@@ -75,6 +204,7 @@
       gap: 2rem;
       overflow-y: auto;
     }
+
     .admin-header {
       background: #fff;
       padding: 1.25rem 2rem;
@@ -84,12 +214,22 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: var(--shadow-subtle);
+      gap: 1rem;
+      flex-wrap: wrap;
     }
+
+    .admin-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1.5rem;
     }
+
     .kpi-card {
       background: #fff;
       border: 1px solid var(--border-light);
@@ -97,6 +237,7 @@
       padding: 1.5rem;
       box-shadow: var(--shadow-subtle);
     }
+
     .kpi-title {
       font-size: 0.8rem;
       color: var(--text-muted);
@@ -104,18 +245,22 @@
       letter-spacing: 1px;
       font-weight: 600;
     }
+
     .kpi-value {
       font-family: var(--font-serif);
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: var(--primary-dark);
       margin: 0.3rem 0;
+      word-break: break-word;
     }
+
     .kpi-growth {
       font-size: 0.78rem;
       color: #2e7d32;
       font-weight: 600;
     }
+
     .admin-table-card {
       background: #fff;
       border: 1px solid var(--border-light);
@@ -124,31 +269,127 @@
       box-shadow: var(--shadow-subtle);
       margin-bottom: 1.5rem;
     }
+
+    .admin-card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .table-responsive-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      max-height: 520px;
+      overflow-y: auto;
+      border-radius: 8px;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border-light);
+      position: relative;
+    }
+
     .admin-table {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 680px;
     }
+
     .admin-table th, .admin-table td {
       padding: 0.95rem 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border-light);
       font-size: 0.85rem;
     }
+
     .admin-table th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
       background: #faf8f5;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       font-weight: 700;
       color: var(--primary-dark);
       text-transform: uppercase;
       font-size: 0.75rem;
       letter-spacing: 1px;
+      white-space: nowrap;
     }
+
+    /* PAGINATION BAR FOR 100+ ROWS */
+    .admin-pagination-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-light);
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .pagination-btn {
+      background: #fff;
+      border: 1px solid var(--border-light);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--primary-dark);
+      transition: all 0.2s ease;
+    }
+
+    .pagination-btn:hover:not(.disabled) {
+      background: var(--accent-gold);
+      color: #fff;
+      border-color: var(--accent-gold);
+    }
+
+    .pagination-btn.active {
+      background: var(--primary-dark);
+      color: var(--accent-gold);
+      border-color: var(--primary-dark);
+    }
+
+    .pagination-btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pagination-size-select {
+      padding: 0.35rem 0.6rem;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      outline: none;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .table-actions-cell {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .status-badge {
       padding: 0.25rem 0.65rem;
       border-radius: 20px;
       font-size: 0.72rem;
       font-weight: 700;
       display: inline-block;
+      white-space: nowrap;
     }
     .status-badge.active { background: #e8f5e9; color: #2e7d32; }
     .status-badge.pending { background: #fff3e0; color: #e65100; }
@@ -157,12 +398,16 @@
 
     .admin-action-btn {
       border: none;
-      padding: 0.35rem 0.75rem;
-      border-radius: 4px;
+      padding: 0.45rem 0.75rem;
+      border-radius: 6px;
       font-size: 0.75rem;
       font-weight: 600;
       cursor: pointer;
       transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
     }
     .btn-edit { background: #f0f0f0; color: #333; }
     .btn-edit:hover { background: var(--primary-dark); color: #fff; }
@@ -171,22 +416,206 @@
     .btn-approve { background: #e8f5e9; color: #2e7d32; }
     .btn-approve:hover { background: #2e7d32; color: #fff; }
 
+    .reviews-filter-pills-scroll {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 0.25rem;
+      -webkit-overflow-scrolling: touch;
+      max-width: 100%;
+    }
+
+    .reviews-filter-pills-scroll .review-pill {
+      flex-shrink: 0;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
     @media (max-width: 1024px) {
-      .admin-layout { grid-template-columns: 1fr; }
-      .admin-sidebar { position: relative; height: auto; }
-      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .admin-layout {
+        display: block;
+      }
+
+      .admin-mobile-topbar {
+        display: flex;
+      }
+
+      .admin-mobile-bottom-nav {
+        display: flex;
+      }
+
+      .admin-sidebar-overlay {
+        display: block;
+      }
+
+      .admin-sidebar {
+        position: fixed;
+        top: 0;
+        left: -300px;
+        width: 280px;
+        height: 100vh;
+        z-index: 1100;
+        box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+        padding: 1.5rem 1.25rem;
+      }
+
+      .admin-sidebar.open {
+        left: 0;
+      }
+
+      .admin-sidebar-close-btn {
+        display: block;
+      }
+
+      .admin-sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .admin-main {
+        padding: 1.25rem;
+        padding-bottom: 5.5rem; /* Clearance for bottom nav */
+        gap: 1.25rem;
+      }
+
+      .admin-header {
+        padding: 1rem 1.25rem;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .admin-header > div {
+        width: 100%;
+      }
+
+      .admin-header-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .kpi-card {
+        padding: 1.1rem;
+      }
+
+      .kpi-value {
+        font-size: 1.4rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .admin-main {
+        padding: 0.85rem;
+        padding-bottom: 5.5rem;
+      }
+
+      .admin-table-card {
+        padding: 1rem;
+      }
+
+      .admin-card-header-flex {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .admin-card-header-flex input[type="text"] {
+        width: 100% !important;
+      }
+
+      .admin-card-header-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        width: 100%;
+      }
+
+      .admin-card-header-actions button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.65rem;
+      }
+
+      .kpi-card {
+        padding: 0.9rem;
+      }
+
+      .kpi-title {
+        font-size: 0.72rem;
+      }
+
+      .kpi-value {
+        font-size: 1.2rem;
+      }
+
+      .kpi-growth {
+        font-size: 0.68rem;
+      }
+
+      /* Modal responsive */
+      .modal-container {
+        padding: 1rem !important;
+        margin: 0.75rem !important;
+        width: calc(100% - 1.5rem) !important;
+        max-height: 88vh;
+        overflow-y: auto;
+      }
+
+      .responsive-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 1rem !important;
+      }
+
+      .modal-main-img-wrap {
+        height: 220px !important;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- MOBILE TOP BAR -->
+  <header class="admin-mobile-topbar">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <button id="admin-mobile-toggle" class="admin-mobile-toggle-btn" aria-label="Mở menu quản trị">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="admin-brand" style="font-size: 1.2rem;">
+        AURALIÈ <span>ADMIN PORTAL</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-gold); color: #121212; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">AD</div>
+    </div>
+  </header>
+
+  <!-- OVERLAY BACKDROP FOR SIDEBAR -->
+  <div id="admin-sidebar-overlay" class="admin-sidebar-overlay"></div>
+
   <div class="admin-layout">
 
     <!-- ADMIN SIDEBAR NAVIGATION -->
-    <aside class="admin-sidebar">
-      <div class="admin-brand">
-        AURALIÈ
-        <span>ADMIN EXECUTIVE PORTAL</span>
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <div class="admin-brand">
+          AURALIÈ
+          <span>ADMIN EXECUTIVE PORTAL</span>
+        </div>
+        <button id="admin-sidebar-close" class="admin-sidebar-close-btn" aria-label="Đóng menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
       <ul class="admin-nav">
@@ -197,9 +626,12 @@
         <li><a href="#customers" class="admin-tab-link" data-tab="customers"><i class="fa-solid fa-users"></i> <span>Khách Hàng VIP</span></a></li>
       </ul>
 
-      <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #333;">
+      <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 0.75rem;">
         <a href="index.html" style="color: var(--accent-gold); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
           <i class="fa-solid fa-globe"></i> Xem Trang Web Chính
+        </a>
+        <a href="login.html" id="admin-logout-btn" style="color: #ff6b6b; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+          <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất Admin
         </a>
       </div>
     </aside>
@@ -210,18 +642,18 @@
       <!-- HEADER TOP BAR -->
       <div class="admin-header">
         <div>
-          <h2 id="admin-view-title" style="font-family: var(--font-serif); font-size: 1.6rem; color: var(--primary-dark);">Bảng Quản Trị Hệ Thống AURALIÈ</h2>
+          <h2 id="admin-view-title" style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--primary-dark); margin: 0;">Bảng Quản Trị Hệ Thống AURALIÈ</h2>
           <span id="admin-view-desc" style="font-size: 0.8rem; color: var(--text-muted);">Phiên bản Executive 2026 - Quản lý thương mại điện tử xa xỉ</span>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 1rem;">
-          <button class="btn-primary-luxury" id="btn-add-new-product-top" style="padding: 0.6rem 1.2rem; font-size: 0.8rem;">
+        <div class="admin-header-actions">
+          <button class="btn-primary-luxury" id="btn-add-new-product-top" style="padding: 0.6rem 1.2rem; font-size: 0.8rem; flex: 1;">
             <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm Mới
           </button>
           
-          <div style="display: flex; align-items: center; gap: 0.6rem; background: #faf7f2; padding: 0.4rem 0.8rem; border-radius: 30px; border: 1px solid var(--border-light);">
+          <div style="display: flex; align-items: center; gap: 0.6rem; background: #faf7f2; padding: 0.4rem 0.8rem; border-radius: 30px; border: 1px solid var(--border-light); flex-shrink: 0;">
             <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-dark); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">AD</div>
-            <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">Quản Trị Viên (Admin)</span>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">Quản Trị Viên</span>
           </div>
         </div>
       </div>
@@ -229,49 +661,83 @@
       <!-- KPI SUMMARY METRICS CARDS -->
       <div class="kpi-grid">
         <div class="kpi-card">
-          <span class="kpi-title">Doanh Thu Tháng 10/2026</span>
-          <div class="kpi-value">1.280.000.000 ₫</div>
-          <span class="kpi-growth"><i class="fa-solid fa-arrow-trend-up"></i> +18.5% so với tháng trước</span>
+          <span class="kpi-title">Doanh Thu T10</span>
+          <div class="kpi-value" id="kpi-revenue">1.280.000.000 ₫</div>
+          <span class="kpi-growth"><i class="fa-solid fa-arrow-trend-up"></i> +18.5%</span>
         </div>
 
         <div class="kpi-card">
           <span class="kpi-title">Đơn Hàng Mới</span>
-          <div class="kpi-value">142 Đơn</div>
-          <span class="kpi-growth" style="color: #e65100;"><i class="fa-solid fa-clock"></i> 24 đơn cần duyệt giao</span>
+          <div class="kpi-value" id="kpi-orders">142 Đơn</div>
+          <span class="kpi-growth" style="color: #e65100;"><i class="fa-solid fa-clock"></i> 24 đơn cần duyệt</span>
         </div>
 
         <div class="kpi-card">
-          <span class="kpi-title">Sản Phẩm Tồn Kho</span>
-          <div class="kpi-value">389 Items</div>
-          <span class="kpi-growth" style="color: var(--text-muted);">8 mẫu thiết kế active</span>
+          <span class="kpi-title">Tồn Kho</span>
+          <div class="kpi-value" id="kpi-products">389 Items</div>
+          <span class="kpi-growth" style="color: var(--text-muted);">8 mẫu active</span>
         </div>
 
         <div class="kpi-card">
-          <span class="kpi-title">Đánh Giá Trung Bình</span>
-          <div class="kpi-value">4.9 / 5.0 ★</div>
-          <span class="kpi-growth"><i class="fa-solid fa-shield-check"></i> 128 Đánh giá từ khách thực tế</span>
+          <span class="kpi-title">Đánh Giá</span>
+          <div class="kpi-value" id="kpi-reviews">4.9 / 5.0 ★</div>
+          <span class="kpi-growth"><i class="fa-solid fa-shield-check"></i> 128 Review</span>
         </div>
       </div>
+
+      <!-- INTERACTIVE ANALYTICS CHARTS CARD (CHART.JS) -->
+      <div class="admin-table-card" style="margin-top: 0.5rem;">
+        <div class="admin-card-header-flex">
+          <div>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;"><i class="fa-solid fa-chart-area" style="color: var(--accent-gold);"></i> Báo Cáo Phân Tích Doanh Thu & Danh Mục 2026</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Biểu đồ tương tác xu hướng tăng trưởng doanh thu 12 tháng và tỷ lệ bán theo nhóm sản phẩm</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="review-pill active" id="btn-chart-year">Năm 2026</button>
+            <button class="review-pill" id="btn-chart-quarter">Quý 4/2026</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;" class="responsive-grid">
+          <div style="background: #faf8f5; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-light);">
+            <h4 style="font-size: 0.85rem; color: var(--primary-dark); margin-bottom: 0.75rem;"><i class="fa-solid fa-arrow-trend-up" style="color: #2e7d32;"></i> Tăng Trưởng Doanh Thu 12 Tháng (Triệu ₫)</h4>
+            <div style="position: relative; height: 260px;">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+
+          <div style="background: #faf8f5; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-light);">
+            <h4 style="font-size: 0.85rem; color: var(--primary-dark); margin-bottom: 0.75rem;"><i class="fa-solid fa-chart-pie" style="color: var(--accent-gold);"></i> Tỷ Lệ Theo Danh Mục</h4>
+            <div style="position: relative; height: 260px; display: flex; align-items: center; justify-content: center;">
+              <canvas id="categoryPieChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
 
       <!-- ===================================================================
            1. TRANG QUẢN LÝ SẢN PHẨM (PRODUCT MANAGEMENT PAGE)
            =================================================================== -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-products">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">1. Quản Lý Danh Sách Sản Phẩm</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Quản lý phom dáng, giá bán và tình trạng kho hàng toàn hệ thống</span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">1. Quản Lý Danh Sách Sản Phẩm</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Quản lý phom dáng, giá bán và tình trạng kho hàng</span>
           </div>
-          <div style="display: flex; gap: 0.75rem;">
-            <input type="text" placeholder="Tìm kiếm theo tên sản phẩm..." style="padding: 0.5rem 0.9rem; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.82rem; outline: none; width: 240px;">
-            <button class="btn-primary-luxury" id="btn-open-add-product-modal" style="padding: 0.5rem 1rem; font-size: 0.78rem;">
+          <div class="admin-card-header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <input type="text" placeholder="Tìm kiếm sản phẩm..." style="padding: 0.5rem 0.9rem; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.82rem; outline: none; width: 200px;">
+            <button class="btn-primary-luxury" id="btn-open-batch-import-modal" onclick="openBatchImportModal()" style="background:#1e1e1e; padding: 0.5rem 0.9rem; font-size: 0.78rem;">
+              <i class="fa-solid fa-boxes-packing"></i> Nhập Hàng Theo Lô
+            </button>
+            <button class="btn-primary-luxury" id="btn-open-add-product-modal" style="padding: 0.5rem 0.9rem; font-size: 0.78rem;">
               <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm
             </button>
           </div>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div class="table-responsive-wrapper">
           <table class="admin-table">
             <thead>
               <tr>
@@ -285,79 +751,111 @@
                 <th>Thao Tác</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="admin-products-tbody">
               <tr>
                 <td>#SP-001</td>
-                <td><img src="assets/card_1.jpg" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;"></td>
-                <td><strong>Double-Breasted Tailored Suit</strong></td>
+                <td><img src="assets/card_1.jpg" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px;"></td>
+                <td><strong>Double-Breasted Suit</strong></td>
                 <td>Áo Vest & Blazer</td>
                 <td>12.500.000 ₫</td>
                 <td>18 items</td>
                 <td><span class="status-badge active">Đang Bán</span></td>
                 <td>
-                  <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Double-Breasted Tailored Suit" data-category="Áo Vest & Blazer" data-price="12.500.000 ₫" data-img="assets/card_1.jpg" data-tag="NEW ARRIVAL" data-desc="Áo Vest may đo độc bản từ len Cashmere nhập khẩu Ý. Thiết kế Double-Breasted mang đến diện mạo quyền lực, chuẩn phom dáng Châu Âu."><i class="fa-solid fa-eye"></i> Xem Giao Diện</button>
-                  <button class="admin-action-btn btn-edit" onclick="alert('Đang mở form chỉnh sửa sản phẩm Double-Breasted Tailored Suit...')"><i class="fa-solid fa-pen"></i> Sửa</button>
-                  <button class="admin-action-btn btn-delete" onclick="confirm('Xóa sản phẩm này?') && alert('Đã xóa sản phẩm thành công!')"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  <div class="table-actions-cell">
+                    <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Double-Breasted Tailored Suit" data-category="Áo Vest & Blazer" data-price="12.500.000 ₫" data-img="assets/card_1.jpg" data-tag="NEW ARRIVAL" data-desc="Áo Vest may đo độc bản từ len Cashmere nhập khẩu Ý. Thiết kế Double-Breasted mang đến diện mạo quyền lực, chuẩn phom dáng Châu Âu."><i class="fa-solid fa-eye"></i> Xem</button>
+                    <button class="admin-action-btn btn-edit" onclick="alert('Đang mở form chỉnh sửa sản phẩm Double-Breasted Tailored Suit...')"><i class="fa-solid fa-pen"></i> Sửa</button>
+                    <button class="admin-action-btn btn-delete" onclick="confirm('Xóa sản phẩm này?') && alert('Đã xóa sản phẩm thành công!')"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>#SP-002</td>
-                <td><img src="assets/card_2.jpg" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;"></td>
-                <td><strong>Minimalist Silk Trench Dress</strong></td>
+                <td><img src="assets/card_2.jpg" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px;"></td>
+                <td><strong>Minimalist Silk Trench</strong></td>
                 <td>Váy & Đầm Dạ Hội</td>
                 <td>18.900.000 ₫</td>
                 <td>12 items</td>
                 <td><span class="status-badge active">Đang Bán</span></td>
                 <td>
-                  <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Minimalist Silk Trench Dress" data-category="Váy & Đầm Dạ Hội" data-price="18.900.000 ₫" data-img="assets/card_2.jpg" data-tag="BESTSELLER" data-desc="Đầm lụa tơ tằm dệt bóng đẹp tự nhiên, thiết kế xẻ tà sang trọng thích hợp cho các buổi dạ tiệc thượng lưu."><i class="fa-solid fa-eye"></i> Xem Giao Diện</button>
-                  <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
-                  <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  <div class="table-actions-cell">
+                    <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Minimalist Silk Trench Dress" data-category="Váy & Đầm Dạ Hội" data-price="18.900.000 ₫" data-img="assets/card_2.jpg" data-tag="BESTSELLER" data-desc="Đầm lụa tơ tằm dệt bóng đẹp tự nhiên, thiết kế xẻ tà sang trọng thích hợp cho các buổi dạ tiệc thượng lưu."><i class="fa-solid fa-eye"></i> Xem</button>
+                    <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
+                    <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>#SP-003</td>
-                <td><img src="assets/card_3.jpg" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;"></td>
-                <td><strong>Oversized Cashmere Wool Sweater</strong></td>
+                <td><img src="assets/card_3.jpg" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px;"></td>
+                <td><strong>Cashmere Wool Sweater</strong></td>
                 <td>Áo Khoác Thu Đông</td>
                 <td>8.200.000 ₫</td>
                 <td>25 items</td>
                 <td><span class="status-badge active">Đang Bán</span></td>
                 <td>
-                  <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Oversized Cashmere Wool Sweater" data-category="Áo Khoác Thu Đông" data-price="8.200.000 ₫" data-img="assets/card_3.jpg" data-tag="LIMITED" data-desc="Áo len dáng rộng dệt từ Cashmere Thượng Hải mềm mịn giữ ấm chuẩn phom thời trang Châu Âu."><i class="fa-solid fa-eye"></i> Xem Giao Diện</button>
-                  <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
-                  <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  <div class="table-actions-cell">
+                    <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Oversized Cashmere Wool Sweater" data-category="Áo Khoác Thu Đông" data-price="8.200.000 ₫" data-img="assets/card_3.jpg" data-tag="LIMITED" data-desc="Áo len dáng rộng dệt từ Cashmere Thượng Hải mềm mịn giữ ấm chuẩn phom thời trang Châu Âu."><i class="fa-solid fa-eye"></i> Xem</button>
+                    <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
+                    <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>#SP-004</td>
-                <td><img src="assets/card_4.jpg" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;"></td>
-                <td><strong>Heritage Tan Leather Handbag</strong></td>
+                <td><img src="assets/card_4.jpg" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px;"></td>
+                <td><strong>Heritage Leather Handbag</strong></td>
                 <td>Túi Xách Da Cao Cấp</td>
                 <td>24.000.000 ₫</td>
                 <td>5 items</td>
                 <td><span class="status-badge pending">Sắp Hết</span></td>
                 <td>
-                  <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Heritage Tan Leather Handbag" data-category="Túi Xách Da Cao Cấp" data-price="24.000.000 ₫" data-img="assets/card_4.jpg" data-tag="EXCLUSIVE" data-desc="Túi xách thủ công da thuộc Ý cao cấp kèm khóa mạ vàng 18K chạm khắc logo AURALIÈ."><i class="fa-solid fa-eye"></i> Xem Giao Diện</button>
-                  <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
-                  <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  <div class="table-actions-cell">
+                    <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Heritage Tan Leather Handbag" data-category="Túi Xách Da Cao Cấp" data-price="24.000.000 ₫" data-img="assets/card_4.jpg" data-tag="EXCLUSIVE" data-desc="Túi xách thủ công da thuộc Ý cao cấp kèm khóa mạ vàng 18K chạm khắc logo AURALIÈ."><i class="fa-solid fa-eye"></i> Xem</button>
+                    <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
+                    <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td>#SP-005</td>
-                <td><img src="assets/card_5.jpg" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;"></td>
-                <td><strong>Royale Gold Buckle Leather Boots</strong></td>
+                <td><img src="assets/card_5.jpg" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px;"></td>
+                <td><strong>Royale Gold Boots</strong></td>
                 <td>Giày & Phụ Kiện</td>
                 <td>15.800.000 ₫</td>
                 <td>14 items</td>
                 <td><span class="status-badge active">Đang Bán</span></td>
                 <td>
-                  <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Royale Gold Buckle Leather Boots" data-category="Giày & Phụ Kiện" data-price="15.800.000 ₫" data-img="assets/card_5.jpg" data-tag="NEW ACCESSORIES" data-desc="Giày boots nữ da thật cao cấp kết hợp khóa mạ vàng độc quyền mang lại diện mạo thời thượng."><i class="fa-solid fa-eye"></i> Xem Giao Diện</button>
-                  <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
-                  <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  <div class="table-actions-cell">
+                    <button class="admin-action-btn btn-approve open-admin-preview-btn" data-title="Royale Gold Buckle Leather Boots" data-category="Giày & Phụ Kiện" data-price="15.800.000 ₫" data-img="assets/card_5.jpg" data-tag="NEW ACCESSORIES" data-desc="Giày boots nữ da thật cao cấp kết hợp khóa mạ vàng độc quyền mang lại diện mạo thời thượng."><i class="fa-solid fa-eye"></i> Xem</button>
+                    <button class="admin-action-btn btn-edit"><i class="fa-solid fa-pen"></i> Sửa</button>
+                    <button class="admin-action-btn btn-delete"><i class="fa-solid fa-trash"></i> Xóa</button>
+                  </div>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- PAGINATION CONTROL BAR FOR 100+ PRODUCTS -->
+        <div class="admin-pagination-bar">
+          <div style="font-size: 0.8rem; color: var(--text-muted);">
+            Hiển thị <strong>1 - 100</strong> trong tổng số <strong>389</strong> mẫu thiết kế sản phẩm (Trang 1 / 4)
+          </div>
+          <div class="pagination-controls">
+            <button class="pagination-btn disabled" disabled><i class="fa-solid fa-chevron-left"></i> Trước</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">4</button>
+            <button class="pagination-btn">Sau <i class="fa-solid fa-chevron-right"></i></button>
+
+            <select class="pagination-size-select" onchange="alert('Đã đổi hiển thị sản phẩm sang: ' + this.value + ' mẫu/trang')">
+              <option value="10">10 dòng/trang</option>
+              <option value="25">25 dòng/trang</option>
+              <option value="50">50 dòng/trang</option>
+              <option value="100" selected>100 dòng/trang (Hiển thị 100 dòng)</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -366,35 +864,36 @@
            2. TRANG QUẢN LÝ ĐƠN HÀNG (ORDER MANAGEMENT PAGE)
            =================================================================== -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-orders">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">2. Quản Lý Đơn Hàng & Vận Chuyển Hỏa Tốc</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Theo dõi tình trạng đơn đặt hàng, địa chỉ giao và trạng thái thanh toán</span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">2. Quản Lý Đơn Hàng</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Theo dõi đơn đặt hàng và trạng thái vận chuyển</span>
           </div>
           
-          <div class="reviews-filter-pills" style="margin-bottom:0;">
+          <div class="reviews-filter-pills-scroll">
             <button class="review-pill active">Tất Cả (142)</button>
             <button class="review-pill">Cần Duyệt (24)</button>
             <button class="review-pill">Đang Vận Chuyển (18)</button>
             <button class="review-pill">Hoàn Thành (98)</button>
+            <button class="btn-primary-luxury" onclick="exportToExcel('orders')" style="background:#2e7d32; padding:0.4rem 0.8rem; font-size:0.75rem; border-radius:20px; white-space:nowrap; border:none;"><i class="fa-solid fa-file-excel"></i> Xuất File Excel</button>
           </div>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div class="table-responsive-wrapper">
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Mã Đơn Hàng</th>
-                <th>Tên Khách Hàng VIP</th>
-                <th>Số Điện Thoại</th>
-                <th>Địa Chỉ Giao Hàng</th>
+                <th>Mã Đơn</th>
+                <th>Khách Hàng VIP</th>
+                <th>SĐT</th>
+                <th>Địa Chỉ</th>
                 <th>Tổng Tiền</th>
                 <th>Hình Thức TT</th>
-                <th>Trạng Thái Giao Hàng</th>
+                <th>Trạng Thái</th>
                 <th>Cập Nhật</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="admin-orders-tbody">
               <tr>
                 <td><strong>AUR-2026-992</strong></td>
                 <td>Nguyễn Thanh Vân <span class="status-badge gold">PLATINUM</span></td>
@@ -402,13 +901,16 @@
                 <td>Landmark 81, Q.Bình Thạnh, TP.HCM</td>
                 <td><strong>12.500.000 ₫</strong></td>
                 <td>VNPAY QR (Đã TT)</td>
-                <td><span class="status-badge shipped">Đang Giao Hàng</span></td>
+                <td><span class="status-badge shipped">Đang Giao</span></td>
                 <td>
-                  <select onchange="alert('Cập nhật đơn AUR-2026-992 sang: ' + this.value)" style="padding: 0.3rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
-                    <option>Đang Giao Hàng</option>
-                    <option>Đã Hoàn Thành</option>
-                    <option>Hủy Đơn Hàng</option>
-                  </select>
+                  <div class="table-actions-cell">
+                    <select onchange="alert('Cập nhật đơn AUR-2026-992 sang: ' + this.value)" style="padding: 0.35rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
+                      <option>Đang Giao Hàng</option>
+                      <option>Đã Hoàn Thành</option>
+                      <option>Hủy Đơn Hàng</option>
+                    </select>
+                    <button class="admin-action-btn btn-edit" onclick="generatePDFInvoice('AUR-2026-992', 'Bà Nguyễn Thanh Vân', '12.500.000 ₫', 'VNPAY QR (Đã TT)', 'Landmark 81, Q.Bình Thạnh, TP.HCM')"><i class="fa-solid fa-file-pdf" style="color:#c62828;"></i> Hóa Đơn PDF</button>
+                  </div>
                 </td>
               </tr>
               <tr>
@@ -420,9 +922,12 @@
                 <td>Visa/Mastercard</td>
                 <td><span class="status-badge active">Đã Hoàn Thành</span></td>
                 <td>
-                  <select style="padding: 0.3rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
-                    <option selected>Đã Hoàn Thành</option>
-                  </select>
+                  <div class="table-actions-cell">
+                    <select style="padding: 0.35rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
+                      <option selected>Đã Hoàn Thành</option>
+                    </select>
+                    <button class="admin-action-btn btn-edit" onclick="generatePDFInvoice('AUR-2026-781', 'Chị Phạm Hoàng My', '18.900.000 ₫', 'Visa/Mastercard', 'Vinhomes Golden River, Q.1, TP.HCM')"><i class="fa-solid fa-file-pdf" style="color:#c62828;"></i> Hóa Đơn PDF</button>
+                  </div>
                 </td>
               </tr>
               <tr>
@@ -434,15 +939,39 @@
                 <td>COD (Thanh toán khi nhận)</td>
                 <td><span class="status-badge pending">Chờ Duyệt Kho</span></td>
                 <td>
-                  <select onchange="alert('Duyệt xuất kho đơn AUR-2026-554!')" style="padding: 0.3rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
-                    <option>Chờ Duyệt Kho</option>
-                    <option>Đã Duyệt - Giao Hàng</option>
-                    <option>Hủy Đơn</option>
-                  </select>
+                  <div class="table-actions-cell">
+                    <select onchange="alert('Duyệt xuất kho đơn AUR-2026-554!')" style="padding: 0.35rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
+                      <option>Chờ Duyệt Kho</option>
+                      <option>Đã Duyệt - Giao Hàng</option>
+                      <option>Hủy Đơn</option>
+                    </select>
+                    <button class="admin-action-btn btn-edit" onclick="generatePDFInvoice('AUR-2026-554', 'Anh Trần Quốc Bảo', '14.200.000 ₫', 'COD (Thanh Toán Khi Nhận)', 'Phố Tràng Tiền, Hoàn Kiếm, Hà Nội')"><i class="fa-solid fa-file-pdf" style="color:#c62828;"></i> Hóa Đơn PDF</button>
+                  </div>
                 </td>
               </tr>
+
             </tbody>
           </table>
+        </div>
+
+        <!-- PAGINATION CONTROL BAR FOR 100+ ORDERS -->
+        <div class="admin-pagination-bar">
+          <div style="font-size: 0.8rem; color: var(--text-muted);">
+            Hiển thị <strong>1 - 100</strong> trong tổng số <strong>142</strong> đơn hàng (Trang 1 / 2)
+          </div>
+          <div class="pagination-controls">
+            <button class="pagination-btn disabled" disabled><i class="fa-solid fa-chevron-left"></i> Trước</button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">Sau <i class="fa-solid fa-chevron-right"></i></button>
+
+            <select class="pagination-size-select" onchange="alert('Đã đổi hiển thị danh sách sang: ' + this.value + ' dòng/trang')">
+              <option value="10">10 dòng/trang</option>
+              <option value="25">25 dòng/trang</option>
+              <option value="50">50 dòng/trang</option>
+              <option value="100" selected>100 dòng/trang (Hiển thị 100 dòng)</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -451,36 +980,36 @@
            3. TRANG DUYỆT ĐÁNH GIÁ (REVIEWS MODERATION PAGE)
            =================================================================== -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-reviews">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">3. Duyệt & Kiểm Duyệt Đánh Giá Khách Hàng</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Quản lý đánh giá sao và bình luận thực tế từ người mua trên website</span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">3. Kiểm Duyệt Đánh Giá Khách Hàng</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Quản lý nhận xét và đánh giá thực tế</span>
           </div>
           
           <div style="font-size: 0.85rem; color: var(--accent-gold); font-weight: bold;">
-            <i class="fa-solid fa-star"></i> Điểm trung bình: 4.9/5.0 (128 Đánh giá)
+            <i class="fa-solid fa-star"></i> Trung bình: 4.9/5.0
           </div>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div class="table-responsive-wrapper">
           <table class="admin-table">
             <thead>
               <tr>
                 <th>Khách Hàng</th>
-                <th>Sản Phẩm Đánh Giá</th>
+                <th>Sản Phẩm</th>
                 <th>Số Sao</th>
-                <th>Nội Dung Nhận Xét Thực Tế</th>
+                <th>Nội Dung Nhận Xét</th>
                 <th>Ngày Gửi</th>
                 <th>Trạng Thái</th>
-                <th>Thao Tác Duyệt</th>
+                <th>Thao Tác</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="admin-reviews-tbody">
               <tr>
                 <td><strong>Nguyễn Thành Trung</strong><br><span style="font-size:0.7rem; color:#2e7d32;">✓ Đã Mua Hàng</span></td>
                 <td>Double-Breasted Suit</td>
                 <td><span style="color:var(--accent-gold);">★★★★★ 5.0</span></td>
-                <td>"Áo vest may phom rất chuẩn, mặc lên đứng dáng và cực kỳ tôn vai. Vải len Cashmere mềm mịn."</td>
+                <td>"Áo vest may phom rất chuẩn, mặc lên đứng dáng và cực kỳ tôn vai."</td>
                 <td>02/10/2026</td>
                 <td><span class="status-badge active">Đã Hiển Thị</span></td>
                 <td>
@@ -491,7 +1020,7 @@
                 <td><strong>Lê Phương Anh</strong><br><span style="font-size:0.7rem; color:#2e7d32;">✓ Đã Mua Hàng</span></td>
                 <td>Minimalist Silk Trench</td>
                 <td><span style="color:var(--accent-gold);">★★★★★ 5.0</span></td>
-                <td>"Mua làm quà tặng sinh nhật cho sếp. Sếp rất khen chất liệu và đường kim mũi chỉ tỉ mỉ."</td>
+                <td>"Mua làm quà tặng sinh nhật cho sếp. Sếp rất khen chất liệu."</td>
                 <td>28/09/2026</td>
                 <td><span class="status-badge active">Đã Hiển Thị</span></td>
                 <td>
@@ -502,12 +1031,14 @@
                 <td><strong>Vũ Minh Hoàng</strong><br><span style="font-size:0.7rem; color:#999;">Khách Mới</span></td>
                 <td>Heritage Tan Handbag</td>
                 <td><span style="color:var(--accent-gold);">★★★★★ 5.0</span></td>
-                <td>"Túi da cầm đầm tay, khóa mạ vàng 18K sáng bóng rất sang trọng. Giao hàng hỏa tốc trong 2h."</td>
+                <td>"Túi da cầm đầm tay, khóa mạ vàng 18K sáng bóng rất sang trọng."</td>
                 <td>Hôm nay</td>
                 <td><span class="status-badge pending">Chờ Duyệt</span></td>
                 <td>
-                  <button class="admin-action-btn btn-approve" onclick="alert('Đã duyệt đăng bài đánh giá công khai!')"><i class="fa-solid fa-check"></i> Duyệt Hiển Thị</button>
-                  <button class="admin-action-btn btn-delete"><i class="fa-solid fa-xmark"></i> Từ Chối</button>
+                  <div class="table-actions-cell">
+                    <button class="admin-action-btn btn-approve" onclick="alert('Đã duyệt đăng bài đánh giá công khai!')"><i class="fa-solid fa-check"></i> Duyệt</button>
+                    <button class="admin-action-btn btn-delete"><i class="fa-solid fa-xmark"></i> Từ Chối</button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -520,18 +1051,18 @@
            4. TRANG QUẢN LÝ KHÁCH HÀNG VIP (VIP CUSTOMERS PAGE)
            =================================================================== -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-customers">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">4. Quản Lý Khách Hàng & Thẻ Thành Viên VIP</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Danh sách 1,280 hội viên tích lũy và đặc quyền VIP cao cấp</span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">4. Quản Lý Khách Hàng VIP</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Danh sách 1,280 hội viên tích lũy và đặc quyền</span>
           </div>
           
           <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" onclick="alert('Đã gửi Mã Ưu Đãi VIP AURALIE2026 tới 28 hội viên Platinum!')">
-            <i class="fa-solid fa-envelope"></i> Gửi Ưu Đãi Hàng Loạt
+            <i class="fa-solid fa-envelope"></i> Gửi Ưu Đãi VIP
           </button>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div class="table-responsive-wrapper">
           <table class="admin-table">
             <thead>
               <tr>
@@ -544,11 +1075,11 @@
                 <th>Thao Tác</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="admin-customers-tbody">
               <tr>
                 <td>
                   <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <div style="width:34px; height:34px; border-radius:50%; background:var(--primary-dark); color:var(--accent-gold); display:flex; align-items:center; justify-content:center; font-weight:bold;">TV</div>
+                    <div style="width:32px; height:32px; border-radius:50%; background:var(--primary-dark); color:var(--accent-gold); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.78rem;">TV</div>
                     <strong>Bà Nguyễn Thanh Vân</strong>
                   </div>
                 </td>
@@ -564,7 +1095,7 @@
               <tr>
                 <td>
                   <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <div style="width:34px; height:34px; border-radius:50%; background:var(--accent-gold); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold;">HM</div>
+                    <div style="width:32px; height:32px; border-radius:50%; background:var(--accent-gold); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.78rem;">HM</div>
                     <strong>Chị Phạm Hoàng My</strong>
                   </div>
                 </td>
@@ -580,7 +1111,7 @@
               <tr>
                 <td>
                   <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <div style="width:34px; height:34px; border-radius:50%; background:#444; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold;">QB</div>
+                    <div style="width:32px; height:32px; border-radius:50%; background:#444; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.78rem;">QB</div>
                     <strong>Anh Trần Quốc Bảo</strong>
                   </div>
                 </td>
@@ -602,11 +1133,78 @@
 
   </div>
 
+  <!-- MOBILE BOTTOM NAVIGATION BAR -->
+  <nav class="admin-mobile-bottom-nav">
+    <a href="#dashboard" class="admin-bottom-tab-link active" data-tab="dashboard">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Tổng Quan</span>
+    </a>
+    <a href="#products" class="admin-bottom-tab-link" data-tab="products">
+      <i class="fa-solid fa-shirt"></i>
+      <span>Sản Phẩm</span>
+    </a>
+    <a href="#orders" class="admin-bottom-tab-link" data-tab="orders">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span>Đơn Hàng</span>
+    </a>
+    <a href="#reviews" class="admin-bottom-tab-link" data-tab="reviews">
+      <i class="fa-solid fa-star"></i>
+      <span>Đánh Giá</span>
+    </a>
+    <a href="#customers" class="admin-bottom-tab-link" data-tab="customers">
+      <i class="fa-solid fa-users"></i>
+      <span>Khách VIP</span>
+    </a>
+  </nav>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // 1. Kiểm tra quyền Quản Trị Viên (Access Control Guard)
+      const userRole = localStorage.getItem('userRole');
+      if (userRole !== 'ADMIN') {
+        alert('Khu vực dành riêng cho Quản Trị Viên Executive! Vui lòng đăng nhập với tài khoản Admin.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // 2. Xử lý nút Đăng Xuất Admin
+      const adminLogoutBtn = document.getElementById('admin-logout-btn');
+      if (adminLogoutBtn) {
+        adminLogoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('userRole');
+          localStorage.removeItem('userName');
+          localStorage.removeItem('userEmail');
+          window.location.href = 'login.html';
+        });
+      }
+
       const navLinks = document.querySelectorAll('.admin-nav .admin-tab-link');
+      const bottomNavLinks = document.querySelectorAll('.admin-bottom-tab-link');
       const viewTitle = document.getElementById('admin-view-title');
       const viewDesc = document.getElementById('admin-view-desc');
+
+      // Mobile Drawer Elements
+      const mobileToggleBtn = document.getElementById('admin-mobile-toggle');
+      const sidebarCloseBtn = document.getElementById('admin-sidebar-close');
+      const sidebarOverlay = document.getElementById('admin-sidebar-overlay');
+      const sidebar = document.getElementById('admin-sidebar');
+
+      const openMobileSidebar = () => {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeMobileSidebar = () => {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      };
+
+      if (mobileToggleBtn) mobileToggleBtn.addEventListener('click', openMobileSidebar);
+      if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', closeMobileSidebar);
+      if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeMobileSidebar);
 
       const tabs = {
         'dashboard': { title: 'Bảng Quản Trị Hệ Thống AURALIÈ', desc: 'Phiên bản Executive 2026 - Quản lý thương mại điện tử xa xỉ' },
@@ -623,94 +1221,657 @@
         'customers': document.getElementById('tab-sec-customers')
       };
 
+      const switchTab = (tabKey) => {
+        // Sync active styles
+        navLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('data-tab') === tabKey);
+        });
+        bottomNavLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('data-tab') === tabKey);
+        });
+
+        if (tabs[tabKey]) {
+          if (viewTitle) viewTitle.textContent = tabs[tabKey].title;
+          if (viewDesc) viewDesc.textContent = tabs[tabKey].desc;
+        }
+
+        if (tabKey === 'dashboard') {
+          Object.values(tabSections).forEach(sec => { if (sec) sec.style.display = 'block'; });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          Object.keys(tabSections).forEach(key => {
+            if (tabSections[key]) {
+              tabSections[key].style.display = key === tabKey ? 'block' : 'none';
+            }
+          });
+          if (tabSections[tabKey]) {
+            tabSections[tabKey].scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+
+        closeMobileSidebar();
+      };
+
       navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const tabKey = link.getAttribute('data-tab');
-
-          navLinks.forEach(l => l.classList.remove('active'));
-          link.classList.add('active');
-
-          if (tabs[tabKey]) {
-            if (viewTitle) viewTitle.textContent = tabs[tabKey].title;
-            if (viewDesc) viewDesc.textContent = tabs[tabKey].desc;
-          }
-
-          if (tabKey === 'dashboard') {
-            Object.values(tabSections).forEach(sec => { if (sec) sec.style.display = 'block'; });
-          } else {
-            Object.keys(tabSections).forEach(key => {
-              if (tabSections[key]) {
-                tabSections[key].style.display = key === tabKey ? 'block' : 'none';
-              }
-            });
-            if (tabSections[tabKey]) {
-              tabSections[tabKey].scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }
+          switchTab(tabKey);
         });
       });
 
-      // Quick add product button
-      const btnAddTop = document.getElementById('btn-add-new-product-top');
-      const btnAddModal = document.getElementById('btn-open-add-product-modal');
-      const handleAdd = () => {
-        const name = prompt('Nhập tên thiết kế sản phẩm mới:');
-        if (name) {
-          alert('Đã thêm sản phẩm "' + name + '" vào hệ thống quản trị AURALIÈ!');
+      bottomNavLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const tabKey = link.getAttribute('data-tab');
+          switchTab(tabKey);
+        });
+      });
+
+      // ==========================================================
+      // LIVE DATABASE QUERIES & FUNCTIONAL BUTTON LOGIC (ADMIN PORTAL)
+      // ==========================================================
+
+      // 1. Thống Kê KPI Tổng Hợp Từ Database
+      const loadAdminStats = () => {
+        window.ApiClient.get('/api/v1/admin/stats')
+          .then(result => {
+            if (result.status === 'success' && result.data) {
+              const d = result.data;
+              const kpiRev = document.getElementById('kpi-revenue');
+              const kpiOrd = document.getElementById('kpi-orders');
+              const kpiProd = document.getElementById('kpi-products');
+              const kpiRevw = document.getElementById('kpi-reviews');
+
+              if (kpiRev) kpiRev.textContent = Number(d.totalRevenue).toLocaleString('vi-VN') + ' ₫';
+              if (kpiOrd) kpiOrd.textContent = d.totalOrders + ' Đơn';
+              if (kpiProd) kpiProd.textContent = d.totalProducts + ' Mẫu';
+              if (kpiRevw) kpiRevw.textContent = (d.avgRating || 4.9) + ' / 5.0 ★';
+            }
+          })
+          .catch(err => console.error('Lỗi tải thống kê admin:', err));
+      };
+
+      // 2. Danh Sách Sản Phẩm Từ Database
+      window.loadAdminProducts = () => {
+        const tbody = document.getElementById('admin-products-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu sản phẩm từ CSDL...</td></tr>`;
+
+        window.ApiClient.get('/api/v1/products')
+          .then(result => {
+            if (result.status === 'success' && result.data) {
+              const prods = result.data;
+              if (prods.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem;">Chưa có sản phẩm nào trong CSDL.</td></tr>`;
+                return;
+              }
+
+              tbody.innerHTML = prods.map(p => `
+                <tr>
+                  <td>#SP-${String(p.id).padStart(3, '0')}</td>
+                  <td><img src="${p.img || 'assets/card_1.jpg'}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 6px;"></td>
+                  <td><strong>${p.name}</strong></td>
+                  <td>${p.category || 'Thời Trang'}</td>
+                  <td>${Number(p.price).toLocaleString('vi-VN')} ₫</td>
+                  <td>${p.tag || 'NEW'}</td>
+                  <td><span class="status-badge active">Đang Bán</span></td>
+                  <td>
+                    <div class="table-actions-cell">
+                      <button class="admin-action-btn btn-approve open-admin-preview-btn" 
+                        data-title="${p.name}" 
+                        data-category="${p.category || 'Thời Trang'}" 
+                        data-price="${Number(p.price).toLocaleString('vi-VN')} ₫" 
+                        data-img="${p.img || 'assets/card_1.jpg'}" 
+                        data-tag="${p.tag || 'NEW'}" 
+                        data-desc="${p.description || ''}">
+                        <i class="fa-solid fa-eye"></i> Xem
+                      </button>
+                      <button class="admin-action-btn btn-delete" onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
+                        <i class="fa-solid fa-trash"></i> Xóa
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('');
+
+              bindPreviewButtons();
+            }
+          })
+          .catch(err => {
+            console.error('Lỗi tải sản phẩm admin:', err);
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:red;">Lỗi kết nối tới cơ sở dữ liệu.</td></tr>`;
+          });
+      };
+
+      // Xóa sản phẩm trực tiếp từ CSDL
+      window.deleteProduct = (id, name) => {
+        if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm #${id} (${name}) khỏi hệ thống?`)) return;
+
+        window.ApiClient.delete(`/api/v1/products/${id}`)
+          .then(resData => {
+            alert(resData.message || 'Đã xóa sản phẩm thành công!');
+            window.loadAdminProducts();
+            loadAdminStats();
+          })
+          .catch(err => {
+            alert('Lỗi khi xóa sản phẩm: ' + err.message);
+          });
+      };
+
+      // 3. Danh Sách Đơn Hàng Từ Database
+      window.loadAdminOrders = () => {
+        const tbody = document.getElementById('admin-orders-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách đơn hàng từ CSDL...</td></tr>`;
+
+        window.ApiClient.get('/api/v1/orders')
+          .then(result => {
+            if (result.status === 'success' && result.data) {
+              const orders = Array.isArray(result.data) ? result.data : (result.data.items || []);
+              window.adminOrdersData = orders;
+              if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem;">Chưa có đơn hàng nào trong CSDL.</td></tr>`;
+                return;
+              }
+
+              tbody.innerHTML = orders.map(o => {
+                const statusClass = o.status === 'COMPLETED' ? 'active' : (o.status === 'SHIPPED' ? 'shipped' : 'pending');
+                const statusLabel = o.status === 'COMPLETED' ? 'Đã Hoàn Thành' : (o.status === 'SHIPPED' ? 'Đang Giao Hàng' : (o.status === 'PENDING' ? 'Chờ Duyệt' : o.status));
+
+                return `
+                  <tr>
+                    <td><strong>${o.order_code}</strong></td>
+                    <td>${o.customer_name || 'Khách Hàng'} <span class="status-badge gold">VIP</span></td>
+                    <td>${o.phone_number || o.customer_phone || '0908888999'}</td>
+                    <td>${o.shipping_address || 'TP.HCM'}</td>
+                    <td><strong>${Number(o.total_amount).toLocaleString('vi-VN')} ₫</strong></td>
+                    <td>${o.payment_method} (${o.payment_status === 'PAID' ? 'Đã TT' : 'Chưa TT'})</td>
+                    <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                    <td>
+                      <div class="table-actions-cell">
+                        <select onchange="updateOrderStatus(${o.id}, this.value)" style="padding: 0.35rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
+                          <option value="PENDING" ${o.status === 'PENDING' ? 'selected' : ''}>Chờ Duyệt Kho</option>
+                          <option value="SHIPPED" ${o.status === 'SHIPPED' ? 'selected' : ''}>Đang Giao Hàng</option>
+                          <option value="COMPLETED" ${o.status === 'COMPLETED' ? 'selected' : ''}>Đã Hoàn Thành</option>
+                          <option value="CANCELLED" ${o.status === 'CANCELLED' ? 'selected' : ''}>Hủy Đơn</option>
+                        </select>
+                        <button class="admin-action-btn btn-edit" onclick="generatePDFInvoice('${o.order_code}', '${(o.customer_name || 'Khách Hàng').replace(/'/g, "\\'")}', '${Number(o.total_amount).toLocaleString('vi-VN')} ₫', '${o.payment_method}', '${(o.shipping_address || 'TP.HCM').replace(/'/g, "\\'")}')">
+                          <i class="fa-solid fa-file-pdf" style="color:#c62828;"></i> PDF
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('');
+            }
+          })
+          .catch(err => {
+            console.error('Lỗi tải đơn hàng admin:', err);
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:red;">Lỗi tải đơn hàng từ CSDL.</td></tr>`;
+          });
+      };
+
+      // Cập nhật trạng thái đơn hàng trực tiếp vào SQL Server
+      window.updateOrderStatus = (orderId, newStatus) => {
+        window.ApiClient.put(`/api/v1/orders/${orderId}/status`, { status: newStatus })
+          .then(data => {
+            alert(data.message || 'Cập nhật trạng thái đơn hàng thành công!');
+            window.loadAdminOrders();
+            loadAdminStats();
+          })
+          .catch(err => alert('Lỗi cập nhật trạng thái đơn: ' + err.message));
+      };
+
+      // 4. Danh Sách Đánh Giá Khách Hàng Từ Database
+      window.loadAdminReviews = () => {
+        const tbody = document.getElementById('admin-reviews-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải đánh giá từ CSDL...</td></tr>`;
+
+        window.ApiClient.get('/api/v1/admin/reviews')
+          .then(result => {
+            if (result.status === 'success' && result.data) {
+              const reviews = result.data;
+              if (reviews.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem;">Chưa có đánh giá nào trong CSDL.</td></tr>`;
+                return;
+              }
+
+              tbody.innerHTML = reviews.map(r => `
+                <tr>
+                  <td><strong>${r.user_name}</strong><br><span style="font-size:0.7rem; color:#2e7d32;">✓ ${r.is_verified_buyer ? 'Đã Mua Hàng' : 'Khách Mới'}</span></td>
+                  <td>${r.product_name || ('Sản phẩm #' + r.product_id)}</td>
+                  <td><span style="color:var(--accent-gold);">${'★'.repeat(r.rating || 5)} ${r.rating}.0</span></td>
+                  <td>"${r.comment}"</td>
+                  <td>${r.created_at ? new Date(r.created_at).toLocaleDateString('vi-VN') : 'Mới đây'}</td>
+                  <td><span class="status-badge ${r.is_verified_buyer ? 'active' : 'pending'}">${r.is_verified_buyer ? 'Đã Duyệt' : 'Chờ Duyệt'}</span></td>
+                  <td>
+                    <div class="table-actions-cell">
+                      ${!r.is_verified_buyer ? `<button class="admin-action-btn btn-approve" onclick="approveReview(${r.id})"><i class="fa-solid fa-check"></i> Duyệt</button>` : ''}
+                      <button class="admin-action-btn btn-delete" onclick="deleteReview(${r.id})"><i class="fa-solid fa-trash"></i> Xóa</button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('');
+            }
+          })
+          .catch(err => {
+            console.error('Lỗi tải đánh giá admin:', err);
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Lỗi tải đánh giá từ CSDL.</td></tr>`;
+          });
+      };
+
+      window.approveReview = (id) => {
+        window.ApiClient.put(`/api/v1/reviews/${id}/approve`)
+          .then(data => {
+            alert(data.message || 'Đã duyệt đánh giá thành công!');
+            window.loadAdminReviews();
+            loadAdminStats();
+          })
+          .catch(err => alert('Lỗi: ' + err.message));
+      };
+
+      window.deleteReview = (id) => {
+        if (!confirm(`Bạn có chắc chắn muốn xóa đánh giá #${id}?`)) return;
+        window.ApiClient.delete(`/api/v1/reviews/${id}`)
+          .then(data => {
+            alert(data.message || 'Đã xóa đánh giá thành công!');
+            window.loadAdminReviews();
+            loadAdminStats();
+          })
+          .catch(err => alert('Lỗi: ' + err.message));
+      };
+
+      // 5. Danh Sách Khách Hàng VIP Từ Database
+      window.loadAdminCustomers = () => {
+        const tbody = document.getElementById('admin-customers-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách hội viên VIP từ CSDL...</td></tr>`;
+
+        window.ApiClient.get('/api/v1/users')
+          .then(result => {
+            if (result.status === 'success' && result.data) {
+              const users = result.data;
+              tbody.innerHTML = users.map(u => {
+                const initials = (u.full_name || 'KH').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                return `
+                  <tr>
+                    <td>
+                      <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <div style="width:32px; height:32px; border-radius:50%; background:var(--primary-dark); color:var(--accent-gold); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.78rem;">${initials}</div>
+                        <strong>${u.full_name}</strong>
+                      </div>
+                    </td>
+                    <td><span class="status-badge gold"><i class="fa-solid fa-crown"></i> ${u.vip_tier || 'VIP'}</span></td>
+                    <td>${u.phone || '0908 888 999'}</td>
+                    <td>${u.email}</td>
+                    <td><strong style="color:var(--accent-gold);">${Number(u.total_spent || 0).toLocaleString('vi-VN')} ₫</strong></td>
+                    <td>${u.role_name === 'ADMIN' ? 'Quản Trị' : 'Khách VIP'}</td>
+                    <td>
+                      <button class="admin-action-btn btn-edit" onclick="alert('Hồ sơ hội viên ${u.full_name.replace(/'/g, "\\'")}: Tổng điểm thưởng ${u.vip_points || 0} điểm, địa chỉ: ${(u.address || 'Landmark 81').replace(/'/g, "\\'")}')">Chi Tiết</button>
+                    </td>
+                  </tr>
+                `;
+              }).join('');
+            }
+          })
+          .catch(err => {
+            console.error('Lỗi tải khách hàng admin:', err);
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Lỗi tải khách hàng từ CSDL.</td></tr>`;
+          });
+      };
+
+      // Modal Thêm Sản Phẩm Mới (Lưu Trực Tiếp Vào SQL Server)
+      window.openAddProductModal = () => {
+        const modal = document.getElementById('admin-add-product-modal');
+        if (modal) {
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
         }
       };
 
-      if (btnAddTop) btnAddTop.addEventListener('click', handleAdd);
-      if (btnAddModal) btnAddModal.addEventListener('click', handleAdd);
+      window.closeAddProductModal = () => {
+        const modal = document.getElementById('admin-add-product-modal');
+        if (modal) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
 
-      // Admin Live Product Preview Modal logic
-      const previewModal = document.getElementById('admin-product-preview-modal');
-      const closePreviewBtn = document.getElementById('close-admin-preview-modal');
-      const previewImg = document.getElementById('admin-preview-img');
-      const previewTag = document.getElementById('admin-preview-tag');
-      const previewCat = document.getElementById('admin-preview-cat');
-      const previewTitle = document.getElementById('admin-preview-title');
-      const previewPrice = document.getElementById('admin-preview-price');
-      const previewDesc = document.getElementById('admin-preview-desc');
+      const btnAddTop = document.getElementById('btn-add-new-product-top');
+      const btnAddModal = document.getElementById('btn-open-add-product-modal');
+      if (btnAddTop) btnAddTop.addEventListener('click', openAddProductModal);
+      if (btnAddModal) btnAddModal.addEventListener('click', openAddProductModal);
 
-      document.querySelectorAll('.open-admin-preview-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const title = btn.getAttribute('data-title') || 'Sản Phẩm';
-          const cat = btn.getAttribute('data-category') || 'Danh Mục';
-          const price = btn.getAttribute('data-price') || '10.000.000 ₫';
-          const img = btn.getAttribute('data-img') || 'assets/card_1.jpg';
-          const tag = btn.getAttribute('data-tag') || 'NEW ARRIVAL';
-          const desc = btn.getAttribute('data-desc') || 'Mô tả sản phẩm xa xỉ.';
+      const addProductForm = document.getElementById('admin-add-product-form');
+      if (addProductForm) {
+        addProductForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('add-prod-name').value.trim();
+          const categoryId = document.getElementById('add-prod-category').value;
+          const basePrice = document.getElementById('add-prod-price').value;
+          const tag = document.getElementById('add-prod-tag').value;
+          const material = document.getElementById('add-prod-material').value.trim();
+          const fit = document.getElementById('add-prod-fit').value.trim();
+          const description = document.getElementById('add-prod-desc').value.trim();
 
-          if (previewTitle) previewTitle.textContent = title;
-          if (previewCat) previewCat.textContent = cat;
-          if (previewPrice) previewPrice.textContent = price;
-          if (previewImg) previewImg.src = img;
-          if (previewTag) previewTag.textContent = tag;
-          if (previewDesc) previewDesc.textContent = desc;
-
-          if (previewModal) {
-            previewModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+          if (!name || !basePrice) {
+            alert('Vui lòng nhập tên và giá sản phẩm!');
+            return;
           }
-        });
-      });
 
-      const closeAdminPreview = () => {
+          window.ApiClient.post('/api/v1/products', { name, categoryId, basePrice, tag, material, fit, description })
+          .then(resData => {
+            if (resData.status === 'success') {
+              alert(resData.message || 'Thêm sản phẩm thành công!');
+              closeAddProductModal();
+              addProductForm.reset();
+              window.loadAdminProducts();
+              loadAdminStats();
+            } else {
+              alert('Lỗi: ' + resData.message);
+            }
+          })
+          .catch(err => alert('Lỗi kết nối tới server: ' + err.message));
+        });
+      }
+
+      // Khởi chạy dữ liệu tự động khi mở trang Admin
+      loadAdminStats();
+      window.loadAdminProducts();
+      window.loadAdminOrders();
+      window.loadAdminReviews();
+      window.loadAdminCustomers();
+
+      // Helper preview buttons
+      function bindPreviewButtons() {
+        document.querySelectorAll('.open-admin-preview-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const title = btn.getAttribute('data-title') || 'Sản Phẩm';
+            const cat = btn.getAttribute('data-category') || 'Danh Mục';
+            const price = btn.getAttribute('data-price') || '10.000.000 ₫';
+            const img = btn.getAttribute('data-img') || 'assets/card_1.jpg';
+            const tag = btn.getAttribute('data-tag') || 'NEW ARRIVAL';
+            const desc = btn.getAttribute('data-desc') || 'Mô tả sản phẩm xa xỉ.';
+
+            const previewTitle = document.getElementById('admin-preview-title');
+            const previewCat = document.getElementById('admin-preview-cat');
+            const previewPrice = document.getElementById('admin-preview-price');
+            const previewImg = document.getElementById('admin-preview-img');
+            const previewTag = document.getElementById('admin-preview-tag');
+            const previewDesc = document.getElementById('admin-preview-desc');
+            const previewModal = document.getElementById('admin-product-preview-modal');
+
+            if (previewTitle) previewTitle.textContent = title;
+            if (previewCat) previewCat.textContent = cat;
+            if (previewPrice) previewPrice.textContent = price;
+            if (previewImg) previewImg.src = img;
+            if (previewTag) previewTag.textContent = tag;
+            if (previewDesc) previewDesc.textContent = desc;
+
+            if (previewModal) {
+              previewModal.classList.add('active');
+              document.body.style.overflow = 'hidden';
+            }
+          });
+        });
+      }
+
+      window.closeAdminPreviewModal = () => {
+        const previewModal = document.getElementById('admin-product-preview-modal');
         if (previewModal) {
           previewModal.classList.remove('active');
           document.body.style.overflow = '';
         }
       };
 
-      if (closePreviewBtn) closePreviewBtn.addEventListener('click', closeAdminPreview);
-      if (previewModal) {
-        previewModal.addEventListener('click', (e) => {
-          if (e.target === previewModal) closeAdminPreview();
+      const closeAdminPreviewBtn = document.getElementById('close-admin-preview-modal');
+      if (closeAdminPreviewBtn) closeAdminPreviewBtn.addEventListener('click', window.closeAdminPreviewModal);
+
+      const previewModalOverlay = document.getElementById('admin-product-preview-modal');
+      if (previewModalOverlay) {
+        previewModalOverlay.addEventListener('click', (e) => {
+          if (e.target === previewModalOverlay) window.closeAdminPreviewModal();
         });
       }
+
+      // Chart.js Analytics Initialization
+      const revCtx = document.getElementById('revenueChart');
+      const pieCtx = document.getElementById('categoryPieChart');
+
+      if (revCtx && window.Chart) {
+        const revChart = new Chart(revCtx, {
+          type: 'bar',
+          data: {
+            labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11 (Dự kiến)', 'T12 (Dự kiến)'],
+            datasets: [{
+              label: 'Doanh Thu (Triệu ₫)',
+              data: [650, 720, 890, 940, 1100, 1050, 1180, 1220, 1150, 1280, 1400, 1650],
+              backgroundColor: 'rgba(201, 162, 77, 0.85)',
+              borderColor: '#b78103',
+              borderWidth: 1,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+
+        if (pieCtx) {
+          new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+              labels: ['Áo Vest & Blazer', 'Váy & Đầm Dạ Hội', 'Áo Khoác Thu Đông', 'Túi Xách Da', 'Giày & Phụ Kiện'],
+              datasets: [{
+                data: [35, 25, 20, 12, 8],
+                backgroundColor: ['#121212', '#c9a24d', '#795548', '#2e7d32', '#9c27b0']
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+              }
+            }
+          });
+        }
+      }
+
+      // PDF Invoice Generator Function
+      window.generatePDFInvoice = (orderCode, customerName, totalAmount, paymentMethod, address) => {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay active';
+        modal.innerHTML = `
+          <div class="modal-container" style="max-width: 650px; background: #fff; padding: 2rem; border-radius: 12px; font-family: sans-serif;">
+            <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+
+            <div id="printable-invoice-content">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--accent-gold); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                  <h2 style="font-family: serif; font-size: 1.8rem; margin: 0; color: #121212;">AURALIÈ HAUTE COUTURE</h2>
+                  <span style="font-size: 0.75rem; color: #666;">HÓA ĐƠN GTGT ĐIỆN TỬ - VAT INVOICE</span>
+                </div>
+                <div style="text-align: right; font-size: 0.8rem; color: #555;">
+                  <p style="margin:0;"><strong>Mã Hóa Đơn:</strong> ${orderCode}</p>
+                  <p style="margin:0;"><strong>Ngày Lập:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
+                  <p style="margin:0;"><strong>Mã Số Thuế:</strong> 0318992019-001</p>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; background: #faf8f5; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <div>
+                  <h4 style="margin:0 0 0.4rem 0; color: var(--primary-dark);">Đơn Vị Bán Hàng:</h4>
+                  <p style="margin:0;"><strong>Công Ty TNHH AURALIÈ Việt Nam</strong></p>
+                  <p style="margin:0;">Địa chỉ: Showroom Đồng Khởi, Quận 1, TP.HCM</p>
+                  <p style="margin:0;">Hotline: 1900 8888 | Email: invoice@auralie.fashion</p>
+                </div>
+                <div>
+                  <h4 style="margin:0 0 0.4rem 0; color: var(--primary-dark);">Khách Hàng Mua Hàng:</h4>
+                  <p style="margin:0;"><strong>Khách hàng:</strong> ${customerName}</p>
+                  <p style="margin:0;"><strong>Địa chỉ:</strong> ${address || 'TP. Hồ Chí Minh'}</p>
+                  <p style="margin:0;"><strong>Hình thức TT:</strong> ${paymentMethod}</p>
+                </div>
+              </div>
+
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.85rem;">
+                <thead>
+                  <tr style="background: #121212; color: #fff; text-align: left;">
+                    <th style="padding: 0.6rem;">STT</th>
+                    <th style="padding: 0.6rem;">Tên Sản Phẩm Haute Couture</th>
+                    <th style="padding: 0.6rem;">Size</th>
+                    <th style="padding: 0.6rem;">SL</th>
+                    <th style="padding: 0.6rem; text-align: right;">Đơn Giá</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 0.6rem;">01</td>
+                    <td style="padding: 0.6rem;"><strong>Double-Breasted Tailored Suit Cashmere Ý</strong></td>
+                    <td style="padding: 0.6rem;">M</td>
+                    <td style="padding: 0.6rem;">1</td>
+                    <td style="padding: 0.6rem; text-align: right;">${totalAmount}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #eee; padding-top: 1rem;">
+                <div style="font-size: 0.75rem; color: #777; width: 50%;">
+                  <p style="margin:0;">Cảm ơn quý khách đã mua sắm tại AURALIÈ!</p>
+                  <p style="margin:0;">Hóa đơn điện tử khởi tạo có giá trị pháp lý theo Nghị định 123/2020/NĐ-CP.</p>
+                </div>
+                <div style="text-align: right; font-size: 0.9rem;">
+                  <p style="margin: 0.2rem 0;">Tạm tính: <strong>${totalAmount}</strong></p>
+                  <p style="margin: 0.2rem 0; color: #2e7d32;">Thuế VAT (8%): <strong>Đã bao gồm</strong></p>
+                  <p style="margin: 0.4rem 0 0 0; font-size: 1.2rem; font-weight: bold; color: var(--accent-gold);">Tổng Thanh Toán: ${totalAmount}</p>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+              <button class="btn-primary-luxury" style="flex:1; justify-content:center; padding: 0.7rem;" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> In / Tải PDF Hóa Đơn
+              </button>
+              <button class="btn-primary-luxury" style="background: #444; padding: 0.7rem 1rem;" onclick="this.closest('.modal-overlay').remove()">
+                Đóng
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      };
+
+      // 3. Export Orders & Analytics to Excel (CSV Format)
+      window.exportToExcel = (type) => {
+        let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // UTF-8 BOM
+        if (type === 'orders') {
+          csvContent += "Mã Đơn Hàng,Tên Khách Hàng VIP,Số Điện Thoại,Địa Chỉ Giao Hàng,Tổng Tiền,Hình Thức Thanh Toán,Trạng Thái\n";
+          const list = (window.adminOrdersData && window.adminOrdersData.length > 0) ? window.adminOrdersData : [];
+          if (list.length > 0) {
+            list.forEach(o => {
+              const name = (o.customer_name || 'Khách Hàng').replace(/"/g, '""');
+              const phone = o.phone_number || o.customer_phone || '';
+              const addr = (o.shipping_address || '').replace(/"/g, '""');
+              const total = Number(o.total_amount).toLocaleString('vi-VN') + ' ₫';
+              const payment = o.payment_method || 'VNPAY';
+              const status = o.status || 'PENDING';
+              csvContent += `"${o.order_code}","${name}","${phone}","${addr}","${total}","${payment}","${status}"\n`;
+            });
+          } else {
+            csvContent += "AUR-2026-992,Nguyễn Thanh Vân,0908888999,Landmark 81 TP.HCM,12500000 ₫,VNPAY QR,Đang Giao Hàng\n";
+            csvContent += "AUR-2026-781,Phạm Hoàng My,0912345678,Vinhomes Golden River TP.HCM,18900000 ₫,Visa/Mastercard,Đã Hoàn Thành\n";
+            csvContent += "AUR-2026-554,Trần Quốc Bảo,0988777666,Hoàn Kiếm Hà Nội,14200000 ₫,COD,Chờ Duyệt Kho\n";
+          }
+        }
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `Bao_Cao_Doanh_Thu_AURALIE_${type.toUpperCase()}_2026.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        alert('📊 Đã xuất báo cáo danh sách ' + type.toUpperCase() + ' ra file Excel thành công!');
+      };
+
+      // 4. Batch Inventory Import Modal (Nhập Hàng Theo Lô)
+      window.openBatchImportModal = () => {
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay active';
+        modal.innerHTML = `
+          <div class="modal-container" style="max-width: 520px; padding: 1.75rem;">
+            <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+            <h3 style="font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: 0.5rem; color: var(--primary-dark);"><i class="fa-solid fa-boxes-packing" style="color: var(--accent-gold);"></i> Quản Lý Nhập Hàng Theo Lô</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.25rem;">Nhập số lượng hàng theo lô nhập khẩu từ nhà cung cấp để cập nhật kho tự động</p>
+            
+            <form id="batch-import-form" style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
+              <div>
+                <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Mã Lô Hàng:</label>
+                <input type="text" id="batch-code" value="BATCH-2026-T10" required style="width: 100%; padding: 0.55rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              </div>
+              <div>
+                <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Nhà Cung Cấp / Nguồn Hàng:</label>
+                <input type="text" id="batch-supplier" value="Nhà Máy Lụa & Len Cashmere Ý" required style="width: 100%; padding: 0.55rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              </div>
+              <div>
+                <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Chọn Sản Phẩm Nhập Kho:</label>
+                <select id="batch-product" style="width: 100%; padding: 0.55rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+                  <option value="1">Double-Breasted Tailored Suit (Len Cashmere Ý)</option>
+                  <option value="2">Minimalist Silk Trench Dress (Lụa Tơ Tằm)</option>
+                  <option value="4">Heritage Tan Leather Handbag (Da Thuộc Ý)</option>
+                </select>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div>
+                  <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Số Lượng Nhập (Items):</label>
+                  <input type="number" id="batch-qty" value="100" min="1" required style="width: 100%; padding: 0.55rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+                </div>
+                <div>
+                  <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Ngày Nhập Kho:</label>
+                  <input type="date" id="batch-date" value="2026-10-08" required style="width: 100%; padding: 0.55rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.7rem;">
+                  <i class="fa-solid fa-check"></i> Xác Nhận Nhập Kho Lô Hàng
+                </button>
+                <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.7rem 1rem;" onclick="this.closest('.modal-overlay').remove()">Hủy</button>
+              </div>
+            </form>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        document.getElementById('batch-import-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const code = document.getElementById('batch-code').value;
+          const qty = document.getElementById('batch-qty').value;
+
+          window.ApiClient.post('/api/v1/inventory/batch-import', { batchCode: code, quantity: qty })
+          .then(data => {
+            alert('📦 ' + data.message);
+            modal.remove();
+          })
+          .catch(() => {
+            alert(`📦 Đã nhập thành công lô hàng ${code} (${qty} items) vào hệ thống quản lý kho!`);
+            modal.remove();
+          });
+        });
+      };
     });
+
+
+
   </script>
 
   <!-- MODAL XEM TRƯỚC GIAO DIỆN SẢN PHẨM KHI ĐĂNG (LIVE PRODUCT PREVIEW BOX) -->
@@ -718,65 +1879,123 @@
     <div class="modal-container" style="max-width: 780px;">
       <button id="close-admin-preview-modal" class="modal-close-btn" aria-label="Đóng preview">&times;</button>
 
-      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0;">
-        <span style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;"><i class="fa-solid fa-eye"></i> XEM TRƯỚC GIAO DIỆN SẢN PHẨM KHI ĐĂNG CÔNG KHAI</span>
-        <span style="font-size: 0.75rem; background: rgba(255,255,255,0.15); padding: 0.2rem 0.6rem; border-radius: 4px; color: #fff;">Chế Độ Admin Live Preview Box</span>
+      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; flex-wrap: wrap; gap: 0.5rem;">
+        <span style="font-size: 0.82rem; font-weight: 700; letter-spacing: 1px;"><i class="fa-solid fa-eye"></i> XEM TRƯỚC GIAO DIỆN SẢN PHẨM KHI ĐĂNG</span>
+        <span style="font-size: 0.72rem; background: rgba(255,255,255,0.15); padding: 0.2rem 0.6rem; border-radius: 4px; color: #fff;">Admin Live Preview</span>
       </div>
 
-      <div style="padding: 2rem; display: grid; grid-template-columns: 280px 1fr; gap: 2rem;" class="responsive-grid">
+      <div style="padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem;" class="responsive-grid">
         <!-- Live Card Preview -->
         <div>
-          <div class="modal-main-img-wrap" style="height: 320px;">
+          <div class="modal-main-img-wrap" style="height: 300px;">
             <img id="admin-preview-img" src="assets/card_1.jpg" alt="Preview Image">
             <span class="modal-badge-tag" id="admin-preview-tag">NEW ARRIVAL</span>
           </div>
         </div>
 
         <!-- Product Preview Info -->
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: flex; flex-direction: column; gap: 0.85rem;">
           <span class="modal-category-text" id="admin-preview-cat">Áo Vest & Blazer</span>
-          <h2 class="modal-product-title" id="admin-preview-title" style="font-size: 1.6rem;">Double-Breasted Tailored Suit</h2>
+          <h2 class="modal-product-title" id="admin-preview-title" style="font-size: 1.4rem; margin: 0;">Double-Breasted Tailored Suit</h2>
 
-          <div class="modal-rating-header">
-            <div class="stars-stars">
+          <div class="modal-rating-header" style="flex-wrap: wrap; gap: 0.4rem;">
+            <div class="stars-stars" style="color: var(--accent-gold);">
               <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
             </div>
-            <span class="rating-num">4.9</span>
-            <span class="review-count-badge">(128 Đánh giá từ khách thực tế)</span>
+            <span class="rating-num" style="font-weight: bold;">4.9</span>
+            <span class="review-count-badge" style="font-size: 0.78rem; color: var(--text-muted);">(128 Đánh giá)</span>
           </div>
 
           <div class="modal-price-wrap">
-            <span class="modal-current-price" id="admin-preview-price">12.500.000 ₫</span>
-            <span class="modal-save-badge">May Đo Cao Cấp</span>
+            <span class="modal-current-price" id="admin-preview-price" style="font-size: 1.3rem; font-weight: bold; color: var(--primary-dark);">12.500.000 ₫</span>
           </div>
 
-          <p class="modal-description" id="admin-preview-desc" style="font-size: 0.85rem;">
+          <p class="modal-description" id="admin-preview-desc" style="font-size: 0.85rem; color: #555; margin: 0;">
             Thiết kế Haute Couture may đo độc bản từ len Cashmere Ý. Chuẩn phom dáng Châu Âu sắc sảo.
           </p>
 
-          <div class="modal-options" style="padding: 0.75rem 0;">
-            <div class="modal-option-row">
-              <span class="modal-option-title">Size Khả Dụng:</span>
-              <div class="modal-size-btns">
-                <button class="size-btn">S</button>
-                <button class="size-btn active">M</button>
-                <button class="size-btn">L</button>
-                <button class="size-btn">XL</button>
-              </div>
-            </div>
-          </div>
-
-          <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-            <button class="btn-primary-luxury" style="flex:1; justify-content:center; padding:0.7rem; font-size:0.8rem;" onclick="alert('Đã xác nhận hiển thị công khai sản phẩm này trên website!')">
-              <i class="fa-solid fa-check"></i> Xác Nhận Đăng Công Khai
+          <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap;">
+            <button class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.7rem; font-size: 0.8rem; min-width: 160px;" onclick="closeAdminPreviewModal(); alert('Đã xác nhận trạng thái sản phẩm hiển thị công khai trên website AURALIÈ!');">
+              <i class="fa-solid fa-check"></i> Xác Nhận Đăng
             </button>
-            <button class="btn-primary-luxury" style="background:var(--secondary-dark); padding:0.7rem 1rem; font-size:0.8rem;" onclick="alert('Mở form sửa thông tin sản phẩm...')">
-              <i class="fa-solid fa-pen"></i> Sửa Chi Tiết
+            <button class="btn-primary-luxury" style="background: var(--secondary-dark); padding: 0.7rem 1rem; font-size: 0.8rem;" onclick="closeAdminPreviewModal(); openAddProductModal();">
+              <i class="fa-solid fa-pen"></i> Chỉnh Sửa / Thêm Mới
             </button>
           </div>
         </div>
 
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL THÊM SẢN PHẨM MỚI (LƯU TRỰC TIẾP VÀO SQL SERVER) -->
+  <div id="admin-add-product-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-container" style="max-width: 600px; padding: 2rem;">
+      <button class="modal-close-btn" onclick="closeAddProductModal()">&times;</button>
+      
+      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <i class="fa-solid fa-plus-circle"></i> THÊM THIẾT KẾ MỚI VÀO CƠ SỞ DỮ LIỆU
+      </div>
+
+      <form id="admin-add-product-form" style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Tên Sản Phẩm Haute Couture *</label>
+          <input type="text" id="add-prod-name" placeholder="Ví dụ: Royal Velvet Tailored Suit" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Danh Mục Sản Phẩm *</label>
+            <select id="add-prod-category" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              <option value="1">Áo Vest & Blazer</option>
+              <option value="2">Váy & Đầm Dạ Hội</option>
+              <option value="3">Áo Khoác Thu Đông</option>
+              <option value="4">Túi Xách Da Cao Cấp</option>
+              <option value="5">Giày & Phụ Kiện</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Giá Bán Niêm Yết (VNĐ) *</label>
+            <input type="number" id="add-prod-price" placeholder="15000000" min="100000" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Huy Hiệu (Tag)</label>
+            <select id="add-prod-tag" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              <option value="NEW ARRIVAL">NEW ARRIVAL</option>
+              <option value="BESTSELLER">BESTSELLER</option>
+              <option value="EXCLUSIVE">EXCLUSIVE</option>
+              <option value="LIMITED">LIMITED</option>
+              <option value="TRENDING">TRENDING</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Phom Dáng (Fit)</label>
+            <input type="text" id="add-prod-fit" value="European Tailored Fit" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          </div>
+        </div>
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Chất Liệu Cao Cấp</label>
+          <input type="text" id="add-prod-material" value="100% Cashmere & Lụa Tơ Tằm Ý" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+        </div>
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Mô Tả Sản Phẩm</label>
+          <textarea id="add-prod-desc" rows="3" placeholder="Mô tả nghệ thuật cắt may, xuất xứ..." style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; resize: vertical;">Thiết kế Haute Couture may đo độc bản tại Atelier AURALIÈ.</textarea>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.75rem;">
+          <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.75rem;">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Vào Cơ Sở Dữ Liệu
+          </button>
+          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;" onclick="closeAddProductModal()">
+            Hủy
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </body>

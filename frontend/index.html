@@ -62,7 +62,7 @@
 
       <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
         <i class="fa-solid fa-bag-shopping"></i>
-        <span class="badge-count" id="cart-count">3</span>
+        <span class="badge-count" id="cart-count">0</span>
       </a>
 
       <div class="user-dropdown-wrapper">
@@ -733,7 +733,7 @@
         <a href="blog.html" class="btn-primary-luxury" style="padding: 0.6rem 1.4rem; font-size: 0.8rem; text-decoration: none;">Xem Tất Cả Bài Viết <i class="fa-solid fa-arrow-right"></i></a>
       </div>
 
-      <div class="product-grid-3col">
+      <div class="product-grid-3col" id="home-journal-grid">
         <!-- Article Card 1 -->
         <article class="fashion-card">
           <div class="card-img-wrap" style="height: 260px;">
@@ -837,12 +837,30 @@
   </footer>
 
   <!-- MOBILE STICKY BOTTOM NAVIGATION -->
-  <nav class="m-bottom-nav">
-    <a href="index.html" class="m-nav-item active"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
-    <a href="index.html#catalog" class="m-nav-item"><i class="fa-solid fa-shirt"></i><span>Sản phẩm</span></a>
-    <a href="collections.html" class="m-nav-item"><i class="fa-solid fa-layer-group"></i><span>Bộ sưu tập</span></a>
-    <a href="cart.html" class="m-nav-item"><i class="fa-solid fa-bag-shopping"></i><span>Giỏ hàng</span></a>
-    <a href="contact.html" class="m-nav-item"><i class="fa-solid fa-envelope"></i><span>Liên hệ</span></a>
+  <nav class="m-bottom-nav" aria-label="Thanh điều hướng di động">
+    <a href="index.html" class="m-nav-item active" data-tab="home">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-house"></i></div>
+      <span>Trang chủ</span>
+    </a>
+    <a href="index.html#catalog" class="m-nav-item" data-tab="catalog">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-shirt"></i></div>
+      <span>Sản phẩm</span>
+    </a>
+    <a href="collections.html" class="m-nav-item" data-tab="collections">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-layer-group"></i></div>
+      <span>Bộ sưu tập</span>
+    </a>
+    <a href="cart.html" class="m-nav-item" data-tab="cart">
+      <div class="m-nav-icon-wrap">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count cart-count-badge">0</span>
+      </div>
+      <span>Giỏ hàng</span>
+    </a>
+    <a href="contact.html" class="m-nav-item" data-tab="contact">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
+      <span>Liên hệ</span>
+    </a>
   </nav>
 
   <!-- PRODUCT DETAIL & REVIEWS MODAL (HƯỚNG THỰC TẾ) -->
@@ -919,7 +937,9 @@
             <div class="modal-option-row">
               <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
                 <span class="modal-option-title">Kích Cỡ: <strong id="modal-selected-size">M</strong></span>
-                <a href="#size-guide" onclick="alert('Bảng quy đổi size chuẩn AURALIÈ:\n- Size S: 45-55kg (1m55-1m65)\n- Size M: 55-68kg (1m65-1m75)\n- Size L: 68-78kg (1m75-1m82)\n- Size XL: >78kg (>1m82)')" style="font-size:0.75rem; color:var(--accent-gold); text-decoration:none;"><i class="fa-solid fa-ruler-horizontal"></i> Bảng Size</a>
+                <button type="button" id="open-size-guide-btn" class="btn-size-guide-trigger" aria-label="Xem bảng quy đổi size">
+                  <i class="fa-solid fa-ruler-combined"></i> Bảng Size
+                </button>
               </div>
               <div class="modal-size-btns">
                 <button class="size-btn">S</button>
@@ -1124,6 +1144,214 @@
 
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- SIZE GUIDE MODAL (BẢNG QUY ĐỔI KÍCH CỠ CHUẨN AURALIÈ) -->
+  <div id="size-guide-modal" class="modal-overlay size-guide-overlay" aria-hidden="true">
+    <div class="modal-container size-guide-container">
+      <button id="close-size-guide-modal" class="modal-close-btn" aria-label="Đóng bảng size">&times;</button>
+      
+      <div class="size-guide-header">
+        <span class="size-guide-badge"><i class="fa-solid fa-crown"></i> AURALIÈ HAUTE COUTURE</span>
+        <h3 class="size-guide-title">Bảng Quy Đổi Kích Cỡ Chuẩn</h3>
+        <p class="size-guide-subtitle">Tiêu chuẩn may đo phom dáng Châu Âu - Dành cho Áo Vest, Sơ Mi &amp; Đầm Thiết Kế</p>
+      </div>
+
+      <!-- TABS CHUYỂN ĐỔI BẢNG SIZE -->
+      <div class="size-guide-tab-nav">
+        <button type="button" class="size-nav-tab active" data-tab="tab-size-men">
+          <i class="fa-solid fa-mars"></i> Đồ Nam (Vest, Sơ Mi, Quần Tây)
+        </button>
+        <button type="button" class="size-nav-tab" data-tab="tab-size-women">
+          <i class="fa-solid fa-venus"></i> Đồ Nữ (Đầm Dạ Hội, Áo Khoác, Váy)
+        </button>
+        <button type="button" class="size-nav-tab" data-tab="tab-size-calc">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Gợi Ý Size Thông Minh
+        </button>
+      </div>
+
+      <!-- TAB 1: BẢNG SIZE NAM -->
+      <div class="size-guide-tab-content active" id="tab-size-men">
+        <div class="size-table-responsive">
+          <table class="size-guide-table">
+            <thead>
+              <tr>
+                <th>Size Chuẩn</th>
+                <th>Chiều Cao</th>
+                <th>Cân Nặng</th>
+                <th>Vòng Ngực</th>
+                <th>Vòng Eo</th>
+                <th>Rộng Vai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="size-pill">S</strong></td>
+                <td>155 - 165 cm</td>
+                <td>45 - 55 kg</td>
+                <td>84 - 88 cm</td>
+                <td>70 - 74 cm</td>
+                <td>42 - 43 cm</td>
+              </tr>
+              <tr class="recommended-row">
+                <td><strong class="size-pill gold">M <span class="tag-popular">Phổ biến</span></strong></td>
+                <td>165 - 175 cm</td>
+                <td>55 - 68 kg</td>
+                <td>89 - 94 cm</td>
+                <td>75 - 80 cm</td>
+                <td>44 - 45 cm</td>
+              </tr>
+              <tr>
+                <td><strong class="size-pill">L</strong></td>
+                <td>172 - 180 cm</td>
+                <td>68 - 78 kg</td>
+                <td>95 - 100 cm</td>
+                <td>81 - 86 cm</td>
+                <td>46 - 47 cm</td>
+              </tr>
+              <tr>
+                <td><strong class="size-pill">XL</strong></td>
+                <td>178 - 185 cm</td>
+                <td>78 - 88 kg</td>
+                <td>101 - 106 cm</td>
+                <td>87 - 92 cm</td>
+                <td>48 - 49 cm</td>
+              </tr>
+              <tr>
+                <td><strong class="size-pill">XXL</strong></td>
+                <td>&gt; 182 cm</td>
+                <td>&gt; 88 kg</td>
+                <td>107 - 114 cm</td>
+                <td>93 - 98 cm</td>
+                <td>50 - 52 cm</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: BẢNG SIZE NỮ -->
+      <div class="size-guide-tab-content" id="tab-size-women">
+        <div class="size-table-responsive">
+          <table class="size-guide-table">
+            <thead>
+              <tr>
+                <th>Size Chuẩn</th>
+                <th>Chiều Cao</th>
+                <th>Cân Nặng</th>
+                <th>Vòng 1 (Ngực)</th>
+                <th>Vòng 2 (Eo)</th>
+                <th>Vòng 3 (Mông)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="size-pill">S</strong></td>
+                <td>150 - 158 cm</td>
+                <td>40 - 48 kg</td>
+                <td>80 - 84 cm</td>
+                <td>60 - 64 cm</td>
+                <td>86 - 90 cm</td>
+              </tr>
+              <tr class="recommended-row">
+                <td><strong class="size-pill gold">M <span class="tag-popular">Phổ biến</span></strong></td>
+                <td>156 - 165 cm</td>
+                <td>48 - 56 kg</td>
+                <td>85 - 89 cm</td>
+                <td>65 - 70 cm</td>
+                <td>91 - 95 cm</td>
+              </tr>
+              <tr>
+                <td><strong class="size-pill">L</strong></td>
+                <td>162 - 170 cm</td>
+                <td>56 - 63 kg</td>
+                <td>90 - 95 cm</td>
+                <td>71 - 76 cm</td>
+                <td>96 - 100 cm</td>
+              </tr>
+              <tr>
+                <td><strong class="size-pill">XL</strong></td>
+                <td>165 - 175 cm</td>
+                <td>63 - 72 kg</td>
+                <td>96 - 102 cm</td>
+                <td>77 - 83 cm</td>
+                <td>101 - 106 cm</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: TƯ VẤN TÍNH SIZE NHANH -->
+      <div class="size-guide-tab-content" id="tab-size-calc">
+        <div class="size-calc-card">
+          <p class="calc-intro-text">
+            <i class="fa-solid fa-sparkles" style="color:var(--accent-gold);"></i>
+            Nhập chiều cao và cân nặng để hệ thống may đo AURALIÈ tính toán kích cỡ tối ưu cho quý khách:
+          </p>
+          <div class="size-calc-form-grid">
+            <div class="calc-field">
+              <label for="calc-height"><i class="fa-solid fa-arrows-up-down"></i> Chiều Cao (cm):</label>
+              <input type="number" id="calc-height" placeholder="Ví dụ: 172" min="130" max="220">
+            </div>
+            <div class="calc-field">
+              <label for="calc-weight"><i class="fa-solid fa-weight-scale"></i> Cân Nặng (kg):</label>
+              <input type="number" id="calc-weight" placeholder="Ví dụ: 65" min="30" max="150">
+            </div>
+            <div class="calc-field">
+              <label for="calc-gender"><i class="fa-solid fa-venus-mars"></i> Dòng Sản Phẩm:</label>
+              <select id="calc-gender">
+                <option value="men">Đồ Nam (Phom Tailored Fit)</option>
+                <option value="women">Đồ Nữ (Phom Fitted / Đầm)</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-actions">
+            <button type="button" id="btn-calculate-size" class="btn-primary-luxury" style="padding: 0.65rem 1.6rem; font-size: 0.82rem;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Phân Tích & Gợi Ý Size
+            </button>
+          </div>
+          
+          <div id="calc-result-box" class="calc-result-box" style="display: none;">
+            <div class="calc-result-header">
+              <span class="calc-check-icon"><i class="fa-solid fa-circle-check"></i></span>
+              <div>
+                <div class="calc-result-title">Size Đề Xuất Dành Cho Bạn: <strong id="calc-size-output" class="size-highlight">M</strong></div>
+                <div class="calc-result-desc" id="calc-desc-output">Phù hợp khoảng 95% theo tỉ lệ cơ thể bạn cung cấp.</div>
+              </div>
+            </div>
+            <button type="button" id="btn-apply-size-to-product" class="btn-apply-selected-size">
+              <i class="fa-solid fa-check"></i> Chọn Size Này Cho Sản Phẩm
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIPS HƯỚNG DẪN ĐO & CHÍNH SÁCH -->
+      <div class="size-guide-notes">
+        <div class="note-box">
+          <i class="fa-solid fa-circle-info note-icon"></i>
+          <div class="note-content">
+            <h4>Lưu Ý Chọn Size Tại AURALIÈ</h4>
+            <p>Nếu số đo nằm giữa 2 size: Hãy chọn size nhỏ hơn nếu muốn tôn trọn đường cong cơ thể, hoặc chọn size lớn hơn nếu muốn mặc thoải mái, phối nhiều lớp.</p>
+          </div>
+        </div>
+        <div class="note-box">
+          <i class="fa-solid fa-shield-halved note-icon"></i>
+          <div class="note-content">
+            <h4>Đặc Quyền May Đo &amp; Đổi Trả</h4>
+            <p>AURALIÈ hỗ trợ đổi size tận nơi hoàn toàn miễn phí trong 30 ngày và nhận dịch vụ tinh chỉnh phom dáng may đo thủ công độc quyền tại Atelier.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="size-guide-modal-footer">
+        <button type="button" id="btn-close-size-guide" class="btn-secondary-luxury">
+          Đóng Bảng Size
+        </button>
+      </div>
+
     </div>
   </div>
 

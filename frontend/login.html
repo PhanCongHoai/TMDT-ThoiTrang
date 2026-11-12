@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
 
   <!-- TOP ANNOUNCEMENT BAR -->
@@ -29,7 +31,7 @@
     </div>
 
     <a href="index.html" class="d-logo">AURALIÈ<span>HAUTE COUTURE</span></a>
-    
+
     <nav class="desktop-nav-wrapper">
       <ul class="d-nav">
         <li><a href="index.html">Trang chủ</a></li>
@@ -48,7 +50,7 @@
 
       <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
         <i class="fa-solid fa-bag-shopping"></i>
-        <span class="badge-count" id="cart-count">3</span>
+        <span class="badge-count" id="cart-count">0</span>
       </a>
 
       <a href="login.html" class="d-btn-icon desktop-user-btn active" title="Tài khoản">
@@ -57,28 +59,35 @@
     </div>
   </header>
 
-  <main class="site-main" style="display:flex; align-items:center; justify-content:center; padding: 4rem 1rem; background: var(--bg-light);">
+  <main class="site-main"
+    style="display:flex; align-items:center; justify-content:center; padding: 4rem 1rem; background: var(--bg-light);">
 
-    <div style="background:#fff; border:1px solid var(--border-light); border-radius: var(--radius-md); box-shadow: var(--shadow-hover); width:100%; max-width: 520px; overflow:hidden; padding: 2.5rem;">
+    <div
+      style="background:#fff; border:1px solid var(--border-light); border-radius: var(--radius-md); box-shadow: var(--shadow-hover); width:100%; max-width: 520px; overflow:hidden; padding: 2.5rem;">
 
       <div style="text-align:center; margin-bottom: 2rem;">
-        <span style="color:var(--accent-gold); font-size: 0.8rem; font-weight:700; letter-spacing: 2px;">TÀI KHOẢN XA XỈ</span>
-        <h2 style="font-family: var(--font-serif); font-size: 2.2rem; color:var(--primary-dark); margin-top:0.25rem;">Chào Mừng Tới AURALIÈ</h2>
-        <p style="font-size:0.85rem; color:var(--text-muted);">Đăng nhập để trải nghiệm mua sắm và quản lý đơn hàng thượng lưu</p>
+        <span style="color:var(--accent-gold); font-size: 0.8rem; font-weight:700; letter-spacing: 2px;">TÀI KHOẢN XA
+          XỈ</span>
+        <h2 style="font-family: var(--font-serif); font-size: 2.2rem; color:var(--primary-dark); margin-top:0.25rem;">
+          Chào Mừng Tới AURALIÈ</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Đăng nhập để trải nghiệm mua sắm và quản lý đơn hàng
+          thượng lưu</p>
       </div>
 
       <!-- TAB HEADERS -->
       <div style="display:flex; border-bottom: 2px solid var(--border-light); margin-bottom: 1.75rem;">
-        <button id="tab-login-btn" class="modal-tab-btn active" style="flex:1; text-align:center; font-size: 1rem;">Đăng Nhập</button>
-        <button id="tab-register-btn" class="modal-tab-btn" style="flex:1; text-align:center; font-size: 1rem;">Đăng Ký Tài Khoản</button>
+        <button id="tab-login-btn" class="modal-tab-btn active" style="flex:1; text-align:center; font-size: 1rem;">Đăng
+          Nhập</button>
+        <button id="tab-register-btn" class="modal-tab-btn" style="flex:1; text-align:center; font-size: 1rem;">Đăng Ký
+          Tài Khoản</button>
       </div>
 
       <!-- FORM ĐĂNG NHẬP -->
       <form id="form-login" style="display: flex; flex-direction: column; gap: 1.25rem;">
         <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
           <label style="font-size: 0.85rem; font-weight: 600;">Email Hoặc Số Điện Thoại *</label>
-          <input type="email" id="login-email-input" placeholder="nhap.email@auralie.fashion" value="khachhang.vip@auralie.fashion" required style="width:100%; padding:0.75rem;">
-          <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Nhập email chứa <strong>admin</strong> (ví dụ: <code>admin@auralie.fashion</code>) để chuyển vào Trang Quản Trị, hoặc email bất kỳ để vào Trang Cá Nhân.</span>
+          <input type="email" id="login-email-input" name="email" autocomplete="username"
+            placeholder="Nhập địa chỉ email của bạn" required style="width:100%; padding:0.75rem;">
         </div>
 
         <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
@@ -86,10 +95,21 @@
             <label style="font-size: 0.85rem; font-weight: 600;">Mật Khẩu *</label>
             <a href="#" style="font-size:0.78rem; color:var(--accent-gold); text-decoration:none;">Quên mật khẩu?</a>
           </div>
-          <input type="password" value="12345678" required style="width:100%; padding:0.75rem;">
+          <input type="password" id="login-password-input" name="password" autocomplete="current-password"
+            placeholder="Nhập mật khẩu" required style="width:100%; padding:0.75rem;">
         </div>
 
-        <button type="submit" class="btn-primary-luxury" style="padding: 0.9rem; justify-content: center; font-size: 0.9rem; margin-top: 0.5rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: -0.25rem;">
+          <label
+            style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--text-muted); cursor: pointer; user-select: none;">
+            <input type="checkbox" id="remember-me-checkbox"
+              style="accent-color: var(--accent-gold); cursor: pointer; width: 15px; height: 15px;">
+            Ghi nhớ tài khoản trên thiết bị này
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary-luxury"
+          style="padding: 0.9rem; justify-content: center; font-size: 0.9rem; margin-top: 0.5rem;">
           Đăng Nhập Tài Khoản <i class="fa-solid fa-arrow-right"></i>
         </button>
       </form>
@@ -98,26 +118,31 @@
       <form id="form-register" style="display: none; flex-direction: column; gap: 1.25rem;">
         <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
           <label style="font-size: 0.85rem; font-weight: 600;">Họ Và Tên *</label>
-          <input type="text" placeholder="Nguyễn Văn A" required style="width:100%; padding:0.75rem;">
+          <input type="text" id="reg-name" name="name" autocomplete="name" placeholder="Nguyễn Văn A" required
+            style="width:100%; padding:0.75rem;">
         </div>
 
         <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
           <label style="font-size: 0.85rem; font-weight: 600;">Địa Chỉ Email *</label>
-          <input type="email" placeholder="email@domain.com" required style="width:100%; padding:0.75rem;">
+          <input type="email" id="reg-email" name="email" autocomplete="email" placeholder="email@domain.com" required
+            style="width:100%; padding:0.75rem;">
         </div>
 
         <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
           <label style="font-size: 0.85rem; font-weight: 600;">Số Điện Thoại *</label>
-          <input type="tel" placeholder="0901 234 567" required style="width:100%; padding:0.75rem;">
+          <input type="tel" id="reg-phone" name="phone" autocomplete="tel" placeholder="0901 234 567" required
+            style="width:100%; padding:0.75rem;">
         </div>
 
         <div class="form-group-review" style="flex-direction: column; gap:0.4rem;">
           <label style="font-size: 0.85rem; font-weight: 600;">Tạo Mật Khẩu *</label>
-          <input type="password" placeholder="Tối thiểu 8 ký tự" required style="width:100%; padding:0.75rem;">
+          <input type="password" id="reg-password" name="password" autocomplete="new-password"
+            placeholder="Tối thiểu 8 ký tự" required style="width:100%; padding:0.75rem;">
         </div>
 
-        <button type="submit" class="btn-primary-luxury" style="padding: 0.9rem; justify-content: center; font-size: 0.9rem; margin-top: 0.5rem;">
-          Tạo Tài Khoản VIP <i class="fa-solid fa-crown"></i>
+        <button type="submit" class="btn-primary-luxury"
+          style="padding: 0.9rem; justify-content: center; font-size: 0.9rem; margin-top: 0.5rem;">
+          Tạo Tài Khoản <i class="fa-solid fa-arrow-right"></i>
         </button>
       </form>
 
@@ -132,12 +157,152 @@
     </div>
   </footer>
 
+  <!-- MOBILE STICKY BOTTOM NAVIGATION -->
+  <nav class="m-bottom-nav" aria-label="Thanh điều hướng di động">
+    <a href="index.html" class="m-nav-item" data-tab="home">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-house"></i></div>
+      <span>Trang chủ</span>
+    </a>
+    <a href="index.html#catalog" class="m-nav-item" data-tab="catalog">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-shirt"></i></div>
+      <span>Sản phẩm</span>
+    </a>
+    <a href="collections.html" class="m-nav-item" data-tab="collections">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-layer-group"></i></div>
+      <span>Bộ sưu tập</span>
+    </a>
+    <a href="cart.html" class="m-nav-item" data-tab="cart">
+      <div class="m-nav-icon-wrap">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="badge-count cart-count-badge">0</span>
+      </div>
+      <span>Giỏ hàng</span>
+    </a>
+    <a href="contact.html" class="m-nav-item" data-tab="contact">
+      <div class="m-nav-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
+      <span>Liên hệ</span>
+    </a>
+  </nav>
+
+  <script src="js/app.js"></script>
   <script>
+    // HỘP THÔNG BÁO DẠNG BOX CAO CẤP (LUXURY MODAL BOX)
+    function showLuxuryAlert({ title, message, type = 'success', btnText = 'Đồng Ý', redirectUrl = null, autoCloseMs = 2000, onConfirm = null }) {
+      const old = document.querySelector('.luxury-alert-overlay');
+      if (old) old.remove();
+
+      let iconHtml = '<i class="fa-solid fa-circle-check"></i>';
+      if (type === 'admin') iconHtml = '<i class="fa-solid fa-shield-halved"></i>';
+      else if (type === 'customer') iconHtml = '<i class="fa-solid fa-crown"></i>';
+      else if (type === 'warning') iconHtml = '<i class="fa-solid fa-triangle-exclamation"></i>';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'luxury-alert-overlay';
+      overlay.innerHTML = `
+        <div class="luxury-alert-card">
+          <div class="luxury-alert-icon-wrap ${type}">
+            ${iconHtml}
+          </div>
+          <h3 class="luxury-alert-title">${title}</h3>
+          <div class="luxury-alert-message">${message}</div>
+          <button class="luxury-alert-btn" id="luxury-alert-confirm-btn">
+            <span>${btnText}</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          ${autoCloseMs ? '<div class="luxury-alert-progress"><div class="luxury-alert-progress-bar" id="luxury-alert-bar"></div></div>' : ''}
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      // Animation mượt mà
+      requestAnimationFrame(() => {
+        overlay.classList.add('active');
+      });
+
+      let timer = null;
+      const closeAndExecute = () => {
+        if (timer) clearTimeout(timer);
+        overlay.classList.remove('active');
+        setTimeout(() => {
+          overlay.remove();
+          if (typeof onConfirm === 'function') onConfirm();
+          if (redirectUrl) window.location.href = redirectUrl;
+        }, 250);
+      };
+
+      overlay.querySelector('#luxury-alert-confirm-btn').addEventListener('click', closeAndExecute);
+
+      if (autoCloseMs) {
+        const bar = overlay.querySelector('#luxury-alert-bar');
+        if (bar) {
+          bar.style.transition = `transform ${autoCloseMs}ms linear`;
+          requestAnimationFrame(() => {
+            bar.style.transform = 'scaleX(0)';
+          });
+        }
+        timer = setTimeout(closeAndExecute, autoCloseMs);
+      }
+    }
+
+    // Tự động chuyển đổi các alert mặc định sang dạng Box
+    window.alert = function (msg) {
+      showLuxuryAlert({
+        title: 'Thông Báo Hệ Thống',
+        message: msg,
+        type: 'warning',
+        btnText: 'Đã Hiểu',
+        autoCloseMs: 0
+      });
+    };
+
+    // ================================================================
+    // AUTH HELPER: Lưu và lấy JWT token an toàn (sessionStorage)
+    // ================================================================
+    function saveAuthToken(token, user) {
+      // Dùng sessionStorage (thoát ra khi đóng tab, bảo mật hơn localStorage)
+      sessionStorage.setItem('auralie_token', token);
+      sessionStorage.setItem('auralie_user', JSON.stringify(user));
+      // Vẫn lưu role và tên vào localStorage để các trang khác hiển thị UI
+      localStorage.setItem('userRole', user.role);
+      localStorage.setItem('userName', user.fullName);
+      localStorage.setItem('userEmail', user.email);
+      localStorage.setItem('userId', user.id);
+      // XÓA password khỏi localStorage (không lưu plaintext)
+      localStorage.removeItem('savedUserPassword');
+    }
+
+    function getAuthToken() {
+      return sessionStorage.getItem('auralie_token');
+    }
+
+    // Helper gọi API với token
+    async function apiFetch(url, options = {}) {
+      const token = getAuthToken();
+      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      return fetch(url, { ...options, headers });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const tabLoginBtn = document.getElementById('tab-login-btn');
       const tabRegisterBtn = document.getElementById('tab-register-btn');
       const formLogin = document.getElementById('form-login');
       const formRegister = document.getElementById('form-register');
+      const emailInput = document.getElementById('login-email-input');
+      const passwordInput = document.getElementById('login-password-input');
+      const rememberCheckbox = document.getElementById('remember-me-checkbox');
+
+      // Nếu đã đăng nhập, chuyển thẳng về profile
+      if (getAuthToken()) {
+        window.location.href = 'profile.html';
+        return;
+      }
+
+      // Điền email đã lưu (chỉ email, KHÔNG điền password)
+      const savedEmail = localStorage.getItem('savedUserEmail');
+      if (savedEmail && emailInput) {
+        emailInput.value = savedEmail;
+        if (rememberCheckbox) rememberCheckbox.checked = true;
+      }
 
       if (tabLoginBtn && tabRegisterBtn) {
         tabLoginBtn.addEventListener('click', () => {
@@ -146,7 +311,6 @@
           formLogin.style.display = 'flex';
           formRegister.style.display = 'none';
         });
-
         tabRegisterBtn.addEventListener('click', () => {
           tabRegisterBtn.classList.add('active');
           tabLoginBtn.classList.remove('active');
@@ -155,34 +319,142 @@
         });
       }
 
+      // ====================== ĐĂNG NHẬP ======================
       if (formLogin) {
-        formLogin.addEventListener('submit', (e) => {
+        formLogin.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const emailInput = document.getElementById('login-email-input');
-          const emailVal = emailInput ? emailInput.value.toLowerCase() : '';
+          const emailVal = emailInput ? emailInput.value.trim().toLowerCase() : '';
+          const passwordVal = passwordInput ? passwordInput.value : '';
 
-          // Role-based automatic redirect: ADMIN vs CUSTOMER
-          if (emailVal.includes('admin')) {
-            localStorage.setItem('userRole', 'ADMIN');
-            alert('Nhận diện quyền tài khoản: QUẢN TRỊ VIÊN (ADMIN). Đang chuyển hướng tới Bảng Quản Trị Hệ Thống...');
-            window.location.href = 'admin.html';
+          if (!emailVal || !passwordVal) {
+            showLuxuryAlert({ title: 'Lưu Ý', message: 'Vui lòng nhập email và mật khẩu.', type: 'warning' });
+            return;
+          }
+
+          // Lưu email (KHÔNG lưu password)
+          if (rememberCheckbox && rememberCheckbox.checked) {
+            localStorage.setItem('savedUserEmail', emailVal);
           } else {
-            localStorage.setItem('userRole', 'CUSTOMER');
-            alert('Nhận diện quyền tài khoản: KHÁCH HÀNG VIP. Đang chuyển hướng tới Trang Cá Nhân...');
-            window.location.href = 'profile.html';
+            localStorage.removeItem('savedUserEmail');
+          }
+
+          const submitBtn = formLogin.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xác thực...';
+          }
+
+          try {
+            const res = await fetch('/api/v1/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: emailVal, password: passwordVal })
+            });
+            const data = await res.json();
+
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = 'Đăng Nhập <i class="fa-solid fa-arrow-right"></i>';
+            }
+
+            if (data.status === 'success') {
+              // Lưu token và thông tin user
+              saveAuthToken(data.token, data.user);
+              sessionStorage.setItem('cartReminderShownAfterLogin', 'false');
+
+              const isAdmin = data.user.role === 'ADMIN';
+              showLuxuryAlert({
+                title: isAdmin ? 'Xác Thực Quản Trị Viên' : 'Đăng Nhập Thành Công',
+                message: isAdmin
+                  ? `Chào <strong>${data.user.fullName}</strong>! Đang mở Bảng Quản Trị...`
+                  : `Chào mừng <strong>${data.user.fullName}</strong> trở lại AURALIÈ Haute Couture!`,
+                type: isAdmin ? 'admin' : 'customer',
+                btnText: isAdmin ? 'Truy Cập Ngay' : 'Vào Trang Cá Nhân',
+                redirectUrl: isAdmin ? 'admin.html' : 'profile.html',
+                autoCloseMs: 1800
+              });
+            } else {
+              showLuxuryAlert({ title: 'Đăng Nhập Thất Bại', message: data.message, type: 'warning' });
+            }
+          } catch (err) {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = 'Đăng Nhập <i class="fa-solid fa-arrow-right"></i>';
+            }
+            showLuxuryAlert({
+              title: 'Lỗi Kết Nối',
+              message: 'Không thể kết nối đến máy chủ. Vui lòng thử lại.',
+              type: 'warning'
+            });
           }
         });
       }
 
+      // ====================== ĐĂNG KÝ ======================
       if (formRegister) {
-        formRegister.addEventListener('submit', (e) => {
+        formRegister.addEventListener('submit', async (e) => {
           e.preventDefault();
-          localStorage.setItem('userRole', 'CUSTOMER');
-          alert('Đăng ký tài khoản VIP thành công! Đang chuyển hướng tới Trang Cá Nhân...');
-          window.location.href = 'profile.html';
+          const regName = document.getElementById('reg-name')?.value.trim() || '';
+          const regEmail = document.getElementById('reg-email')?.value.trim().toLowerCase() || '';
+          const regPhone = document.getElementById('reg-phone')?.value.trim() || '';
+          const regPass = document.getElementById('reg-password')?.value || '';
+
+          if (!regName || !regEmail || !regPass) {
+            showLuxuryAlert({ title: 'Lưu Ý', message: 'Vui lòng nhập đầy đủ họ tên, email và mật khẩu.', type: 'warning' });
+            return;
+          }
+          if (regPass.length < 6) {
+            showLuxuryAlert({ title: 'Lưu Ý', message: 'Mật khẩu phải có ít nhất 6 ký tự.', type: 'warning' });
+            return;
+          }
+
+          const submitBtn = formRegister.querySelector('button[type="submit"]');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo tài khoản...';
+          }
+
+          try {
+            const res = await fetch('/api/v1/auth/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fullName: regName, email: regEmail, password: regPass, phone: regPhone })
+            });
+            const data = await res.json();
+
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = 'Tạo Tài Khoản <i class="fa-solid fa-arrow-right"></i>';
+            }
+
+            if (data.status === 'success') {
+              // Lưu token (đăng ký xong = tự đăng nhập luôn)
+              saveAuthToken(data.token, data.user);
+              localStorage.setItem('savedUserEmail', regEmail); // Chỉ lưu email
+              sessionStorage.setItem('cartReminderShownAfterLogin', 'false');
+
+              showLuxuryAlert({
+                title: 'Chào Mừng Thành Viên Mới!',
+                message: `Chúc mừng <strong>${regName}</strong> đã gia nhập AURALIÈ Haute Couture!<br>Tài khoản đã được lưu vào hệ thống.`,
+                type: 'success',
+                btnText: 'Bắt Đầu Trải Nghiệm',
+                redirectUrl: 'profile.html',
+                autoCloseMs: 2000
+              });
+            } else {
+              showLuxuryAlert({ title: 'Đăng Ký Thất Bại', message: data.message, type: 'warning' });
+            }
+          } catch (err) {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = 'Tạo Tài Khoản <i class="fa-solid fa-arrow-right"></i>';
+            }
+            showLuxuryAlert({ title: 'Lỗi Kết Nối', message: 'Không thể kết nối đến máy chủ.', type: 'warning' });
+          }
         });
       }
     });
   </script>
 </body>
+
 </html>
