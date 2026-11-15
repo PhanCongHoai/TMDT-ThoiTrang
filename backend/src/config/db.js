@@ -28,7 +28,7 @@ const poolPromise = new sql.ConnectionPool(config)
   })
   .catch(err => {
     console.error('[Database] Lỗi kết nối CSDL:', err.message);
-    return null;
+    throw err;
   });
 
 module.exports = {

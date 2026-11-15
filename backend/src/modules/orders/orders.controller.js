@@ -102,7 +102,7 @@ class OrderController {
     try {
       const code = req.params.orderCode || req.params.code;
       const { phone } = req.query;
-      const order = await OrderService.trackOrder(code, phone);
+      const order = await OrderService.trackOrder(code, phone, req.user || null);
       return ApiResponse.success(res, order, 'Tra cứu đơn hàng thành công');
     } catch (err) {
       next(err);

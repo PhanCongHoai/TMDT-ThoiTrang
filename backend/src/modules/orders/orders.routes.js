@@ -28,10 +28,10 @@ router.get(
   OrderController.getOrderDetails
 );
 
-// Public / Client endpoints (gắn optionalAuth để tự động lấy user nếu đã đăng nhập)
+// Creating an order always requires an authenticated customer.
 router.post(
   '/orders',
-  optionalAuth,
+  verifyToken,
   OrderValidation.validateCreateOrder,
   OrderController.createOrder
 );
@@ -44,6 +44,7 @@ router.get(
 
 router.get(
   '/orders/track/:code',
+  optionalAuth,
   OrderValidation.validateOrderCode,
   OrderController.trackOrder
 );
@@ -51,7 +52,7 @@ router.get(
 // Hủy đơn hàng và hoàn kho (Khách hàng hoặc Quản trị viên)
 router.post(
   '/orders/:id/cancel',
-  optionalAuth,
+  verifyToken,
   OrderController.cancelOrder
 );
 

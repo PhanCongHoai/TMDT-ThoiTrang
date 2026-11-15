@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Đề xuất điều chỉnh CSDL AURALIÈ</title>
+<style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; color: #242424; font: 11pt/1.5 Arial, sans-serif; }
+.page { width: 210mm; height: 297mm; padding: 17mm 18mm 20mm; position: relative; break-after: page; overflow: hidden; }
+.page:last-child { break-after: auto; }
+.brand { color: #97702b; letter-spacing: 3px; font-size: 10pt; border-bottom: 1px solid #c7a355; padding-bottom: 9px; margin-bottom: 22px; }
+h1 { font-size: 25pt; line-height: 1.22; margin: 12px 0; }
+h2 { font-size: 17pt; margin: 15px 0 12px; }
+h3 { font-size: 12pt; margin: 18px 0 6px; color: #76551f; }
+p { margin: 7px 0; }
+.sub { color: #666; font-size: 10pt; }
+.callout { background: #f6f1e7; border-left: 3px solid #b68c3b; padding: 11px 14px; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0 15px; font-size: 10pt; }
+th { background: #eee8dc; text-align: left; }
+td, th { padding: 8px 10px; border: 1px solid #ddd6c9; vertical-align: top; }
+ul, ol { margin: 7px 0; padding-left: 21px; }
+li { margin: 5px 0; }
+code { font-family: Consolas, monospace; font-size: 9.5pt; overflow-wrap: anywhere; }
+.foot { position: absolute; bottom: 11mm; left: 18mm; right: 18mm; border-top: 1px solid #ddd; padding-top: 7px; font-size: 8.5pt; color: #777; display: flex; justify-content: space-between; }
+</style></head><body>
+<section class="page">
+<div class="brand">AURALIÈ · TÀI LIỆU KỸ THUẬT</div>
+<h1>Đề xuất điều chỉnh<br>cơ sở dữ liệu</h1>
+<p class="sub">Ngày tổng hợp: 15/11/2026 · Cơ sở dữ liệu: AURALIE_FashionDB</p>
+<div class="callout"><b>Kết luận:</b> DB đã có nền tảng cho sản phẩm, biến thể và đơn hàng. Cần tăng ràng buộc tồn kho, bổ sung lịch sử nhập/xuất và lưu địa chỉ nhận hàng trên máy chủ để đáp ứng đầy đủ các yêu cầu hiện tại.</div>
+<p>Tài liệu tổng hợp kết quả kiểm tra DB thực tế và mã nguồn. Các bảng, cột được đề xuất bên dưới <b>chưa được tạo hoặc thay đổi</b> trong đợt kiểm tra này.</p>
+<h2>1. Hiện trạng đã kiểm tra</h2>
+<table><tr><th>Hạng mục</th><th>Kết quả</th></tr>
+<tr><td>Sản phẩm / biến thể</td><td>20 sản phẩm, 14 biến thể; 16 sản phẩm chưa có biến thể.</td></tr>
+<tr><td>Sản phẩm đủ điều kiện hiển thị</td><td>4 sản phẩm theo điều kiện tổng tồn kho dương tại thời điểm kiểm tra.</td></tr>
+<tr><td>Chất lượng dữ liệu tồn kho</td><td>Không phát hiện tồn âm, tồn NULL, nhóm biến thể trùng hoặc SKU bị thiếu.</td></tr>
+<tr><td>Dòng chi tiết đơn hàng cần đối chiếu</td><td>2 dòng đồng thời thiếu liên kết biến thể và SKU.</td></tr>
+<tr><td>Địa chỉ nhận hàng</td><td>Danh sách địa chỉ đang lưu trên trình duyệt, chưa có bảng địa chỉ riêng.</td></tr>
+</table>
+<h2>2. Thứ tự ưu tiên</h2>
+<table><tr><th style="width:16%">Ưu tiên</th><th>Thay đổi đề xuất</th></tr>
+<tr><td>1 · Cao</td><td>Ràng buộc tồn không âm và duy nhất biến thể sản phẩm–size–màu.</td></tr>
+<tr><td>2 · Cao</td><td>Tách bảng lịch sử nhập/xuất/điều chỉnh tồn kho.</td></tr>
+<tr><td>3</td><td>Thêm sổ địa chỉ nhận hàng theo tài khoản.</td></tr>
+<tr><td>4</td><td>Lưu tên người nhận tại thời điểm đặt hàng.</td></tr>
+<tr><td>5</td><td>Bổ sung liên kết sản phẩm trong chi tiết đơn và các chỉ mục tra cứu.</td></tr>
+</table>
+<div class="foot"><span>Tài liệu đề xuất · Chưa thay đổi DB</span><span>1 / 4</span></div>
+</section>
+<section class="page">
+<div class="brand">AURALIÈ · QUẢN LÝ TỒN KHO</div>
+<h2>3. Ràng buộc bảng biến thể</h2>
+<p>Bảng <code>product_variants</code> đã có sản phẩm, kích thước, màu, SKU và số lượng tồn. Tuy nhiên, <code>stock_quantity</code> vẫn cho phép NULL và chưa có ràng buộc chống tồn âm hoặc trùng tổ hợp biến thể.</p>
+<table><tr><th>Đề xuất</th><th>Mục đích</th></tr>
+<tr><td><code>stock_quantity NOT NULL DEFAULT 0</code></td><td>Mỗi biến thể luôn có số lượng tồn xác định.</td></tr>
+<tr><td><code>CHECK (stock_quantity &gt;= 0)</code></td><td>Ngăn dữ liệu tồn âm ngay tại DB.</td></tr>
+<tr><td><code>UNIQUE (product_id, size, color)</code></td><td>Mỗi tổ hợp sản phẩm–size–màu chỉ có một bản ghi.</td></tr>
+</table>
+<p>Trước khi tạo khóa duy nhất, cần thống nhất cách viết và khoảng trắng của size/màu. Dữ liệu kiểm tra hiện chưa phát hiện tổ hợp trùng.</p>
+<div class="callout"><b>Điều kiện đăng/hiển thị:</b> chỉ hiển thị sản phẩm đang hoạt động và có tổng tồn các biến thể lớn hơn 0. Điều kiện này cần được giữ ở API danh sách, chi tiết và tìm kiếm; không chỉ kiểm tra trên giao diện.</div>
+<h2>4. Bảng lịch sử biến động tồn</h2>
+<p>Hiện chức năng điều chỉnh dùng bảng <code>inventory_imports</code>; thông tin biến thể, thao tác và tồn trước/sau được ghi trong JSON ở cột <code>notes</code>. Cách này dùng được trước mắt nhưng khó truy vấn và ràng buộc.</p>
+<p>Đề xuất thêm bảng <code>inventory_movements</code>:</p>
+<table><tr><th style="width:40%">Nhóm trường dự kiến</th><th>Ý nghĩa</th></tr>
+<tr><td><code>id, variant_id</code></td><td>Mã giao dịch và biến thể được điều chỉnh.</td></tr>
+<tr><td><code>movement_type, quantity</code></td><td>Nhập, xuất, giữ hàng, hoàn giữ hoặc điều chỉnh; quy định rõ cách tính số lượng cho từng loại.</td></tr>
+<tr><td><code>stock_before, stock_after</code></td><td>Số dư trước và sau để đối soát.</td></tr>
+<tr><td><code>actor_id, order_id, reason</code></td><td>Người thao tác, đơn liên quan nếu có và lý do.</td></tr>
+<tr><td><code>request_id, created_at</code></td><td>Mã yêu cầu duy nhất chống ghi lặp và thời điểm phát sinh.</td></tr>
+</table>
+<p>Cập nhật số dư và ghi lịch sử phải nằm trong cùng transaction. Xuất hàng phải kiểm tra tồn và xử lý trường hợp nhiều yêu cầu đồng thời.</p>
+<p class="sub">Không dựng lại lịch sử nhập từ số dư hiện tại. Nếu cần số dư đầu kỳ, dùng tồn đã được kiểm kê/xác nhận và ghi rõ thời điểm bắt đầu theo dõi.</p>
+<div class="foot"><span>Tài liệu đề xuất · Chưa thay đổi DB</span><span>2 / 4</span></div>
+</section>
+<section class="page">
+<div class="brand">AURALIÈ · GIAO NHẬN &amp; ĐƠN HÀNG</div>
+<h2>5. Sổ địa chỉ theo tài khoản</h2>
+<p>Địa chỉ hiện lưu trong localStorage nên có thể mất khi xóa dữ liệu trình duyệt và không tự đồng bộ sang thiết bị khác. Cột <code>users.address</code> chỉ là một chuỗi, chưa đáp ứng danh sách nhiều địa chỉ.</p>
+<p>Đề xuất bảng <code>user_addresses</code>:</p>
+<table><tr><th>Trường dự kiến</th><th>Nội dung</th></tr>
+<tr><td><code>id, user_id</code></td><td>Mã địa chỉ và tài khoản sở hữu.</td></tr>
+<tr><td><code>recipient_name, phone_number</code></td><td>Họ tên, số điện thoại người nhận.</td></tr>
+<tr><td><code>province, ward, street, house_number</code></td><td>Tỉnh/thành phố, phường/xã, đường, số nhà/tòa nhà/căn hộ.</td></tr>
+<tr><td><code>label, is_default</code></td><td>Nhãn nhà riêng/văn phòng và địa chỉ mặc định.</td></tr>
+<tr><td><code>created_at, updated_at</code></td><td>Thời gian tạo và cập nhật.</td></tr>
+</table>
+<p>Thêm khóa ngoại tới tài khoản, chỉ mục theo <code>user_id</code> và cơ chế bảo đảm mỗi tài khoản tối đa một địa chỉ mặc định. API phải kiểm tra quyền sở hữu khi đọc, sửa hoặc xóa.</p>
+<h2>6. Giữ nguyên người nhận của đơn cũ</h2>
+<p>Bảng <code>orders</code> đã lưu <code>shipping_address</code> và <code>phone_number</code> tại thời điểm đặt hàng. Cần thêm <code>recipient_name</code> để tên người nhận không phụ thuộc vào tên hồ sơ hiện tại.</p>
+<div class="callout">Khi đặt đơn, sao chép tên, điện thoại và địa chỉ đã chọn vào đơn hàng. Khi khách sửa hoặc xóa địa chỉ trong sổ địa chỉ, thông tin giao nhận của đơn cũ vẫn được giữ nguyên.</div>
+<h2>7. Liên kết sản phẩm trong chi tiết đơn</h2>
+<p><code>order_items</code> đã có bản lưu tên sản phẩm, SKU, size, màu, giá và số lượng. <b>Không cần thêm lại các trường này.</b></p>
+<p>Nên thêm <code>product_id</code> độc lập để truy vết sản phẩm khi liên kết biến thể bị mất. Hiện khóa ngoại <code>variant_id</code> dùng <code>ON DELETE SET NULL</code>, vì vậy xóa biến thể có thể làm mất liên kết này.</p>
+<p>Giữ bản lưu thông tin mua hàng để hiển thị lịch sử. Khi “Mua lại”, kiểm tra sản phẩm/biến thể còn bán và dùng đúng số lượng của đơn cũ; DB không tự giải quyết được lỗi cộng dồn ở giỏ hàng.</p>
+<div class="foot"><span>Tài liệu đề xuất · Chưa thay đổi DB</span><span>3 / 4</span></div>
+</section>
+<section class="page">
+<div class="brand">AURALIÈ · LỘ TRÌNH ÁP DỤNG</div>
+<h2>8. Dữ liệu cần xử lý trước</h2>
+<ul>
+<li><b>16 sản phẩm chưa có biến thể:</b> bổ sung đúng size, màu và số lượng đã kiểm kê nếu muốn đưa lên bán; không tự gán tồn giả để đủ điều kiện hiển thị.</li>
+<li><b>2 dòng đơn thiếu cả biến thể và SKU:</b> đối chiếu đơn gốc hoặc chứng từ trước khi gắn lại liên kết. Không tự suy đoán sản phẩm/biến thể.</li>
+<li><b>Lịch sử tồn:</b> hiện có 3 dòng trong <code>inventory_imports</code>, chưa có dòng nhật ký điều chỉnh dạng <code>STK-…</code> kèm JSON hợp lệ tại thời điểm kiểm tra. Không coi đây là lịch sử nhập/xuất đầy đủ.</li>
+</ul>
+<h2>9. Chỉ mục nên bổ sung</h2>
+<table><tr><th>Chỉ mục dự kiến</th><th>Phục vụ</th></tr>
+<tr><td><code>order_items(order_id)</code></td><td>Đọc chi tiết từng đơn.</td></tr>
+<tr><td><code>orders(user_id, created_at)</code></td><td>Lịch sử đơn theo tài khoản và thời gian.</td></tr>
+<tr><td><code>inventory_movements(variant_id, created_at)</code></td><td>Tra lịch sử tồn từng biến thể.</td></tr>
+</table>
+<p class="sub">Khóa duy nhất sản phẩm–size–màu ở trang 2 đồng thời hỗ trợ truy vấn biến thể. Cần rà soát chỉ mục hiện hữu trước khi tạo để tránh trùng lặp.</p>
+<h2>10. Những phần chưa cần đổi cấu trúc</h2>
+<p><code>product_images</code> đã phù hợp để lưu URL ảnh; ảnh tiếp tục lưu bằng tệp, không cần chuyển thành dữ liệu nhị phân trong DB. Cơ chế vai trò tài khoản hiện có đáp ứng phân quyền admin đang dùng.</p>
+<h2>11. Trình tự triển khai đề xuất</h2>
+<ol>
+<li>Sao lưu DB; xác nhận dữ liệu cần đối chiếu và số dư tồn thực tế.</li>
+<li>Áp dụng ràng buộc biến thể, tạo bảng lịch sử tồn và các chỉ mục.</li>
+<li>Thêm bảng địa chỉ, tên người nhận của đơn và liên kết sản phẩm trong chi tiết đơn.</li>
+<li>Cập nhật API và giao diện để sử dụng cấu trúc mới; chuyển địa chỉ cũ theo tài khoản đã xác thực, có xử lý trùng.</li>
+<li>Kiểm tra nhập/xuất đồng thời, chống gửi lặp, sản phẩm hết hàng, địa chỉ trên nhiều thiết bị, lịch sử đơn và mua lại.</li>
+</ol>
+<p class="sub">Các mục trên là phương án đề xuất. Thay đổi DB cần đi cùng cập nhật mã nguồn; chỉ thêm bảng/cột sẽ chưa hoàn tất chức năng.</p>
+<div class="foot"><span>Tài liệu đề xuất · Chưa thay đổi DB</span><span>4 / 4</span></div>
+</section>
+</body></html>

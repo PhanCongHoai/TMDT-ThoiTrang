@@ -51,9 +51,11 @@ app.use(cors({
   credentials: true
 }));
 
+app.use('/api/v1/products', express.json({ limit: '4mb' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(globalLimiter);
+app.use('/uploads', express.static(require('path').resolve(__dirname, '../uploads'), { index: false, dotfiles: 'deny' }));
 
 // ====================================================================
 // HEALTH CHECK

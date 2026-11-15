@@ -11,6 +11,7 @@
   <script src="js/auth.js"></script>
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/commerce.css">
 </head>
 <body>
 
@@ -241,6 +242,7 @@
 
   <!-- SCRIPT LOGIC -->
   <script type="module" src="js/services/tracking/trackingService.js"></script>
+  <script src="js/commerce.js"></script>
   <script src="js/app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -331,6 +333,9 @@
             if (inputAddress) inputAddress.value = user.address;
             if (addressDisplayText) addressDisplayText.textContent = user.address;
             if (addressPhoneText) addressPhoneText.textContent = 'SĐT: ' + user.phone;
+            const delivery = Commerce.savedAddresses(user)[0];
+            if (addressDisplayText) addressDisplayText.textContent = delivery?.address || user.address || 'Chưa có địa chỉ nhận hàng';
+            if (addressPhoneText) addressPhoneText.textContent = 'SĐT: ' + (delivery?.phone || user.phone || 'Chưa có');
 
             // Render Orders Dynamically from SQL Server
             renderOrdersList(user.orders || []);
@@ -383,6 +388,10 @@
                 <i class="fa-solid fa-circle-check"></i> ĐÃ HOÀN THÀNH
               </span>
             `;
+          } else if (order.status === 'CANCELLED') {
+            statusBadge = '<span style="background:#eee;color:#555;padding:0.35rem 0.85rem;border-radius:20px;font-size:0.78rem;font-weight:700">ĐÃ HỦY</span>';
+          } else if (order.status === 'PROCESSING') {
+            statusBadge = '<span style="background:#fff3e0;color:#e65100;padding:0.35rem 0.85rem;border-radius:20px;font-size:0.78rem;font-weight:700">ĐANG CHUẨN BỊ HÀNG</span>';
           }
 
           const orderAmount = Number(order.total_amount).toLocaleString('vi-VN') + ' ₫';
@@ -404,7 +413,7 @@
                 <img src="assets/card_1.jpg" alt="AURALIÈ Haute Couture" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
                 <div style="flex: 1;">
                   <h4 style="font-size: 0.95rem; color: var(--primary-dark);">Sản phẩm may đo Haute Couture AURALIÈ</h4>
-                  <p style="font-size: 0.8rem; color: var(--text-muted);">Mã vận đơn: <strong>${order.tracking_code || 'GHN-VN-88291039'}</strong> • Đơn vị: GHN Express</p>
+                  <p style="font-size: 0.8rem; color: var(--text-muted);">Mã vận đơn: <strong>${Commerce.escape(order.tracking_code || 'Chưa có')}</strong></p>
                 </div>
                 <span style="font-weight: 700; font-size: 1.15rem; color: var(--primary-dark);">${orderAmount}</span>
               </div>
@@ -420,9 +429,9 @@
                   <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="trackMyOrder('${order.order_code}')">
                     <i class="fa-solid fa-truck-fast"></i> Tra Cứu Vận Chuyển
                   </button>
-                  <a href="index.html#catalog" class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: var(--secondary-dark); text-decoration: none;">
+                  <button type="button" onclick="Commerce.reorder(${order.id})" class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.75rem; background: var(--secondary-dark);">
                     Mua Lại
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -466,88 +475,24 @@
         });
       }
 
-      // 5. Cancel Order Function
-      window.cancelMyOrder = (orderId, orderCode) => {
-        if (!confirm(`Quý khách có chắc chắn muốn hủy đơn hàng ${orderCode} không? Tồn kho sẽ được hoàn trả lại hệ thống.`)) {
-          return;
-        }
-        window.ApiClient.post(`/api/v1/orders/${orderId}/cancel`, { reason: 'Khách hủy từ trang cá nhân' })
-          .then(res => {
-            if (res.status === 'success') {
-              window.showLuxuryAlert({
-                title: 'Hủy Đơn Thành Công',
-                message: `Đơn hàng <strong>${orderCode}</strong> đã được hủy và hoàn tồn kho thành công!`,
-                type: 'success',
-                btnText: 'Đồng Ý',
-                autoCloseMs: 2000
-              });
-              setTimeout(() => location.reload(), 1500);
-            } else {
-              alert(res.message || 'Không thể hủy đơn hàng.');
-            }
-          })
-          .catch(err => alert('Lỗi: ' + err.message));
+      // Confirm cancellation using the website dialog.
+      const cancellingOrders = new Set();
+      window.cancelMyOrder = async (orderId, orderCode) => {
+        if (cancellingOrders.has(orderId)) return;
+        cancellingOrders.add(orderId);
+        try {
+          const confirmed = await Commerce.dialog('Xác nhận hủy đơn', `<p>Bạn có chắc muốn hủy đơn <strong>${Commerce.escape(orderCode)}</strong>?</p><p>Chỉ xác nhận nếu bạn muốn hủy đơn hàng này.</p>`, 'Xác nhận hủy');
+          if (!confirmed) return;
+          await Commerce.request(`/api/v1/orders/${orderId}/cancel`, { method: 'POST', body: JSON.stringify({ reason: 'Khách hủy từ trang cá nhân' }) });
+          await Commerce.notify('Đã hủy đơn hàng thành công.');
+          location.reload();
+        } catch (error) { await Commerce.notify(error.message); }
+        finally { cancellingOrders.delete(orderId); }
       };
-
-      // 6. Track Order Function
-      window.trackMyOrder = (code) => {
-        window.ApiClient.get('/api/v1/orders/track/' + code)
-          .then(resData => {
-            if (resData.status === 'success' && resData.data) {
-              const o = resData.data;
-              window.showLuxuryAlert({
-                title: 'Hành Trình Đơn Hàng ' + o.orderCode,
-                message: `
-                  <div style="text-align: left; font-size: 0.85rem; line-height: 1.6;">
-                    <p><strong>Khách hàng:</strong> ${o.customerName}</p>
-                    <p><strong>Đơn vị vận chuyển:</strong> ${o.carrier}</p>
-                    <p><strong>Mã vận đơn GHN:</strong> <code style="color: #e6ca65;">${o.trackingCode}</code></p>
-                    <p><strong>Trạng thái:</strong> <span style="color: #4ade80; font-weight: bold;">${o.statusText}</span></p>
-                    <p><strong>Địa chỉ nhận:</strong> ${o.shippingAddress}</p>
-                  </div>
-                `,
-                type: 'admin',
-                btnText: 'Đóng Tra Cứu',
-                autoCloseMs: 0
-              });
-            } else {
-              alert('Không tìm thấy thông tin đơn hàng này trong CSDL!');
-            }
-          })
-          .catch(() => {
-            alert('Đơn hàng ' + code + ' đang được vận chuyển hỏa tốc!');
-          });
-      };
-
-      // 6. Edit Address Button
-      const editAddressBtn = document.getElementById('edit-address-btn');
-      if (editAddressBtn) {
-        editAddressBtn.addEventListener('click', () => {
-          const currentAddr = document.getElementById('address-display-text').textContent;
-          const newAddr = prompt('Nhập địa chỉ giao hàng mặc định mới:', currentAddr);
-          if (newAddr && newAddr.trim() !== '') {
-            const userId = document.getElementById('profile-user-id').value;
-            window.ApiClient.put('/api/v1/users/profile', {
-              id: userId,
-              fullName: document.getElementById('profile-input-name').value,
-              phone: document.getElementById('profile-input-phone').value,
-              address: newAddr.trim()
-            })
-            .then(data => {
-              if (data.status === 'success') {
-                document.getElementById('address-display-text').textContent = newAddr.trim();
-                document.getElementById('profile-input-address').value = newAddr.trim();
-                window.showLuxuryAlert({
-                  title: 'Cập Nhật Sổ Địa Chỉ',
-                  message: 'Địa chỉ giao hàng mặc định mới đã được lưu thành công vào CSDL!',
-                  type: 'success',
-                  btnText: 'Đồng Ý',
-                  autoCloseMs: 2000
-                });
-              }
-            });
-          }
-        });
+      window.trackMyOrder = code => Commerce.trackOrder(code);
+      for (const id of ['edit-address-btn', 'btn-quick-add-address']) {
+        const button = document.getElementById(id);
+        if (button) button.onclick = () => Commerce.editAddress(id === 'btn-quick-add-address');
       }
 
       // 7. Logout Links

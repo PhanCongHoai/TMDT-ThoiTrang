@@ -4,6 +4,10 @@
   "description": "Đồ án tốt nghiệp AURALIÈ Haute Couture - Fullstack E-commerce System",
   "private": true,
   "scripts": {
+    "dev:all": "concurrently --kill-others \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\" \"npm run start:ai\"",
+    "start:ai": "cd ai-service && .venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000",
+    "db:migrate": "npm run migrate --prefix backend",
+    "check:connections": "node backend/scripts/check-connections.js",
     "start": "concurrently \"npm run start --prefix backend\" \"npm run start --prefix frontend\"",
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "tunnel": ".\\cloudflared.exe tunnel --url http://localhost:3000",

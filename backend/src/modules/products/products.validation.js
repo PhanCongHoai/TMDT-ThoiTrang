@@ -1,4 +1,5 @@
 const ApiResponse = require('../../utils/response');
+const { parseImage } = require('./product-image');
 
 /**
  * Validation Middleware cho Module Products
@@ -15,6 +16,8 @@ class ProductValidation {
   }
 
   static validateCreateProduct(req, res, next) {
+    try { parseImage(req.body.imageData); }
+    catch (error) { return ApiResponse.error(res, error.message, error.statusCode || 400); }
     const { name, categoryId, basePrice, description, tag, material, fit } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {

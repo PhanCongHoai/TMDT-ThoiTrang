@@ -21,6 +21,11 @@ class OrderService {
    * - Giữ hàng trong 15 phút cho thanh toán SePay VietQR.
    */
   static async createOrder({ fullName, phone, address, cartItems, items, paymentMethod, couponCode, user }) {
+    if (!user || !user.id) {
+      const err = new Error('Vui lòng đăng nhập trước khi đặt hàng.');
+      err.statusCode = 401;
+      throw err;
+    }
     const rawItems = cartItems || items || [];
     if (!rawItems.length) {
       const err = new Error('Giỏ hàng không có sản phẩm');
@@ -48,7 +53,7 @@ class OrderService {
       }
 
       const qty = Number(rawItem.quantity !== undefined ? rawItem.quantity : rawItem.qty) || 1;
-      const currentStock = resolved.stock_quantity !== null ? Number(resolved.stock_quantity) : 999;
+      const currentStock = resolved.stock_quantity !== null && resolved.stock_quantity !== undefined ? Number(resolved.stock_quantity) : 0;
       if (currentStock < qty) {
         const err = new Error(`Sản phẩm "${resolved.product_name}" (${resolved.size} / ${resolved.color}) không đủ tồn kho (còn ${currentStock}, yêu cầu ${qty}).`);
         err.statusCode = 400;
@@ -581,6 +586,7 @@ class OrderService {
       items: items.map(it => ({
         id: it.id,
         variantId: it.variant_id,
+        productId: it.product_id,
         productName: it.product_name,
         size: it.size,
         color: it.color,
@@ -595,7 +601,7 @@ class OrderService {
   /**
    * Tra cứu đơn hàng an toàn (Track order có bảo vệ dữ liệu cá nhân)
    */
-  static async trackOrder(code, phoneVerification = null) {
+  static async trackOrder(code, phoneVerification = null, user = null) {
     const order = await OrderRepository.findByOrderCode(code);
     if (!order) {
       const err = new Error(`Không tìm thấy mã đơn hàng ${code}`);
@@ -606,27 +612,29 @@ class OrderService {
     const items = await OrderRepository.getOrderItems(order.id);
 
     // Kiểm tra xác minh số điện thoại
-    const isPhoneVerified = Boolean(phoneVerification && String(order.phone_number).trim() === String(phoneVerification).trim());
+    const isOwner = Boolean(user && (user.role === 'ADMIN' || (order.user_id && Number(order.user_id) === Number(user.id))));
+    const isPhoneVerified = isOwner || Boolean(phoneVerification && String(order.phone_number).trim() === String(phoneVerification).trim());
 
     // Masking dữ liệu cá nhân nếu chưa xác minh số điện thoại
     const maskedPhone = isPhoneVerified 
       ? order.phone_number 
-      : String(order.phone_number).slice(0, 3) + '****' + String(order.phone_number).slice(-3);
+      : (order.phone_number ? String(order.phone_number).slice(0, 3) + '****' + String(order.phone_number).slice(-3) : null);
     
     const maskedAddress = isPhoneVerified
       ? order.shipping_address
-      : order.shipping_address.split(',').slice(-2).join(', ').trim(); // Chỉ hiện Quận, Thành Phố
+      : (order.shipping_address?.includes(',') ? order.shipping_address.split(',').slice(-2).join(', ').trim() : 'Cần xác minh số điện thoại');
 
     return {
       orderCode: order.order_code,
-      customerName: order.customer_name || 'Quý Khách Hàng',
+      userId: isOwner ? order.user_id : null,
+      customerName: isPhoneVerified ? order.customer_name : null,
       totalAmount: Number(order.total_amount),
       status: order.status,
       statusText: order.status === ORDER_STATUS.SHIPPED 
         ? 'Đang giao hàng hỏa tốc' 
-        : (order.status === ORDER_STATUS.COMPLETED ? 'Giao hàng thành công' : 'Đang xử lý xuất kho'),
-      trackingCode: order.tracking_code || 'GHN-VN-88291039',
-      carrier: 'Giao Hàng Nhanh (GHN Express)',
+        : (order.status === ORDER_STATUS.COMPLETED ? 'Giao hàng thành công' : (order.status === ORDER_STATUS.CANCELLED ? 'Đã hủy' : (order.status === ORDER_STATUS.CONFIRMED ? 'Đã xác nhận' : 'Chờ xử lý'))),
+      trackingCode: order.tracking_code || null,
+      carrier: null,
       paymentMethod: order.payment_method,
       paymentStatus: order.payment_status,
       shippingAddress: maskedAddress,

@@ -18,6 +18,7 @@ router.get('/profile', verifyToken, async (req, res, next) => {
     if (req.user.role === 'ADMIN') {
       if (req.query.userId) {
         targetUserId = Number(req.query.userId);
+        if (!Number.isInteger(targetUserId) || targetUserId <= 0) return ApiResponse.error(res, 'Mã khách hàng không hợp lệ', 400);
       } else if (req.query.email) {
         const byEmail = await query('SELECT id FROM users WHERE email = @email', { email: req.query.email.trim() });
         if (byEmail.recordset.length) targetUserId = byEmail.recordset[0].id;
@@ -25,7 +26,7 @@ router.get('/profile', verifyToken, async (req, res, next) => {
     }
 
     const userResult = await query(`
-      SELECT u.id, u.full_name, u.email, u.phone, u.address, u.vip_tier, u.vip_points, u.total_spent, r.role_name
+      SELECT u.id, u.full_name, u.email, u.phone, u.address, u.vip_tier, u.vip_points, u.total_spent, u.created_at, r.role_name
       FROM users u
       LEFT JOIN roles r ON u.role_id = r.id
       WHERE u.id = @userId
