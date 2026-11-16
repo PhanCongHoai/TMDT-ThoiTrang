@@ -4,11 +4,649 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sản Phẩm Yêu Thích | AURALIÈ Haute Couture</title>
-  <!-- Font Awesome Icons CDN -->
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/commerce.css">
+
+  <style>
+    /* ===================================================================
+       AURALIÈ LUXURY DUAL-MODE WISHLIST STYLES
+       =================================================================== */
+    :root {
+      --wl-gold: #c5a880;
+      --wl-gold-light: #f5eedf;
+      --wl-dark: #1a1a1a;
+      --wl-gray-bg: #f9f9fb;
+      --wl-border: #e8e8ed;
+      --wl-text-sub: #666677;
+    }
+
+    .wishlist-page-header {
+      background: #ffffff;
+      padding: 3rem 1.25rem 2.5rem 1.25rem;
+      border-bottom: 1px solid var(--wl-border);
+      text-align: center;
+      position: relative;
+    }
+
+    .wishlist-supertitle {
+      color: var(--wl-gold);
+      font-size: 0.78rem;
+      letter-spacing: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .wishlist-main-title {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      color: var(--wl-dark);
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+    }
+
+    .wishlist-subtitle {
+      color: var(--wl-text-sub);
+      font-size: 0.95rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    /* WISHLIST TOOLBAR */
+    .wishlist-toolbar-wrap {
+      background: #ffffff;
+      border: 1px solid var(--wl-border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .wishlist-filter-pills {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .wishlist-filter-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wl-pill-btn {
+      background: var(--wl-gray-bg);
+      border: 1px solid var(--wl-border);
+      color: var(--wl-dark);
+      padding: 0.45rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .wl-pill-btn:hover {
+      border-color: var(--wl-gold);
+      color: var(--wl-gold);
+    }
+
+    .wl-pill-btn.active {
+      background: var(--wl-dark);
+      color: #ffffff;
+      border-color: var(--wl-dark);
+    }
+
+    .wishlist-toolbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .wl-sort-select {
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--wl-border);
+      font-size: 0.8rem;
+      font-family: inherit;
+      background: #ffffff;
+      color: var(--wl-dark);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .wl-sort-select:focus {
+      border-color: var(--wl-gold);
+    }
+
+    /* VIEW SWITCHER BUTTONS */
+    .wl-view-switcher {
+      display: flex;
+      background: var(--wl-gray-bg);
+      border: 1px solid var(--wl-border);
+      border-radius: 8px;
+      padding: 3px;
+    }
+
+    .wl-view-btn {
+      background: transparent;
+      border: none;
+      color: var(--wl-text-sub);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .wl-view-btn.active {
+      background: #ffffff;
+      color: var(--wl-dark);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .wl-batch-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-clear-all {
+      background: transparent;
+      border: 1px solid #ffcdd2;
+      color: #d32f2f;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-clear-all:hover {
+      background: #ffebee;
+    }
+
+    /* ===================================================================
+       1. GRID VIEW MODE (Modern Haute Couture Grid)
+       =================================================================== */
+    .wishlist-grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.75rem;
+      transition: opacity 0.3s ease;
+    }
+
+    .wl-card {
+      background: #ffffff;
+      border: 1px solid var(--wl-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .wl-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--wl-gold);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    .wl-card-img-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 125%; /* 4:5 luxury aspect ratio */
+      background: #f4f4f6;
+      overflow: hidden;
+    }
+
+    .wl-card-img-wrap img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .wl-card:hover .wl-card-img-wrap img {
+      transform: scale(1.04);
+    }
+
+    .wl-badge-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(26, 26, 26, 0.85);
+      backdrop-filter: blur(4px);
+      color: #ffffff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .wl-badge-tag.low-stock {
+      background: #b91c1c;
+      color: #ffffff;
+    }
+
+    .wl-remove-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--wl-border);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      color: #e53935;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      z-index: 3;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .wl-remove-btn:hover {
+      background: #e53935;
+      color: #ffffff;
+      transform: scale(1.1);
+    }
+
+    .wl-card-content {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .wl-card-cat {
+      font-size: 0.72rem;
+      color: var(--wl-gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .wl-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--wl-dark);
+      margin: 0 0 0.4rem 0;
+      line-height: 1.35;
+    }
+
+    .wl-card-material {
+      font-size: 0.78rem;
+      color: var(--wl-text-sub);
+      margin-bottom: 0.75rem;
+    }
+
+    .wl-card-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: auto;
+      margin-bottom: 0.85rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed var(--wl-border);
+    }
+
+    .wl-card-price {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--wl-dark);
+      font-family: var(--font-sans);
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .wl-card-rating {
+      font-size: 0.75rem;
+      color: #f59e0b;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Size selector pills on card */
+    .wl-size-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.85rem;
+    }
+
+    .wl-size-label {
+      font-size: 0.72rem;
+      color: var(--wl-text-sub);
+      font-weight: 600;
+      margin-right: 2px;
+    }
+
+    .wl-size-pill {
+      background: var(--wl-gray-bg);
+      border: 1px solid var(--wl-border);
+      color: var(--wl-dark);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .wl-size-pill.active {
+      background: var(--wl-dark);
+      color: #ffffff;
+      border-color: var(--wl-dark);
+    }
+
+    .btn-add-to-cart-card {
+      width: 100%;
+      background: var(--wl-dark);
+      color: #ffffff;
+      border: 1px solid var(--wl-dark);
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-add-to-cart-card:hover {
+      background: var(--wl-gold);
+      border-color: var(--wl-gold);
+      color: #1a1a1a;
+    }
+
+    /* ===================================================================
+       2. LIST / ROW VIEW MODE (Luxury Concierge Table)
+       =================================================================== */
+    .wishlist-list-view {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: opacity 0.3s ease;
+    }
+
+    .wl-list-row {
+      background: #ffffff;
+      border: 1px solid var(--wl-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      transition: all 0.2s ease;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .wl-list-row:hover {
+      border-color: var(--wl-gold);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .wl-list-thumb {
+      width: 110px;
+      height: 140px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f4f4f6;
+    }
+
+    .wl-list-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .wl-list-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .wl-list-cat {
+      font-size: 0.72rem;
+      color: var(--wl-gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    .wl-list-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--wl-dark);
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .wl-list-material {
+      font-size: 0.8rem;
+      color: var(--wl-text-sub);
+    }
+
+    .wl-stock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .wl-stock-badge.in-stock {
+      color: #16a34a;
+    }
+
+    .wl-stock-badge.low-stock {
+      color: #dc2626;
+      font-weight: 700;
+    }
+
+    .wl-list-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+      padding: 0 1rem;
+      border-left: 1px solid var(--wl-border);
+      border-right: 1px solid var(--wl-border);
+    }
+
+    .wl-list-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+      min-width: 170px;
+    }
+
+    .wl-list-price {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--wl-dark);
+      font-family: var(--font-sans);
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .btn-add-to-cart-list {
+      background: var(--wl-dark);
+      color: #ffffff;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .btn-add-to-cart-list:hover {
+      background: var(--wl-gold);
+      color: #1a1a1a;
+    }
+
+    .wl-list-remove-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s;
+    }
+
+    .wl-list-remove-btn:hover {
+      color: #e53935;
+    }
+
+    /* EMPTY STATE */
+    .wishlist-empty-state {
+      background: #ffffff;
+      border: 1px dashed var(--wl-border);
+      border-radius: 16px;
+      padding: 4.5rem 1.5rem;
+      text-align: center;
+      max-width: 600px;
+      margin: 1.5rem auto 3rem auto;
+    }
+
+    .empty-heart-icon-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--wl-gold-light);
+      color: var(--wl-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 1.5rem auto;
+      box-shadow: 0 8px 24px rgba(197, 168, 128, 0.25);
+    }
+
+    /* MOBILE RESPONSIVE OPTIMIZATIONS (<= 768px) */
+    @media (max-width: 768px) {
+      .wishlist-page-header {
+        padding: 2rem 1rem 1.5rem 1rem;
+      }
+      .wishlist-main-title {
+        font-size: 1.6rem;
+      }
+      .wishlist-toolbar-wrap {
+        padding: 0.85rem;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .wishlist-toolbar-controls {
+        justify-content: space-between;
+      }
+      
+      /* Mobile 2-Col Grid Optimization */
+      .wishlist-grid-view {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem;
+      }
+      .wl-card-content {
+        padding: 0.85rem 0.65rem;
+      }
+      .wl-card-title {
+        font-size: 0.88rem;
+      }
+      .wl-card-price {
+        font-size: 0.98rem;
+      }
+      .wl-size-row {
+        gap: 3px;
+      }
+      .wl-size-pill {
+        padding: 2px 6px;
+        font-size: 0.65rem;
+      }
+      .btn-add-to-cart-card {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.75rem;
+      }
+
+      /* Mobile List View */
+      .wl-list-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      .wl-list-thumb {
+        width: 100%;
+        height: 200px;
+      }
+      .wl-list-options {
+        border: none;
+        padding: 0;
+        width: 100%;
+      }
+      .wl-list-actions {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px dashed var(--wl-border);
+        padding-top: 0.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -56,12 +694,12 @@
 
       <a href="wishlist.html" class="d-btn-icon active-icon" title="Yêu thích" style="color: var(--accent-gold);">
         <i class="fa-solid fa-heart"></i>
-        <span class="badge-count">2</span>
+        <span class="badge-count wishlist-count-badge">4</span>
       </a>
 
       <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
         <i class="fa-solid fa-bag-shopping"></i>
-        <span class="badge-count" id="cart-count">0</span>
+        <span class="badge-count cart-count-badge" id="cart-count">0</span>
       </a>
 
       <div class="user-dropdown-wrapper">
@@ -87,9 +725,10 @@
 
           <ul class="user-dropdown-links">
             <li><a href="profile.html#info"><i class="fa-solid fa-user-gear"></i> Thông Tin & Số Đo</a></li>
-            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi <span class="dropdown-badge gold">1 đang giao</span></a></li>
+            <li><a href="profile.html#orders"><i class="fa-solid fa-box-archive"></i> Đơn Hàng Của Tôi</a></li>
             <li><a href="profile.html#address"><i class="fa-solid fa-location-dot"></i> Sổ Địa Chỉ Giao Hàng</a></li>
-            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích <span class="dropdown-badge">2</span></a></li>
+            <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích <span class="dropdown-badge">4</span></a></li>
+            <li><a href="shipper.html" target="_blank" style="color:#38bdf8;"><i class="fa-solid fa-motorcycle"></i> Cổng Shipper Giả Lập</a></li>
             <li><a href="contact.html"><i class="fa-solid fa-gem"></i> Đặc Quyền VIP Lounge</a></li>
             <li class="dropdown-divider"></li>
             <li><a href="login.html" class="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
@@ -98,15 +737,6 @@
       </div>
     </div>
   </header>
-
-  <!-- MOBILE SEARCH OVERLAY -->
-  <div class="mobile-search-overlay" id="mobile-search-overlay">
-    <div class="mobile-search-container">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" placeholder="Tìm kiếm sản phẩm..." id="mobile-search-input">
-      <button class="close-search-btn" id="close-search-btn">&times;</button>
-    </div>
-  </div>
 
   <!-- MOBILE NAVIGATION DRAWER -->
   <div class="mobile-nav-drawer" id="mobile-nav-drawer">
@@ -118,6 +748,8 @@
       <li><a href="index.html"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
       <li><a href="index.html#catalog"><i class="fa-solid fa-shirt"></i> Sản phẩm</a></li>
       <li><a href="collections.html"><i class="fa-solid fa-layer-group"></i> Bộ sưu tập</a></li>
+      <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh sách yêu thích</a></li>
+      <li><a href="shipper.html"><i class="fa-solid fa-motorcycle"></i> Cổng Shipper Giao Hàng</a></li>
       <li><a href="about.html"><i class="fa-solid fa-building"></i> Về chúng tôi</a></li>
       <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
     </ul>
@@ -127,70 +759,62 @@
   <main class="site-main">
 
     <!-- PAGE TITLE SECTION -->
-    <section style="background: #ffffff; padding: 2.5rem 1.25rem; border-bottom: 1px solid var(--border-light); text-align: center;">
-      <span style="color: var(--accent-gold); font-size: 0.8rem; letter-spacing: 3px; font-weight: 700;">YOUR WISHLIST</span>
-      <h1 class="section-title" style="text-align: center; margin-top: 0.5rem;">Danh Sách Yêu Thích (2 Sản Phẩm)</h1>
+    <section class="wishlist-page-header">
+      <span class="wishlist-supertitle">AURALIÈ PRIVATE SELECTION</span>
+      <h1 class="wishlist-main-title" id="page-wishlist-title">Danh Sách Yêu Thích (4 Tuyệt Tác)</h1>
+      <p class="wishlist-subtitle">Các thiết kế thời trang may đo cao cấp Quý khách đã lưu giữ để trải nghiệm và đặt may riêng.</p>
     </section>
 
     <!-- WISHLIST BODY SECTION -->
-    <section class="page-section">
+    <section class="page-section" style="max-width: 1280px; margin: 0 auto; padding: 2rem 1.25rem 4rem 1.25rem;">
       
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Các thiết kế thời trang bạn đã lưu để xem và mua sau.</p>
-        <a href="cart.html" class="btn-primary-luxury" style="padding: 0.6rem 1.2rem; font-size: 0.8rem; text-decoration: none;"><i class="fa-solid fa-bag-shopping"></i> Chuyển Tất Cả Vào Giỏ</a>
+      <!-- INTERACTIVE TOOLBAR -->
+      <div class="wishlist-toolbar-wrap" id="wishlist-toolbar">
+        
+        <!-- Category Filter Pills -->
+        <div class="wishlist-filter-pills" id="wishlist-filter-pills">
+          <button class="wl-pill-btn active" data-category="all" onclick="filterWishlistCategory('all')">Tất Cả (4)</button>
+          <button class="wl-pill-btn" data-category="vest" onclick="filterWishlistCategory('vest')">Áo Vest & Blazer (2)</button>
+          <button class="wl-pill-btn" data-category="dress" onclick="filterWishlistCategory('dress')">Đầm Dạ Hội (1)</button>
+          <button class="wl-pill-btn" data-category="accessories" onclick="filterWishlistCategory('accessories')">Giày & Phụ Kiện (1)</button>
+        </div>
+
+        <!-- Controls: Sort + View Switcher + Batch Buttons -->
+        <div class="wishlist-toolbar-controls">
+          
+          <!-- Sắp xếp -->
+          <select class="wl-sort-select" id="wishlist-sort-select" onchange="sortWishlist(this.value)">
+            <option value="newest">Mới lưu gần đây</option>
+            <option value="price-asc">Giá: Thấp đến Cao</option>
+            <option value="price-desc">Giá: Cao đến Thấp</option>
+          </select>
+
+          <!-- Chế độ hiển thị: Lưới vs Danh sách -->
+          <div class="wl-view-switcher">
+            <button class="wl-view-btn active" id="btn-view-grid" onclick="setWishlistViewMode('grid')" title="Hiển thị dạng lưới thẻ thời trang">
+              <i class="fa-solid fa-grip"></i> <span>Lưới</span>
+            </button>
+            <button class="wl-view-btn" id="btn-view-list" onclick="setWishlistViewMode('list')" title="Hiển thị dạng danh sách may đo chi tiết">
+              <i class="fa-solid fa-list-ul"></i> <span>Danh sách</span>
+            </button>
+          </div>
+
+          <!-- Batch Actions -->
+          <div class="wl-batch-actions">
+            <button class="btn-primary-luxury" id="btn-move-all-cart" onclick="moveAllWishlistToCart()" style="padding: 0.5rem 1rem; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-bag-shopping"></i> Chuyển Hết Vào Giỏ
+            </button>
+            <button class="btn-clear-all" onclick="clearAllWishlist()" title="Xóa toàn bộ danh sách">
+              <i class="fa-solid fa-trash-can"></i> Xóa Tất Cả
+            </button>
+          </div>
+
+        </div>
       </div>
 
-      <!-- LƯỚI SẢN PHẨM YÊU THÍCH -->
-      <div class="product-grid-3col">
-
-        <!-- Card 1 -->
-        <article class="fashion-card">
-          <div class="card-img-wrap">
-            <img src="assets/card_1.jpg" alt="Áo Vest Tailored Double-Breasted">
-            <span class="card-tag">WISHLIST</span>
-            <button style="position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 32px; height: 32px; color: #e53935; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Bỏ yêu thích">
-              <i class="fa-solid fa-heart"></i>
-            </button>
-            <div class="card-quick-actions">
-              <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div>
-              <span class="card-category">Áo Vest Nam</span>
-              <h3 class="card-title">Double-Breasted Tailored Suit</h3>
-            </div>
-            <div class="card-price-row">
-              <span class="card-price">12.500.000 ₫</span>
-              <span class="card-rating"><i class="fa-solid fa-star"></i> 4.9</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article class="fashion-card">
-          <div class="card-img-wrap">
-            <img src="assets/card_2.jpg" alt="Đầm Lụa Minimalist Silk Trench">
-            <span class="card-tag">WISHLIST</span>
-            <button style="position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 32px; height: 32px; color: #e53935; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Bỏ yêu thích">
-              <i class="fa-solid fa-heart"></i>
-            </button>
-            <div class="card-quick-actions">
-              <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div>
-              <span class="card-category">Đầm Haute Couture</span>
-              <h3 class="card-title">Minimalist Silk Trench Dress</h3>
-            </div>
-            <div class="card-price-row">
-              <span class="card-price">18.900.000 ₫</span>
-              <span class="card-rating"><i class="fa-solid fa-star"></i> 5.0</span>
-            </div>
-          </div>
-        </article>
-
+      <!-- WISHLIST PRODUCTS CONTAINER -->
+      <div id="wishlist-items-container" class="wishlist-grid-view">
+        <!-- Rendered dynamically by JavaScript -->
       </div>
 
     </section>
@@ -217,6 +841,7 @@
           <li><a href="warranty-policy.html">Chính sách bảo hành</a></li>
           <li><a href="return-policy.html">Đổi trả trong 30 ngày</a></li>
           <li><a href="shipping-policy.html">Vận chuyển hỏa tốc</a></li>
+          <li><a href="shipper.html" target="_blank" style="color: #38bdf8;"><i class="fa-solid fa-motorcycle"></i> Cổng Shipper Giao Hàng (Mô phỏng)</a></li>
           <li><a href="privacy-policy.html">Bảo mật thông tin</a></li>
         </ul>
       </div>
@@ -261,6 +886,13 @@
       <div class="m-nav-icon-wrap"><i class="fa-solid fa-layer-group"></i></div>
       <span>Bộ sưu tập</span>
     </a>
+    <a href="wishlist.html" class="m-nav-item active" data-tab="wishlist">
+      <div class="m-nav-icon-wrap">
+        <i class="fa-solid fa-heart"></i>
+        <span class="badge-count wishlist-count-badge">4</span>
+      </div>
+      <span>Yêu thích</span>
+    </a>
     <a href="cart.html" class="m-nav-item" data-tab="cart">
       <div class="m-nav-icon-wrap">
         <i class="fa-solid fa-bag-shopping"></i>
@@ -268,14 +900,401 @@
       </div>
       <span>Giỏ hàng</span>
     </a>
-    <a href="contact.html" class="m-nav-item" data-tab="contact">
-      <div class="m-nav-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
-      <span>Liên hệ</span>
-    </a>
   </nav>
 
+  <!-- Scripts -->
   <script type="module" src="js/services/tracking/trackingService.js"></script>
   <script src="js/commerce.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- ===================================================================
+       DUAL-MODE WISHLIST CONTROLLER SCRIPT
+       =================================================================== -->
+  <script>
+    (function() {
+      // 1. Initial State & High-Fashion Dataset
+      const DEFAULT_WISHLIST = [
+        {
+          id: 1,
+          name: "Double-Breasted Tailored Suit",
+          category: "vest",
+          categoryName: "Áo Vest & Blazer",
+          material: "Dạ Cashmere Ý cao cấp • May đo thủ công",
+          price: 12500000,
+          img: "assets/card_1.jpg",
+          rating: 4.9,
+          stock: 3,
+          stockText: "Chỉ còn 3 chiếc",
+          isLowStock: true,
+          sizes: ["S", "M", "L", "XL"],
+          selectedSize: "M",
+          color: "Đen Tuyền (Jet Black)",
+          dateAdded: 1731600000000
+        },
+        {
+          id: 2,
+          name: "Minimalist Silk Trench Dress",
+          category: "dress",
+          categoryName: "Đầm Dạ Hội",
+          material: "100% Lụa Tơ Tằm Tự Nhiên Mulberry",
+          price: 18900000,
+          img: "assets/card_2.jpg",
+          rating: 5.0,
+          stock: 2,
+          stockText: "Chỉ còn 2 chiếc",
+          isLowStock: true,
+          sizes: ["S", "M", "L"],
+          selectedSize: "S",
+          color: "Trắng Ngà (Ivory Pearl)",
+          dateAdded: 1731610000000
+        },
+        {
+          id: 3,
+          name: "Royale Gold Buckle Boots",
+          category: "accessories",
+          categoryName: "Giày & Phụ Kiện",
+          material: "Da Bê Thượng Hạng Ý • Khóa mạ vàng 18K",
+          price: 15800000,
+          img: "assets/card_3.jpg",
+          rating: 4.95,
+          stock: 5,
+          stockText: "Sẵn sàng xuất kho",
+          isLowStock: false,
+          sizes: ["36", "37", "38", "39"],
+          selectedSize: "38",
+          color: "Nâu Cognac Cổ Điển",
+          dateAdded: 1731620000000
+        },
+        {
+          id: 4,
+          name: "Signature Cashmere Evening Cape",
+          category: "vest",
+          categoryName: "Áo Vest & Blazer",
+          material: "100% Cashmere Nguyên Bản Vùng Biella",
+          price: 24500000,
+          img: "assets/card_4.jpg",
+          rating: 5.0,
+          stock: 1,
+          stockText: "Độc bản duy nhất",
+          isLowStock: true,
+          sizes: ["Freesize"],
+          selectedSize: "Freesize",
+          color: "Xanh Đêm Midnight",
+          dateAdded: 1731630000000
+        }
+      ];
+
+      // Retrieve from localStorage or fallback
+      let wishlistData = [];
+      try {
+        const stored = localStorage.getItem('auralie_wishlist_items');
+        wishlistData = stored ? JSON.parse(stored) : DEFAULT_WISHLIST;
+        if (!Array.isArray(wishlistData) || wishlistData.length === 0) {
+          wishlistData = DEFAULT_WISHLIST;
+          localStorage.setItem('auralie_wishlist_items', JSON.stringify(wishlistData));
+        }
+      } catch (e) {
+        wishlistData = DEFAULT_WISHLIST;
+      }
+
+      let currentView = localStorage.getItem('wishlist_view_mode') || 'grid';
+      let currentCategory = 'all';
+      let currentSort = 'newest';
+
+      // Save to localStorage helper
+      function persistWishlist() {
+        localStorage.setItem('auralie_wishlist_items', JSON.stringify(wishlistData));
+        updateBadges();
+      }
+
+      // Update badge counters everywhere
+      function updateBadges() {
+        const count = wishlistData.length;
+        document.querySelectorAll('.wishlist-count-badge, .dropdown-badge').forEach(b => {
+          b.textContent = count;
+        });
+        const titleEl = document.getElementById('page-wishlist-title');
+        if (titleEl) {
+          titleEl.textContent = `Danh Sách Yêu Thích (${count} Tuyệt Tác)`;
+        }
+      }
+
+      // 2. Set View Mode (Grid vs List)
+      window.setWishlistViewMode = function(mode) {
+        currentView = mode;
+        localStorage.setItem('wishlist_view_mode', mode);
+        
+        const btnGrid = document.getElementById('btn-view-grid');
+        const btnList = document.getElementById('btn-view-list');
+        const container = document.getElementById('wishlist-items-container');
+
+        if (btnGrid) btnGrid.classList.toggle('active', mode === 'grid');
+        if (btnList) btnList.classList.toggle('active', mode === 'list');
+
+        if (container) {
+          container.className = mode === 'grid' ? 'wishlist-grid-view' : 'wishlist-list-view';
+        }
+
+        renderWishlist();
+      };
+
+      // 3. Filter Category
+      window.filterWishlistCategory = function(cat) {
+        currentCategory = cat;
+        document.querySelectorAll('.wl-pill-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.category === cat);
+        });
+        renderWishlist();
+      };
+
+      // 4. Sort Wishlist
+      window.sortWishlist = function(sortType) {
+        currentSort = sortType;
+        renderWishlist();
+      };
+
+      // 5. Select Size on Card / Row
+      window.selectWishlistSize = function(productId, size) {
+        const item = wishlistData.find(p => p.id === productId);
+        if (item) {
+          item.selectedSize = size;
+          persistWishlist();
+          renderWishlist();
+        }
+      };
+
+      // 6. Add Single Item to Cart
+      window.addWishlistItemToCart = async function(productId) {
+        const item = wishlistData.find(p => p.id === productId);
+        if (!item) return;
+
+        if (typeof window.addToCart === 'function') {
+          await window.addToCart({
+            id: item.id,
+            name: item.name,
+            category: item.categoryName,
+            price: item.price,
+            img: item.img,
+            size: item.selectedSize || 'M',
+            color: item.color || 'Tiêu chuẩn',
+            qty: 1
+          });
+        }
+      };
+
+      // 7. Remove Single Item from Wishlist
+      window.removeWishlistItem = function(productId) {
+        const el = document.getElementById(`wl-item-${productId}`);
+        if (el) {
+          el.style.transition = 'all 0.3s ease';
+          el.style.opacity = '0';
+          el.style.transform = 'scale(0.85)';
+        }
+
+        setTimeout(() => {
+          wishlistData = wishlistData.filter(p => p.id !== productId);
+          persistWishlist();
+          renderWishlist();
+          if (typeof window.showLuxuryAlert === 'function') {
+            window.showLuxuryAlert({
+              title: 'Đã Cập Nhật Yêu Thích',
+              message: 'Đã bỏ sản phẩm khỏi danh sách yêu thích của Quý khách.',
+              type: 'warning',
+              autoCloseMs: 2000
+            });
+          }
+        }, 250);
+      };
+
+      // 8. Move All Wishlist to Cart
+      window.moveAllWishlistToCart = async function() {
+        if (!wishlistData.length) {
+          alert('Danh sách yêu thích của Quý khách hiện đang trống!');
+          return;
+        }
+
+        if (window.Commerce && typeof window.Commerce.requireUser === 'function') {
+          if (!await window.Commerce.requireUser('cart.html')) return;
+        }
+
+        for (const item of wishlistData) {
+          if (typeof window.addToCart === 'function') {
+            await window.addToCart({
+              id: item.id,
+              name: item.name,
+              category: item.categoryName,
+              price: item.price,
+              img: item.img,
+              size: item.selectedSize || 'M',
+              color: item.color || 'Tiêu chuẩn',
+              qty: 1
+            });
+          }
+        }
+
+        if (typeof window.showLuxuryAlert === 'function') {
+          window.showLuxuryAlert({
+            title: 'Chuyển Vào Giỏ Hàng Thành Công',
+            message: `Đã chuyển toàn bộ ${wishlistData.length} sản phẩm yêu thích vào giỏ hàng của Quý khách!`,
+            type: 'success',
+            btnText: 'Đến Giỏ Hàng Ngay',
+            redirectUrl: 'cart.html',
+            autoCloseMs: 3000
+          });
+        }
+      };
+
+      // 9. Clear All Wishlist
+      window.clearAllWishlist = function() {
+        if (!wishlistData.length) return;
+        if (confirm('Quý khách có chắc chắn muốn xóa toàn bộ sản phẩm khỏi danh sách yêu thích?')) {
+          wishlistData = [];
+          persistWishlist();
+          renderWishlist();
+        }
+      };
+
+      // 10. Core Render Function
+      function renderWishlist() {
+        const container = document.getElementById('wishlist-items-container');
+        const toolbar = document.getElementById('wishlist-toolbar');
+        if (!container) return;
+
+        // Filter
+        let displayList = [...wishlistData];
+        if (currentCategory !== 'all') {
+          displayList = displayList.filter(p => p.category === currentCategory);
+        }
+
+        // Sort
+        if (currentSort === 'price-asc') {
+          displayList.sort((a, b) => a.price - b.price);
+        } else if (currentSort === 'price-desc') {
+          displayList.sort((a, b) => b.price - a.price);
+        } else {
+          displayList.sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
+        }
+
+        // Check empty state
+        if (displayList.length === 0) {
+          if (wishlistData.length === 0) {
+            if (toolbar) toolbar.style.display = 'none';
+          }
+          container.className = '';
+          container.innerHTML = `
+            <div class="wishlist-empty-state">
+              <div class="empty-heart-icon-wrap">
+                <i class="fa-regular fa-heart"></i>
+              </div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--wl-dark); margin: 0 0 0.5rem 0;">Danh Sách Yêu Thích Trống</h3>
+              <p style="color: var(--wl-text-sub); font-size: 0.9rem; margin-bottom: 1.75rem; line-height: 1.5;">
+                Quý khách chưa lưu giữ thiết kế nào trong danh mục này.<br>Khám phá bộ sưu tập may đo mới nhất để chọn lựa những tuyệt tác thời trang ưng ý.
+              </p>
+              <a href="index.html#catalog" class="btn-primary-luxury" style="padding: 0.75rem 1.75rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-sparkles"></i> Khám Phá Bộ Sưu Tập Mới
+              </a>
+            </div>
+          `;
+          return;
+        }
+
+        if (toolbar) toolbar.style.display = 'flex';
+
+        // Render based on current view
+        if (currentView === 'grid') {
+          container.className = 'wishlist-grid-view';
+          container.innerHTML = displayList.map(item => {
+            const priceFormatted = Number(item.price).toLocaleString('vi-VN') + ' ₫';
+            return `
+              <article class="wl-card" id="wl-item-${item.id}">
+                <div class="wl-card-img-wrap">
+                  <img src="${item.img}" alt="${item.name}">
+                  <span class="wl-badge-tag ${item.isLowStock ? 'low-stock' : ''}">
+                    ${item.isLowStock ? item.stockText : 'WISHLIST'}
+                  </span>
+                  <button class="wl-remove-btn" onclick="removeWishlistItem(${item.id})" title="Bỏ khỏi yêu thích">
+                    <i class="fa-solid fa-heart"></i>
+                  </button>
+                </div>
+                <div class="wl-card-content">
+                  <span class="wl-card-cat">${item.categoryName}</span>
+                  <h3 class="wl-card-title">${item.name}</h3>
+                  <div class="wl-card-material">${item.material}</div>
+                  
+                  <!-- Size Selection Pills -->
+                  <div class="wl-size-row">
+                    <span class="wl-size-label">Size:</span>
+                    ${item.sizes.map(s => `
+                      <button class="wl-size-pill ${item.selectedSize === s ? 'active' : ''}" onclick="selectWishlistSize(${item.id}, '${s}')">
+                        ${s}
+                      </button>
+                    `).join('')}
+                  </div>
+
+                  <div class="wl-card-price-row">
+                    <span class="wl-card-price">${priceFormatted}</span>
+                    <span class="wl-card-rating"><i class="fa-solid fa-star"></i> ${item.rating}</span>
+                  </div>
+
+                  <button class="btn-add-to-cart-card" onclick="addWishlistItemToCart(${item.id})">
+                    <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng (Size ${item.selectedSize || 'M'})
+                  </button>
+                </div>
+              </article>
+            `;
+          }).join('');
+        } else {
+          // LIST / ROW VIEW
+          container.className = 'wishlist-list-view';
+          container.innerHTML = displayList.map(item => {
+            const priceFormatted = Number(item.price).toLocaleString('vi-VN') + ' ₫';
+            return `
+              <div class="wl-list-row" id="wl-item-${item.id}">
+                <div class="wl-list-thumb">
+                  <img src="${item.img}" alt="${item.name}">
+                </div>
+                
+                <div class="wl-list-info">
+                  <span class="wl-list-cat">${item.categoryName}</span>
+                  <h3 class="wl-list-title">${item.name}</h3>
+                  <div class="wl-list-material">${item.material}</div>
+                  <div class="wl-stock-badge ${item.isLowStock ? 'low-stock' : 'in-stock'}">
+                    <i class="fa-solid ${item.isLowStock ? 'fa-fire' : 'fa-circle-check'}"></i> ${item.stockText}
+                  </div>
+                </div>
+
+                <div class="wl-list-options">
+                  <span style="font-size:0.75rem; color:var(--wl-text-sub); font-weight:700;">CHỌN KÍCH CỠ:</span>
+                  <div style="display:flex; gap:6px;">
+                    ${item.sizes.map(s => `
+                      <button class="wl-size-pill ${item.selectedSize === s ? 'active' : ''}" onclick="selectWishlistSize(${item.id}, '${s}')">
+                        ${s}
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+
+                <div class="wl-list-actions">
+                  <span class="wl-list-price">${priceFormatted}</span>
+                  <button class="btn-add-to-cart-list" onclick="addWishlistItemToCart(${item.id})">
+                    <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ (Size ${item.selectedSize || 'M'})
+                  </button>
+                  <button class="wl-list-remove-btn" onclick="removeWishlistItem(${item.id})">
+                    <i class="fa-solid fa-trash-can"></i> Xóa khỏi yêu thích
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // Initial Call
+      document.addEventListener('DOMContentLoaded', () => {
+        updateBadges();
+        setWishlistViewMode(currentView);
+      });
+    })();
+  </script>
 </body>
 </html>
