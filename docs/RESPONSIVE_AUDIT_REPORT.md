@@ -309,3 +309,4 @@ Giao diện website **AURALIÈ Haute Couture** đã hoàn thành xuất sắc đ
 - Trải nghiệm mượt mà, tiện dụng và tối ưu công thái học trên thiết bị di động và máy tính bảng.
 - Không làm suy giảm hay gián đoạn bất kỳ luồng nghiệp vụ kinh doanh, CSDL SQL Server hay mô hình AI nào.
 - Toàn bộ 136 kịch bản kiểm thử tự động đạt tỷ lệ **100% PASS**.
+

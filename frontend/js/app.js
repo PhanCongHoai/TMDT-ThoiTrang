@@ -338,10 +338,10 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div style="display: flex; align-items: center; gap: 1.5rem;">
-          <div class="quantity-control" style="display: flex; align-items: center; border: 1px solid var(--border-light); border-radius: 20px; padding: 0.2rem 0.6rem; background: #faf8f5;">
-            <button onclick="window.changeCartQty(${idx}, -1)" style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">-</button>
-            <span style="font-size: 0.9rem; font-weight: 600; padding: 0 0.5rem;">${item.qty || 1}</span>
-            <button onclick="window.changeCartQty(${idx}, 1)" style="background: none; border: none; cursor: pointer; padding: 0.3rem 0.5rem; font-weight: bold;">+</button>
+          <div class="quantity-control" style="display: inline-flex; align-items: center; border: 1px solid var(--border-light); border-radius: 20px; padding: 0.15rem 0.4rem; background: #faf8f5;">
+            <button onclick="window.changeCartQty(${idx}, -1)" style="background: none; border: none; cursor: pointer; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; line-height: 1; color: var(--primary-dark);">-</button>
+            <span style="font-size: 0.9rem; font-weight: 600; min-width: 24px; text-align: center; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums lining-nums;">${item.qty || 1}</span>
+            <button onclick="window.changeCartQty(${idx}, 1)" style="background: none; border: none; cursor: pointer; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; line-height: 1; color: var(--primary-dark);">+</button>
           </div>
 
           <button onclick="window.removeCartItem(${idx})" style="background: none; border: none; color: #a00; font-size: 1.2rem; cursor: pointer;" title="Xóa khỏi giỏ hàng">

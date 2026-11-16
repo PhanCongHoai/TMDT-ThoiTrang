@@ -251,18 +251,38 @@
     }
 
     .kpi-value {
-      font-family: var(--font-serif);
-      font-size: 1.8rem;
+      font-family: var(--font-sans);
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--primary-dark);
       margin: 0.3rem 0;
       word-break: break-word;
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: 'lnum' 1, 'tnum' 1;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+      line-height: 1.2;
     }
 
     .kpi-growth {
+      font-family: var(--font-sans);
       font-size: 0.78rem;
       color: #2e7d32;
       font-weight: 600;
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: 'lnum' 1, 'tnum' 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      line-height: 1;
+    }
+
+    .kpi-growth i {
+      font-size: 0.75rem;
+      line-height: 1;
+      margin-top: -1px;
     }
 
     .admin-table-card {
@@ -306,6 +326,13 @@
       text-align: left;
       border-bottom: 1px solid var(--border-light);
       font-size: 0.85rem;
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: 'lnum' 1, 'tnum' 1;
+    }
+
+    #cj-kpi-grid div, #behavior-kpi-grid div, #ai-kpi-grid div {
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: 'lnum' 1, 'tnum' 1;
     }
 
     .admin-table th {

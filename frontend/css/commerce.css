@@ -48,8 +48,8 @@
 .checkout-payment-panel .payment-method-selector { display:block; margin:0; }
 .checkout-payment-panel .payment-method-options { display:flex; flex-direction:column; gap:10px; }
 .checkout-summary #btn-proceed-checkout { width:100%; justify-content:center; margin-top:16px; }
-.checkout-total-row { display:flex; justify-content:space-between; gap:14px; margin:16px 0; }
-.checkout-grand-total { border-top:1px solid #ddd; padding-top:16px; color:#ad8635; font-size:1.1rem; }
+.checkout-total-row { display:flex; justify-content:space-between; align-items:baseline; gap:14px; margin:16px 0; font-variant-numeric:tabular-nums lining-nums; }
+.checkout-grand-total { border-top:1px solid #ddd; padding-top:16px; color:#ad8635; font-size:1.1rem; display:flex; justify-content:space-between; align-items:baseline; font-weight:700; font-variant-numeric:tabular-nums lining-nums; }
 .checkout-coupon { display:flex; gap:8px; margin-top:8px; }
 .checkout-coupon input { min-width:0; width:100%; border:1px solid #ccc; border-radius:6px; padding:10px; }
 .checkout-order-note { font-size:.85rem; color:#666; margin-top:20px; }

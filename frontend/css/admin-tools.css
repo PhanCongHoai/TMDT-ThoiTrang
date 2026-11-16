@@ -1,5 +1,6 @@
-.stock-remaining { display:block; font-size:1.05rem; }
-.stock-breakdown { display:block; line-height:1.6; color:#777; white-space:nowrap; }
+.stock-remaining { display:block; font-size:1.05rem; font-variant-numeric:tabular-nums lining-nums; }
+.stock-breakdown { display:block; line-height:1.6; color:#777; white-space:nowrap; font-variant-numeric:tabular-nums lining-nums; }
+.inventory-preview strong { display:block;color:#29251f;font-size:1.5rem;margin-top:5px; font-variant-numeric:tabular-nums lining-nums; }
 .admin-muted { color:#777; }
 .admin-products-notice { color:#98651b; font-size:.85rem; line-height:1.5; margin:8px 0; }
 .admin-products-notice:empty { display:none; }
