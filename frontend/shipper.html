@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AURALIÈ Express Concierge • Cổng Giả Lập Shipper Giao Hàng</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Base Style -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <style>
+    :root {
+      --shp-bg: #0f172a;
+      --shp-card-bg: #1e293b;
+      --shp-card-border: #334155;
+      --shp-primary: #38bdf8;
+      --shp-accent: #f59e0b;
+      --shp-success: #10b981;
+      --shp-danger: #ef4444;
+      --shp-text-main: #f8fafc;
+      --shp-text-muted: #94a3b8;
+      --shp-gold: #c5a880;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body.shipper-body {
+      background-color: var(--shp-bg);
+      color: var(--shp-text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0 0 80px 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .shipper-app-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Top Navigation Bar */
+    .shp-header {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--shp-card-border);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .shp-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .shp-brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #c5a880 0%, #9a7b56 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(197, 168, 128, 0.3);
+    }
+
+    .shp-brand-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .shp-brand-sub {
+      font-size: 0.68rem;
+      color: var(--shp-gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+    }
+
+    .shp-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shp-badge-online {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse-green 1.8s infinite;
+    }
+
+    @keyframes pulse-green {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Driver Profile Card */
+    .shp-driver-card {
+      background: var(--shp-card-bg);
+      border: 1px solid var(--shp-card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 16px 0 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .driver-avatar-wrap {
+      position: relative;
+    }
+
+    .driver-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px solid var(--shp-gold);
+      background: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: #f8fafc;
+    }
+
+    .driver-rank-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      background: #f59e0b;
+      color: #000;
+      font-size: 0.65rem;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid var(--shp-card-bg);
+    }
+
+    .driver-info {
+      flex: 1;
+    }
+
+    .driver-name {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .driver-vehicle {
+      font-size: 0.78rem;
+      color: var(--shp-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .driver-rating {
+      font-size: 0.75rem;
+      color: #fbbf24;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .driver-switch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--shp-text-main);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .driver-switch-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* KPI Summary Strip */
+    .shp-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .shp-kpi-box {
+      background: var(--shp-card-bg);
+      border: 1px solid var(--shp-card-border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .shp-kpi-box:hover, .shp-kpi-box.active {
+      border-color: var(--shp-primary);
+      background: #253348;
+    }
+
+    .kpi-title {
+      font-size: 0.68rem;
+      color: var(--shp-text-muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .kpi-num {
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-family: var(--font-sans);
+      font-variant-numeric: tabular-nums lining-nums;
+      color: #fff;
+    }
+
+    .kpi-num.ready { color: #f59e0b; }
+    .kpi-num.shipping { color: #38bdf8; }
+    .kpi-num.completed { color: #10b981; }
+    .kpi-num.cod { color: #fbbf24; font-size: 0.95rem; }
+
+    /* Action bar */
+    .shp-action-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .shp-search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .shp-search-wrap i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--shp-text-muted);
+      font-size: 0.85rem;
+    }
+
+    .shp-search-input {
+      width: 100%;
+      background: var(--shp-card-bg);
+      border: 1px solid var(--shp-card-border);
+      border-radius: 10px;
+      padding: 10px 12px 10px 36px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-family: inherit;
+    }
+
+    .shp-search-input:focus {
+      outline: none;
+      border-color: var(--shp-primary);
+    }
+
+    .btn-create-sim {
+      background: linear-gradient(135deg, #c5a880 0%, #9a7b56 100%);
+      color: #0f172a;
+      border: none;
+      padding: 0 14px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(197, 168, 128, 0.25);
+      transition: transform 0.15s ease;
+    }
+
+    .btn-create-sim:active {
+      transform: scale(0.96);
+    }
+
+    /* Tabs Filter Bar */
+    .shp-tabs {
+      display: flex;
+      background: var(--shp-card-bg);
+      border: 1px solid var(--shp-card-border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .shp-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .shp-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--shp-text-muted);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .shp-tab-btn.active {
+      background: var(--shp-primary);
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .tab-counter {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+    }
+
+    .shp-tab-btn.active .tab-counter {
+      background: #0f172a;
+      color: #fff;
+    }
+
+    /* Order Card Component */
+    .shp-order-card {
+      background: var(--shp-card-bg);
+      border: 1px solid var(--shp-card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      position: relative;
+    }
+
+    .shp-order-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--shp-card-border);
+      margin-bottom: 12px;
+    }
+
+    .card-code-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .order-code-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .tracking-code-sub {
+      font-size: 0.72rem;
+      color: var(--shp-text-muted);
+      font-family: monospace;
+      margin-top: 2px;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-badge.ready {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+
+    .status-badge.shipping {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+    }
+
+    .status-badge.completed {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .status-badge.cancelled {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+
+    /* Customer Info Block */
+    .cust-info-block {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .cust-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .cust-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-call-cust {
+      background: #10b981;
+      color: #fff;
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+      transition: background 0.15s;
+    }
+
+    .btn-call-cust:hover {
+      background: #059669;
+    }
+
+    .cust-address {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .cust-address i {
+      color: #ef4444;
+      margin-top: 3px;
+    }
+
+    .route-telemetry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--shp-text-muted);
+      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      padding-top: 8px;
+    }
+
+    .route-km {
+      color: var(--shp-primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .route-eta {
+      color: #fbbf24;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    /* Payment Badge */
+    .payment-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .payment-strip.cod {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .payment-strip.paid {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .pay-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .payment-strip.cod .pay-label { color: #f59e0b; }
+    .payment-strip.paid .pay-label { color: #34d399; }
+
+    .pay-amount {
+      font-size: 1.05rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .payment-strip.cod .pay-amount { color: #fbbf24; }
+    .payment-strip.paid .pay-amount { color: #10b981; }
+
+    /* Items Toggle */
+    .items-accordion {
+      margin-bottom: 14px;
+    }
+
+    .items-accordion-btn {
+      background: transparent;
+      border: none;
+      color: var(--shp-text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .items-list {
+      display: none;
+      background: rgba(15, 23, 42, 0.4);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 8px;
+    }
+
+    .items-list.open {
+      display: block;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    .item-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Action Buttons Row */
+    .card-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .card-actions-grid.multi {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .btn-action {
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .btn-action:active {
+      transform: scale(0.97);
+    }
+
+    .btn-pickup {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-simulate-gps {
+      background: #334155;
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-simulate-gps:hover {
+      background: #475569;
+    }
+
+    .btn-deliver {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-fail {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 10px;
+      font-size: 0.75rem;
+    }
+
+    /* Empty State */
+    .shp-empty {
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--shp-card-bg);
+      border: 1px dashed var(--shp-card-border);
+      border-radius: 16px;
+      margin: 20px 0;
+    }
+
+    .shp-empty i {
+      font-size: 3rem;
+      color: #475569;
+      margin-bottom: 12px;
+    }
+
+    .shp-empty h3 {
+      font-size: 1.1rem;
+      color: #f1f5f9;
+      margin: 0 0 6px 0;
+    }
+
+    .shp-empty p {
+      font-size: 0.8rem;
+      color: var(--shp-text-muted);
+      margin: 0;
+    }
+
+    /* Bottom Navigation for Mobile */
+    .shp-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--shp-card-border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 12px 14px 12px;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--shp-text-muted);
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-item i {
+      font-size: 1.1rem;
+    }
+
+    .nav-item.active {
+      color: var(--shp-primary);
+    }
+
+    /* Modals */
+    .shp-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .shp-modal-overlay.open {
+      display: flex;
+    }
+
+    .shp-modal {
+      background: var(--shp-card-bg);
+      border: 1px solid var(--shp-card-border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      animation: modal-up 0.25s ease-out;
+    }
+
+    @keyframes modal-up {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--shp-card-border);
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--shp-text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    /* GPS Animation Screen */
+    .gps-map-box {
+      background: #0f172a;
+      border: 1px solid var(--shp-card-border);
+      border-radius: 14px;
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gps-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .gps-road {
+      position: absolute;
+      left: 15%;
+      right: 15%;
+      height: 4px;
+      background: #334155;
+      border-radius: 2px;
+    }
+
+    .gps-road-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #10b981);
+      transition: width 0.3s linear;
+    }
+
+    .gps-driver-marker {
+      position: absolute;
+      top: -16px;
+      left: 0%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 36px;
+      background: #38bdf8;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0f172a;
+      font-size: 0.9rem;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+      transition: left 0.3s linear;
+      z-index: 2;
+    }
+
+    .gps-origin-marker {
+      position: absolute;
+      left: 15%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px;
+      height: 28px;
+      background: #f59e0b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-size: 0.75rem;
+    }
+
+    .gps-dest-marker {
+      position: absolute;
+      right: 15%;
+      top: 50%;
+      transform: translate(50%, -50%);
+      width: 28px;
+      height: 28px;
+      background: #ef4444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.75rem;
+      animation: bounce 1.2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translate(50%, -50%) scale(1); }
+      50% { transform: translate(50%, -60%) scale(1.1); }
+    }
+
+    /* Signature Canvas */
+    .sig-canvas-wrap {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid var(--shp-card-border);
+      position: relative;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    canvas#sig-canvas {
+      width: 100%;
+      height: 140px;
+      display: block;
+      cursor: crosshair;
+    }
+
+    .sig-clear-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .sig-hint {
+      position: absolute;
+      bottom: 6px;
+      left: 12px;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      pointer-events: none;
+    }
+
+    /* Toast Notification */
+    .shp-toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50px);
+      background: #1e293b;
+      border: 1px solid var(--shp-primary);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .shp-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .shp-toast.success { border-color: #10b981; }
+    .shp-toast.error { border-color: #ef4444; }
+  </style>
+</head>
+<body class="shipper-body">
+
+  <!-- Top Navigation Header -->
+  <header class="shp-header">
+    <div class="shp-brand">
+      <div class="shp-brand-logo">A</div>
+      <div>
+        <div class="shp-brand-title">AURALIÈ EXPRESS</div>
+        <div class="shp-brand-sub">Luxury Concierge Shipper</div>
+      </div>
+    </div>
+    <div class="shp-header-actions">
+      <span class="shp-badge-online">
+        <span class="pulse-dot"></span> ĐANG TRỰC TUYẾN
+      </span>
+      <a href="index.html" title="Trang chủ website" style="color: var(--shp-text-muted); font-size: 1.1rem; padding: 4px 8px;">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </div>
+  </header>
+
+  <div class="shipper-app-container">
+
+    <!-- Driver Card Profile -->
+    <div class="shp-driver-card">
+      <div class="driver-avatar-wrap">
+        <div class="driver-avatar">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="driver-rank-badge" title="Tài xế Kim Cương VIP">
+          <i class="fa-solid fa-crown"></i>
+        </div>
+      </div>
+      <div class="driver-info">
+        <div class="driver-name" id="driver-name">Nguyễn Văn Hùng <span style="font-size:0.75rem; color:var(--shp-gold);">(SHP-8821)</span></div>
+        <div class="driver-vehicle" id="driver-vehicle">
+          <i class="fa-solid fa-motorcycle"></i> Yamaha Grande VIP • 59-X1 888.68
+        </div>
+        <div class="driver-rating" id="driver-rating">
+          <i class="fa-solid fa-star"></i> 4.98 • 1,420 đơn thành công
+        </div>
+      </div>
+      <button class="driver-switch-btn" onclick="toggleDriverOnline()" id="btn-toggle-online">
+        <i class="fa-solid fa-power-off"></i>
+      </button>
+    </div>
+
+    <!-- Quick KPI Summary Strip -->
+    <div class="shp-kpi-grid">
+      <div class="shp-kpi-box" onclick="switchTab('ready')">
+        <div class="kpi-title">Chờ Lấy</div>
+        <div class="kpi-num ready" id="kpi-ready">0</div>
+      </div>
+      <div class="shp-kpi-box" onclick="switchTab('shipping')">
+        <div class="kpi-title">Đang Giao</div>
+        <div class="kpi-num shipping" id="kpi-shipping">0</div>
+      </div>
+      <div class="shp-kpi-box" onclick="switchTab('completed')">
+        <div class="kpi-title">Đã Giao</div>
+        <div class="kpi-num completed" id="kpi-completed">0</div>
+      </div>
+      <div class="shp-kpi-box">
+        <div class="kpi-title">COD Đã Thu</div>
+        <div class="kpi-num cod" id="kpi-cod">0 ₫</div>
+      </div>
+    </div>
+
+    <!-- Action Bar: Search & Quick Test Order Generator -->
+    <div class="shp-action-bar">
+      <div class="shp-search-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="shipper-search" class="shp-search-input" placeholder="Tìm theo mã đơn, khách, SĐT...">
+      </div>
+      <button class="btn-create-sim" onclick="createSimulatedOrder()" title="Tạo ngay 1 đơn hàng mới trong SQL Server để thử nghiệm nhận & giao hàng">
+        <i class="fa-solid fa-bolt"></i> Tạo Đơn Test
+      </button>
+    </div>
+
+    <!-- Filter Tabs Bar -->
+    <div class="shp-tabs">
+      <button class="shp-tab-btn active" data-tab="ready" onclick="switchTab('ready')">
+        <i class="fa-solid fa-box-open"></i> Chờ Nhận
+        <span class="tab-counter" id="tab-cnt-ready">0</span>
+      </button>
+      <button class="shp-tab-btn" data-tab="shipping" onclick="switchTab('shipping')">
+        <i class="fa-solid fa-truck-fast"></i> Đang Giao
+        <span class="tab-counter" id="tab-cnt-shipping">0</span>
+      </button>
+      <button class="shp-tab-btn" data-tab="completed" onclick="switchTab('completed')">
+        <i class="fa-solid fa-circle-check"></i> Đã Giao
+        <span class="tab-counter" id="tab-cnt-completed">0</span>
+      </button>
+      <button class="shp-tab-btn" data-tab="all" onclick="switchTab('all')">
+        <i class="fa-solid fa-list-check"></i> Tất Cả
+      </button>
+    </div>
+
+    <!-- Active Orders List Container -->
+    <div id="orders-container">
+      <div class="shp-empty">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <h3>Đang tải dữ liệu đơn hàng...</h3>
+        <p>Kết nối trực tiếp tới CSDL SQL Server AURALIE_FashionDB.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Navigation Bar for Mobile -->
+  <nav class="shp-bottom-nav">
+    <a href="javascript:void(0)" class="nav-item active" onclick="switchTab('ready')">
+      <i class="fa-solid fa-boxes-packing"></i>
+      <span>Đơn Hàng</span>
+    </a>
+    <a href="javascript:void(0)" class="nav-item" onclick="openDriverReport()">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Thu Nhập</span>
+    </a>
+    <a href="profile.html#orders" class="nav-item" title="Kiểm tra đối chiếu giao diện Khách Hàng">
+      <i class="fa-solid fa-user-check"></i>
+      <span>Khách Hàng</span>
+    </a>
+    <a href="admin.html" class="nav-item" title="Kiểm tra đối chiếu trang Quản Trị Admin">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Admin</span>
+    </a>
+  </nav>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: GPS ROUTE SIMULATION -->
+  <!-- ==================================================================== -->
+  <div class="shp-modal-overlay" id="gps-modal">
+    <div class="shp-modal">
+      <div class="modal-head">
+        <div class="modal-title">
+          <i class="fa-solid fa-route" style="color:var(--shp-primary);"></i> Mô Phỏng Lộ Trình Giao Hàng
+        </div>
+        <button class="modal-close-btn" onclick="closeGpsModal()">&times;</button>
+      </div>
+
+      <div class="gps-map-box">
+        <div class="gps-grid-bg"></div>
+        <div class="gps-origin-marker" title="Kho AURALIÈ Trung Tâm">
+          <i class="fa-solid fa-warehouse"></i>
+        </div>
+        <div class="gps-road">
+          <div class="gps-road-progress" id="gps-road-progress"></div>
+        </div>
+        <div class="gps-driver-marker" id="gps-driver-marker">
+          <i class="fa-solid fa-motorcycle"></i>
+        </div>
+        <div class="gps-dest-marker" title="Địa chỉ khách hàng">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+      </div>
+
+      <div style="background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
+          <span style="color:var(--shp-text-muted);">Đơn Hàng:</span>
+          <strong id="gps-order-code" style="color:#fff;">AUR-...</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
+          <span style="color:var(--shp-text-muted);">Điểm đến:</span>
+          <strong id="gps-dest-address" style="color:#38bdf8; text-align: right; max-width: 65%;">Địa chỉ khách</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
+          <span style="color:var(--shp-text-muted);">Khoảng cách còn lại:</span>
+          <strong id="gps-remaining-km" style="color:#fbbf24; font-variant-numeric: tabular-nums lining-nums;">2.4 km</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+          <span style="color:var(--shp-text-muted);">Tiến độ di chuyển:</span>
+          <strong id="gps-percent-text" style="color:#10b981; font-variant-numeric: tabular-nums lining-nums;">0%</strong>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-action" style="flex:1; background:#334155; color:#fff;" onclick="startGpsSimulation()" id="btn-start-gps">
+          <i class="fa-solid fa-play"></i> Bắt Đầu Chạy
+        </button>
+        <button class="btn-action btn-deliver" style="flex:1;" onclick="proceedToDeliverFromGps()" id="btn-gps-deliver" disabled>
+          <i class="fa-solid fa-circle-check"></i> Xác Nhận Đến Nơi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: PROOF OF DELIVERY (POD) & CASH COLLECTION -->
+  <!-- ==================================================================== -->
+  <div class="shp-modal-overlay" id="deliver-modal">
+    <div class="shp-modal">
+      <div class="modal-head">
+        <div class="modal-title">
+          <i class="fa-solid fa-clipboard-check" style="color:#10b981;"></i> Biên Bản Bàn Giao Hàng
+        </div>
+        <button class="modal-close-btn" onclick="closeDeliverModal()">&times;</button>
+      </div>
+
+      <div id="deliver-summary-box" style="background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <!-- Filled by JS -->
+      </div>
+
+      <div style="margin-bottom: 12px;">
+        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+          <i class="fa-solid fa-camera"></i> Ảnh Gói Hàng Bàn Giao (Giả lập POD):
+        </label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <img id="pod-img-preview" src="assets/card_1.jpg" alt="Proof" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--shp-card-border);">
+          <div style="flex: 1; font-size: 0.75rem; color: var(--shp-text-muted);">
+            Đã đính kèm ảnh bọc bảo quản AURALIÈ Haute Couture có gắn seal niêm phong.
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+          <i class="fa-solid fa-signature"></i> Chữ Ký Điện Tử Khách Hàng (Ký trực tiếp):
+        </label>
+        <div class="sig-canvas-wrap">
+          <canvas id="sig-canvas" width="440" height="140"></canvas>
+          <button class="sig-clear-btn" type="button" onclick="clearSignature()">Xóa ký lại</button>
+          <div class="sig-hint">Dùng ngón tay hoặc chuột để ký vào đây</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+          Ghi chú bàn giao:
+        </label>
+        <input type="text" id="delivery-note" class="shp-search-input" value="Khách hàng đã kiểm tra kỹ bao bì Haute Couture và hài lòng." placeholder="Nhập ghi chú (tùy chọn)">
+      </div>
+
+      <button class="btn-action btn-deliver" style="width: 100%;" onclick="submitDelivery()" id="btn-submit-delivery">
+        <i class="fa-solid fa-check-double"></i> XÁC NHẬN GIAO THÀNH CÔNG & THU TIỀN
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL: INCIDENT / REPORT RESCHEDULE -->
+  <!-- ==================================================================== -->
+  <div class="shp-modal-overlay" id="fail-modal">
+    <div class="shp-modal">
+      <div class="modal-head">
+        <div class="modal-title" style="color: #ef4444;">
+          <i class="fa-solid fa-triangle-exclamation"></i> Báo Cáo Sự Cố Giao Hàng
+        </div>
+        <button class="modal-close-btn" onclick="closeFailModal()">&times;</button>
+      </div>
+
+      <p style="font-size: 0.82rem; color: var(--shp-text-muted); margin-bottom: 14px;">
+        Vui lòng chọn lý do giao hàng không thành công để hệ thống cập nhật lịch trình hoặc kích hoạt thủ tục hoàn kho:
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 8px;">
+          <input type="radio" name="fail_reason" value="Khách bận họp hẹn giao lại vào buổi chiều" checked>
+          <span>Khách bận họp, hẹn giao lại vào buổi chiều</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 8px;">
+          <input type="radio" name="fail_reason" value="Thuê bao không liên lạc được sau 3 cuộc gọi">
+          <span>Thuê bao không nghe máy (đã gọi 3 lần)</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 8px;">
+          <input type="radio" name="fail_reason" value="Khách từ chối nhận hàng do thay đổi kế hoạch" data-action="cancel">
+          <span style="color:#f87171;">Khách từ chối nhận hàng (Hủy đơn & hoàn kho)</span>
+        </label>
+      </div>
+
+      <button class="btn-action" style="width: 100%; background: #ef4444; color: #fff;" onclick="submitReportFailure()">
+        <i class="fa-solid fa-paper-plane"></i> Gửi Báo Cáo Cho Điều Phối Viên
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification element -->
+  <div class="shp-toast" id="shp-toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="shp-toast-msg">Thông báo</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api/client.js"></script>
+  <script src="js/shipper.js"></script>
+</body>
+</html>

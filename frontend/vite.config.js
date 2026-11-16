@@ -45,6 +45,7 @@ export default defineConfig({
         returnPolicy: resolve(__dirname, 'return-policy.html'),
         shippingPolicy: resolve(__dirname, 'shipping-policy.html'),
         privacyPolicy: resolve(__dirname, 'privacy-policy.html'),
+        shipper: resolve(__dirname, 'shipper.html'),
       }
     }
   }
