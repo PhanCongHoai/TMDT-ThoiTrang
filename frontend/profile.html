@@ -401,7 +401,7 @@
 
           return `
             <div style="background: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-subtle);">
-              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
                 <div>
                   <strong style="font-size: 1.05rem; color: var(--primary-dark);">Mã Đơn: ${order.order_code}</strong>
                   <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Ngày đặt: ${formattedDate} • ${order.payment_method === 'SEPAY_QR' ? 'SePay VietQR 24/7' : order.payment_method}</span>
@@ -418,7 +418,7 @@
                 <span style="font-weight: 700; font-size: 1.15rem; color: var(--primary-dark);">${orderAmount}</span>
               </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-light);">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-light); flex-wrap: wrap; gap: 0.75rem;">
                 <span style="font-size: 0.85rem; color: var(--text-muted);">Thanh toán: <strong>${order.payment_method === 'SEPAY_QR' ? 'SePay VietQR' : order.payment_method} (${order.payment_status === 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'})</strong></span>
                 <div style="display: flex; gap: 0.5rem;">
                   ${['PENDING', 'CONFIRMED'].includes(order.status) ? `
