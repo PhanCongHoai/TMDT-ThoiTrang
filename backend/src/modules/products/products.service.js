@@ -1,4 +1,5 @@
 const ProductRepository = require('./products.repository');
+const ProductImage = require('./product-image');
 
 class ProductService {
   static async getProducts(filters) {
@@ -16,7 +17,14 @@ class ProductService {
   }
 
   static async createProduct(data) {
-    return await ProductRepository.create(data);
+    const parsed = ProductImage.parseImage(data.imageData);
+    const image = parsed ? await ProductImage.save(parsed) : null;
+    try {
+      return await ProductRepository.create({ ...data, imageUrl: image?.url });
+    } catch (error) {
+      await ProductImage.remove(image);
+      throw error;
+    }
   }
 
   static async deleteProduct(id) {

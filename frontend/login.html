@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/commerce.css">
 </head>
 
 <body>
@@ -185,6 +186,7 @@
   </nav>
 
   <script type="module" src="js/services/tracking/trackingService.js"></script>
+  <script src="js/commerce.js"></script>
   <script src="js/app.js"></script>
   <script>
     // HỘP THÔNG BÁO DẠNG BOX CAO CẤP (LUXURY MODAL BOX)
@@ -259,6 +261,9 @@
     // AUTH HELPER: Lưu và lấy JWT token an toàn (sessionStorage)
     // ================================================================
     function saveAuthToken(token, user) {
+      if (!token || !user || !user.id || !user.role) {
+        throw new Error('Phản hồi xác thực không hợp lệ.');
+      }
       // Dùng sessionStorage (thoát ra khi đóng tab, bảo mật hơn localStorage)
       sessionStorage.setItem('auralie_token', token);
       sessionStorage.setItem('auralie_user', JSON.stringify(user));
@@ -269,6 +274,13 @@
       localStorage.setItem('userId', user.id);
       // XÓA password khỏi localStorage (không lưu plaintext)
       localStorage.removeItem('savedUserPassword');
+    }
+
+    function authDestination(user) {
+      const target = sessionStorage.getItem('commerce_return');
+      sessionStorage.removeItem('commerce_return');
+      if (['cart.html', 'cart.html?checkout=1', 'checkout.html', 'shipping.html', 'shipping.html?checkout=1', 'profile.html#orders'].includes(target)) return target;
+      return user.role === 'ADMIN' ? 'admin.html' : 'profile.html';
     }
 
     function getAuthToken() {
@@ -283,7 +295,7 @@
       return fetch(url, { ...options, headers });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const tabLoginBtn = document.getElementById('tab-login-btn');
       const tabRegisterBtn = document.getElementById('tab-register-btn');
       const formLogin = document.getElementById('form-login');
@@ -292,10 +304,21 @@
       const passwordInput = document.getElementById('login-password-input');
       const rememberCheckbox = document.getElementById('remember-me-checkbox');
 
-      // Nếu đã đăng nhập, chuyển thẳng về profile
+      // Xác minh phiên cũ; khôi phục thông tin user nếu lần đăng nhập trước bị gián đoạn.
       if (getAuthToken()) {
-        window.location.href = 'profile.html';
-        return;
+        try {
+          const response = await apiFetch('/api/v1/auth/me');
+          const session = await response.json();
+          if (response.ok && session.status === 'success') {
+            saveAuthToken(getAuthToken(), session.data);
+            window.location.href = authDestination(session.data);
+            return;
+          }
+        } catch (err) {
+          // Cho phép đăng nhập lại nếu không xác minh được phiên.
+        }
+        sessionStorage.removeItem('auralie_token');
+        sessionStorage.removeItem('auralie_user');
       }
 
       // Điền email đã lưu (chỉ email, KHÔNG điền password)
@@ -358,20 +381,20 @@
               submitBtn.innerHTML = 'Đăng Nhập <i class="fa-solid fa-arrow-right"></i>';
             }
 
-            if (data.status === 'success') {
+            if (res.ok && data.status === 'success') {
               // Lưu token và thông tin user
-              saveAuthToken(data.token, data.user);
+              saveAuthToken(data.token, data.data);
               sessionStorage.setItem('cartReminderShownAfterLogin', 'false');
 
-              const isAdmin = data.user.role === 'ADMIN';
+              const isAdmin = data.data.role === 'ADMIN';
               showLuxuryAlert({
                 title: isAdmin ? 'Xác Thực Quản Trị Viên' : 'Đăng Nhập Thành Công',
                 message: isAdmin
-                  ? `Chào <strong>${data.user.fullName}</strong>! Đang mở Bảng Quản Trị...`
-                  : `Chào mừng <strong>${data.user.fullName}</strong> trở lại AURALIÈ Haute Couture!`,
+                  ? `Chào <strong>${data.data.fullName}</strong>! Đang mở Bảng Quản Trị...`
+                  : `Chào mừng <strong>${data.data.fullName}</strong> trở lại AURALIÈ Haute Couture!`,
                 type: isAdmin ? 'admin' : 'customer',
                 btnText: isAdmin ? 'Truy Cập Ngay' : 'Vào Trang Cá Nhân',
-                redirectUrl: isAdmin ? 'admin.html' : 'profile.html',
+                redirectUrl: authDestination(data.data),
                 autoCloseMs: 1800
               });
             } else {
@@ -428,9 +451,9 @@
               submitBtn.innerHTML = 'Tạo Tài Khoản <i class="fa-solid fa-arrow-right"></i>';
             }
 
-            if (data.status === 'success') {
+            if (res.ok && data.status === 'success') {
               // Lưu token (đăng ký xong = tự đăng nhập luôn)
-              saveAuthToken(data.token, data.user);
+              saveAuthToken(data.token, data.data);
               localStorage.setItem('savedUserEmail', regEmail); // Chỉ lưu email
               sessionStorage.setItem('cartReminderShownAfterLogin', 'false');
 
@@ -439,7 +462,7 @@
                 message: `Chúc mừng <strong>${regName}</strong> đã gia nhập AURALIÈ Haute Couture!<br>Tài khoản đã được lưu vào hệ thống.`,
                 type: 'success',
                 btnText: 'Bắt Đầu Trải Nghiệm',
-                redirectUrl: 'profile.html',
+                redirectUrl: authDestination(data.data),
                 autoCloseMs: 2000
               });
             } else {

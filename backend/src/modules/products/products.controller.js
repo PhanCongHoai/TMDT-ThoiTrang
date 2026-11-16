@@ -26,13 +26,13 @@ class ProductController {
 
   static async createProduct(req, res, next) {
     try {
-      const { name, categoryId, basePrice, description, tag, material, fit } = req.body;
+      const { name, categoryId, basePrice, description, tag, material, fit, imageData } = req.body;
       if (!name || !basePrice) {
         return ApiResponse.error(res, 'Tên và giá sản phẩm là bắt buộc', 400);
       }
 
       const result = await ProductService.createProduct({
-        name, categoryId, basePrice, description, tag, material, fit
+        name, categoryId, basePrice, description, tag, material, fit, imageData
       });
 
       return ApiResponse.success(res, result, `Đã thêm sản phẩm "${name}" thành công vào Cơ Sở Dữ Liệu!`, 201);

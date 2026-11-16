@@ -20,3 +20,6 @@ __pycache__/
 ai-service/__pycache__/
 ai-service/app/__pycache__/
 ai-service/.env
+ai-service/.venv/
+ai-service/artifacts/
+backend/uploads/

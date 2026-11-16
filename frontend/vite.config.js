@@ -1,12 +1,24 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { cpSync } from 'node:fs';
 
 export default defineConfig({
+  // Classic scripts use window globals and must retain their execution order.
+  plugins: [{
+    name: 'copy-classic-browser-assets',
+    writeBundle(output) {
+      for (const directory of ['js', 'assets']) {
+        cpSync(resolve(__dirname, directory), resolve(output.dir, directory), { recursive: true });
+      }
+    }
+  }],
   server: {
     port: 3000,
+    strictPort: true,
     host: true,
     allowedHosts: true,
     proxy: {
+      '/uploads': { target: 'http://localhost:5000', changeOrigin: true },
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true
@@ -21,6 +33,8 @@ export default defineConfig({
         about: resolve(__dirname, 'about.html'),
         contact: resolve(__dirname, 'contact.html'),
         cart: resolve(__dirname, 'cart.html'),
+        checkout: resolve(__dirname, 'checkout.html'),
+        shipping: resolve(__dirname, 'shipping.html'),
         wishlist: resolve(__dirname, 'wishlist.html'),
         login: resolve(__dirname, 'login.html'),
         profile: resolve(__dirname, 'profile.html'),

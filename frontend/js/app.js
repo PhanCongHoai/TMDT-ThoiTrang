@@ -164,20 +164,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const raw = localStorage.getItem('auralie_cart');
       if (raw !== null) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed)) {
+          const normalized = window.Commerce.normalizeCart(parsed);
+          if (JSON.stringify(normalized) !== raw) localStorage.setItem('auralie_cart', JSON.stringify(normalized));
+          return normalized;
+        }
       }
     } catch (e) {}
     return [];
   };
 
   window.saveCart = function(cart) {
-    localStorage.setItem('auralie_cart', JSON.stringify(cart));
+    localStorage.setItem('auralie_cart', JSON.stringify(window.Commerce.normalizeCart(cart)));
+    window.Commerce.cartChanged();
     window.updateCartBadge();
     if (typeof window.renderCartPage === 'function') window.renderCartPage();
   };
 
-  window.addToCart = function(product) {
+  window.addToCart = async function(product) {
     if (!product) return;
+    if (!await window.Commerce.requireUser('cart.html')) return;
     const cart = window.getCart();
     const id = product.id || ('p-' + Date.now());
     const name = product.name || 'Thiết Kế Haute Couture AURALIÈ';
@@ -270,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.renderCartPage = function() {
     const container = document.getElementById('cart-items-container');
-    if (!container) return;
+    if (!container) { window.Commerce.renderCheckoutSummary(); return; }
 
     const cart = window.getCart();
     const subtotalElem = document.getElementById('cart-subtotal-val');
@@ -313,13 +319,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (summarySidebar) summarySidebar.style.display = 'block';
 
     const totalQty = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
-    const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.qty || 1)), 0);
+    const selected = cart.filter(item => item.selected);
+    const subtotal = selected.reduce((sum, item) => sum + (Number(item.price) * (item.qty || 1)), 0);
 
     if (headerTitle) headerTitle.textContent = `Giỏ Hàng Của Bạn (${totalQty} Sản Phẩm)`;
 
-    container.innerHTML = cart.map((item, idx) => `
+    container.innerHTML = `<label class="cart-select-all"><input type="checkbox" id="cart-select-all" ${selected.length === cart.length ? 'checked' : ''} onchange="window.selectAllCart(this.checked)"> Chọn tất cả <span>Đã chọn ${selected.length} / ${cart.length} sản phẩm</span></label>` + cart.map((item, idx) => `
       <div class="cart-item-card" style="display: flex; gap: 1.5rem; background: #ffffff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-light); align-items: center; justify-content: space-between; flex-wrap: wrap;">
         <div style="display: flex; gap: 1.25rem; align-items: center;">
+          <input type="checkbox" class="cart-item-select" aria-label="Chọn ${window.Commerce.escape(item.name)}" ${item.selected ? 'checked' : ''} onchange="window.selectCartItem(${idx}, this.checked)">
           <img src="${item.img || 'assets/card_1.jpg'}" alt="${item.name}" style="width: 90px; height: 110px; object-fit: cover; border-radius: 8px;">
           <div>
             <span class="card-category">${item.category || 'Haute Couture'}</span>
@@ -370,6 +378,24 @@ document.addEventListener('DOMContentLoaded', () => {
         dedupeKey: 'cart-view'
       });
     }
+
+    const checkout = document.getElementById('btn-proceed-checkout');
+    if (checkout) {
+      checkout.disabled = selected.length === 0;
+      checkout.textContent = selected.length ? `Thanh toán (${selected.reduce((sum, item) => sum + Number(item.qty || 1), 0)} sản phẩm)` : 'Chọn sản phẩm để thanh toán';
+    }
+    const couponStatus = document.getElementById('coupon-status');
+    if (couponStatus) couponStatus.textContent = window.couponMessage || '';
+  };
+
+  window.selectCartItem = function(index, checked) {
+    const cart = window.getCart();
+    if (cart[index]) { cart[index].selected = checked; window.saveCart(cart); }
+  };
+  window.selectAllCart = function(checked) {
+    const cart = window.getCart();
+    cart.forEach(item => { item.selected = checked; });
+    window.saveCart(cart);
   };
 
   window.changeCartQty = function(index, delta) {
@@ -419,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Khởi chạy cập nhật giỏ hàng
+  window.Commerce.restoreDraft();
   window.updateCartBadge();
   window.renderCartPage();
 
@@ -1738,6 +1765,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.logout-link').forEach(logoutBtn => {
     logoutBtn.addEventListener('click', (e) => {
       localStorage.removeItem('userRole');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userId');
+      sessionStorage.removeItem('auralie_token');
+      sessionStorage.removeItem('auralie_user');
       sessionStorage.removeItem('cartReminderShownAfterLogin');
     });
   });
@@ -1765,94 +1797,102 @@ document.addEventListener('DOMContentLoaded', () => {
   const applyCouponBtn = document.getElementById('apply-coupon-btn');
 
   if (applyCouponBtn && couponInput) {
-    applyCouponBtn.addEventListener('click', () => {
+    applyCouponBtn.addEventListener('click', async () => {
       const code = couponInput.value.trim().toUpperCase();
-      if (!code) {
-        window.showLuxuryAlert({
-          title: 'Lưu Ý',
-          message: 'Vui lòng nhập mã ưu đãi VIP của quý khách!',
-          type: 'warning'
+      if (window.Commerce && typeof window.Commerce.applyCoupon === 'function') {
+        await window.Commerce.applyCoupon(couponInput.value);
+        if (window.AuralieTracking && code) {
+          window.AuralieTracking.track('coupon_apply', {
+            properties: { coupon_code: code, discount_amount: Number(window.appliedCouponDiscount || 0), success: Boolean(window.appliedCouponDiscount) }
+          });
+        }
+      } else {
+        if (!code) {
+          window.showLuxuryAlert({
+            title: 'Lưu Ý',
+            message: 'Vui lòng nhập mã ưu đãi VIP của quý khách!',
+            type: 'warning'
+          });
+          return;
+        }
+
+        const cart = window.getCart();
+        const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.qty || 1)), 0);
+
+        applyCouponBtn.disabled = true;
+        applyCouponBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+        fetch('/api/v1/coupons/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code, orderAmount: subtotal })
+        })
+        .then(res => res.json())
+        .then(resData => {
+          applyCouponBtn.disabled = false;
+          applyCouponBtn.innerHTML = 'Áp Dụng';
+
+          if (resData.status === 'success' && resData.data) {
+            window.appliedCouponDiscount = resData.data.discountAmount;
+            window.appliedCouponCode = code;
+            if (window.AuralieTracking) {
+              window.AuralieTracking.track('coupon_apply', {
+                properties: { coupon_code: code, discount_amount: Number(resData.data.discountAmount || 0), order_amount: subtotal, success: true }
+              });
+            }
+            window.renderCartPage();
+            window.showLuxuryAlert({
+              title: 'Áp Dụng Mã Ưu Đãi Thành Công',
+              message: `Mã <strong>${code}</strong> hợp lệ! Quý khách được giảm ngay <strong>${Number(resData.data.discountAmount).toLocaleString('vi-VN')} ₫</strong> trực tiếp trên đơn hàng.`,
+              type: 'success',
+              btnText: 'Tuyệt Vời'
+            });
+          } else {
+            if (window.AuralieTracking) {
+              window.AuralieTracking.track('coupon_apply', {
+                properties: { coupon_code: code, order_amount: subtotal, success: false }
+              });
+            }
+            window.showLuxuryAlert({
+              title: 'Mã Không Hợp Lệ',
+              message: resData.message || 'Mã ưu đãi không hợp lệ hoặc đã hết hạn áp dụng!',
+              type: 'warning'
+            });
+          }
+        })
+        .catch(() => {
+          applyCouponBtn.disabled = false;
+          applyCouponBtn.innerHTML = 'Áp Dụng';
+          if (code === 'AURALIE2026') {
+            const discount = Math.round(subtotal * 0.2);
+            window.appliedCouponDiscount = discount;
+            window.renderCartPage();
+            window.showLuxuryAlert({
+              title: 'Áp Dụng Mã Ưu Đãi Thành Công',
+              message: `Áp dụng thành công mã <strong>AURALIE2026</strong> (Giảm 20% cho hội viên VIP)!`,
+              type: 'success'
+            });
+          } else {
+            window.showLuxuryAlert({
+              title: 'Mã Không Hợp Lệ',
+              message: 'Mã giảm giá không hợp lệ hoặc đã hết hạn!',
+              type: 'warning'
+            });
+          }
         });
-        return;
       }
-
-      const cart = window.getCart();
-      const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.qty || 1)), 0);
-
-      applyCouponBtn.disabled = true;
-      applyCouponBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-
-      fetch('/api/v1/coupons/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code, orderAmount: subtotal })
-      })
-      .then(res => res.json())
-      .then(resData => {
-        applyCouponBtn.disabled = false;
-        applyCouponBtn.innerHTML = 'Áp Dụng';
-
-        if (resData.status === 'success' && resData.data) {
-          window.appliedCouponDiscount = resData.data.discountAmount;
-          window.appliedCouponCode = code;
-          if (window.AuralieTracking) {
-            window.AuralieTracking.track('coupon_apply', {
-              properties: { coupon_code: code, discount_amount: Number(resData.data.discountAmount || 0), order_amount: subtotal, success: true }
-            });
-          }
-          window.renderCartPage();
-          window.showLuxuryAlert({
-            title: 'Áp Dụng Mã Ưu Đãi Thành Công',
-            message: `Mã <strong>${code}</strong> hợp lệ! Quý khách được giảm ngay <strong>${Number(resData.data.discountAmount).toLocaleString('vi-VN')} ₫</strong> trực tiếp trên đơn hàng.`,
-            type: 'success',
-            btnText: 'Tuyệt Vời'
-          });
-        } else {
-          if (window.AuralieTracking) {
-            window.AuralieTracking.track('coupon_apply', {
-              properties: { coupon_code: code, order_amount: subtotal, success: false }
-            });
-          }
-          window.showLuxuryAlert({
-            title: 'Mã Không Hợp Lệ',
-            message: resData.message || 'Mã ưu đãi không hợp lệ hoặc đã hết hạn áp dụng!',
-            type: 'warning'
-          });
-        }
-      })
-      .catch(() => {
-        applyCouponBtn.disabled = false;
-        applyCouponBtn.innerHTML = 'Áp Dụng';
-        if (code === 'AURALIE2026') {
-          const discount = Math.round(subtotal * 0.2);
-          window.appliedCouponDiscount = discount;
-          window.renderCartPage();
-          window.showLuxuryAlert({
-            title: 'Áp Dụng Mã Ưu Đãi Thành Công',
-            message: `Áp dụng thành công mã <strong>AURALIE2026</strong> (Giảm 20% cho hội viên VIP)!`,
-            type: 'success'
-          });
-        } else {
-          window.showLuxuryAlert({
-            title: 'Mã Không Hợp Lệ',
-            message: 'Mã giảm giá không hợp lệ hoặc đã hết hạn!',
-            type: 'warning'
-          });
-        }
-      });
     });
   }
 
-  // ===================================================================
-  // 14. CỔNG THANH TOÁN TỰ ĐỘNG SEPAY (VIETQR MBBANK/VCB) & CHECKOUT
-  // ===================================================================
-  let selectedPaymentMethod = 'SEPAY_QR';
+  let selectedPaymentMethod = window.Commerce.readDraft().paymentMethod || 'SEPAY_QR';
   const paymentCards = document.querySelectorAll('#payment-method-group .payment-method-card');
   paymentCards.forEach(card => {
     card.addEventListener('click', () => {
       paymentCards.forEach(c => c.classList.remove('active'));
       card.classList.add('active');
+      paymentCards.forEach(c => c.setAttribute('aria-checked', String(c === card)));
       selectedPaymentMethod = card.getAttribute('data-method') || 'SEPAY_QR';
+      window.Commerce.saveDraft({ paymentMethod: selectedPaymentMethod });
       if (window.AuralieTracking) {
         window.AuralieTracking.track('payment_method_select', {
           properties: { payment_method: selectedPaymentMethod },
@@ -1874,9 +1914,40 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const checkoutBtn = document.getElementById('btn-proceed-checkout');
+  if (document.getElementById('checkout-page')) {
+    paymentCards.forEach(card => {
+      const active = card.dataset.method === selectedPaymentMethod;
+      card.classList.toggle('active', active);
+      card.setAttribute('role', 'radio');
+      card.setAttribute('aria-checked', String(active));
+      card.tabIndex = 0;
+      card.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); card.click(); } });
+    });
+    document.getElementById('payment-method-group').setAttribute('role', 'radiogroup');
+    document.getElementById('payment-method-group').setAttribute('aria-label', 'Phương thức thanh toán');
+    void window.Commerce.checkoutPage();
+  }
   if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-      const cart = window.getCart();
+    checkoutBtn.addEventListener('click', async () => {
+      if (checkoutBtn.dataset.preparing === '1' || checkoutBtn.dataset.submitting === '1') return;
+      checkoutBtn.dataset.preparing = '1';
+      let shipping;
+      try {
+        if (!window.Commerce.selectedItems().length) {
+          await window.Commerce.notify('Vui lòng tick chọn ít nhất một sản phẩm để thanh toán.');
+          return;
+        }
+        shipping = await window.Commerce.prepareCheckout(window.Commerce.readDraft().paymentMethod || selectedPaymentMethod);
+      } catch (error) {
+        await window.Commerce.notify(error.message);
+        return;
+      } finally {
+        delete checkoutBtn.dataset.preparing;
+      }
+      if (!shipping) return;
+      checkoutBtn.dataset.submitting = '1';
+      selectedPaymentMethod = shipping.paymentMethod;
+      const cart = shipping.cartItems;
       if (!cart || cart.length === 0) {
         window.showLuxuryAlert({
           title: 'Giỏ Hàng Đang Trống',
@@ -1891,7 +1962,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const rawSubtotal = cart.reduce((sum, item) => sum + (Number(item.price) * (item.qty || 1)), 0);
       const discount = window.appliedCouponDiscount || 0;
       const finalTotal = Math.max(0, rawSubtotal - discount);
-      const userName = localStorage.getItem('userName') || 'Nguyễn Thanh Vân';
+      const userName = shipping.fullName;
 
       if (window.AuralieTracking) {
         window.AuralieTracking.track('checkout_start', {
@@ -1932,8 +2003,8 @@ document.addEventListener('DOMContentLoaded', () => {
           headers: authHeaders,
           body: JSON.stringify({
             fullName: userName,
-            phone: '0908888999',
-            address: 'Căn hộ 45.02, Tháp Landmark 81, Q.Bình Thạnh, TP.HCM',
+            phone: shipping.phone,
+            address: shipping.address,
             totalAmount: finalTotal,
             paymentMethod: 'COD',
             couponCode: activeCoupon,
@@ -1942,10 +2013,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(res => res.json())
         .then(orderRes => {
+          if (orderRes.status !== 'success' || !orderRes.data?.orderCode) throw new Error(orderRes.message || 'Không thể tạo đơn hàng.');
+          window.Commerce.rememberOrder(orderRes.data, shipping);
+          delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
           checkoutBtn.innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Đặt Hàng Thanh Toán Khi Nhận (COD)';
 
-          window.saveCart([]);
+          window.Commerce.completePurchase(cart);
           window.appliedCouponDiscount = 0;
           window.appliedCouponCode = null;
           window.updateCartBadge();
@@ -1960,6 +2034,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         })
         .catch(err => {
+          delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
           checkoutBtn.innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Đặt Hàng Thanh Toán Khi Nhận (COD)';
           window.showLuxuryAlert({ title: 'Lỗi', message: err.message, type: 'warning' });
@@ -1977,8 +2052,8 @@ document.addEventListener('DOMContentLoaded', () => {
           headers: authHeaders,
           body: JSON.stringify({
             fullName: userName,
-            phone: '0908888999',
-            address: 'Căn hộ 45.02, Tháp Landmark 81, Q.Bình Thạnh, TP.HCM',
+            phone: shipping.phone,
+            address: shipping.address,
             totalAmount: finalTotal,
             paymentMethod: 'VISA',
             couponCode: activeCoupon,
@@ -1987,10 +2062,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(res => res.json())
         .then(orderRes => {
+          if (orderRes.status !== 'success' || !orderRes.data?.orderCode) throw new Error(orderRes.message || 'Không thể tạo đơn hàng.');
+          window.Commerce.rememberOrder(orderRes.data, shipping);
+          delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
           checkoutBtn.innerHTML = '<i class="fa-brands fa-cc-visa"></i> Thanh Toán Thẻ Quốc Tế (VISA / Mastercard)';
 
-          window.saveCart([]);
+          window.Commerce.completePurchase(cart);
           window.appliedCouponDiscount = 0;
           window.appliedCouponCode = null;
           window.updateCartBadge();
@@ -2005,6 +2083,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         })
         .catch(err => {
+          delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
           checkoutBtn.innerHTML = '<i class="fa-brands fa-cc-visa"></i> Thanh Toán Thẻ Quốc Tế (VISA / Mastercard)';
           window.showLuxuryAlert({ title: 'Lỗi', message: err.message, type: 'warning' });
@@ -2021,8 +2100,8 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: authHeaders,
         body: JSON.stringify({
           fullName: userName,
-          phone: '0908888999',
-          address: 'Căn hộ 45.02, Tháp Landmark 81, Q.Bình Thạnh, TP.HCM',
+          phone: shipping.phone,
+          address: shipping.address,
           totalAmount: finalTotal,
           paymentMethod: 'SEPAY_QR',
           couponCode: activeCoupon,
@@ -2031,6 +2110,9 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(res => res.json())
       .then(orderRes => {
+          if (orderRes.status !== 'success' || !orderRes.data?.orderCode) throw new Error(orderRes.message || 'Không thể tạo đơn hàng.');
+          window.Commerce.rememberOrder(orderRes.data, shipping);
+        delete checkoutBtn.dataset.submitting;
         checkoutBtn.disabled = false;
         checkoutBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> Thanh Toán Tự Động Qua SePay <i class="fa-solid fa-bolt" style="color: #ffd700;"></i>';
 
@@ -2122,6 +2204,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         `;
         document.body.appendChild(modal);
+        checkoutBtn.dataset.submitting = '1';
+        checkoutBtn.disabled = true;
 
         // Nút sao chép thông tin
         modal.querySelector('#copy-acc-btn')?.addEventListener('click', (e) => {
@@ -2142,13 +2226,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Hàm hiển thị giao diện thành công
         const renderPaymentSuccess = () => {
-          window.saveCart([]);
+          if (!modal.isConnected) return;
+          window.Commerce.completePurchase(cart);
           window.appliedCouponDiscount = 0;
           window.updateCartBadge();
 
           const container = modal.querySelector('.sepay-modal-container');
           if (!container) return;
           container.innerHTML = `
+            <button class="modal-close-btn" id="close-sepay-modal" type="button" aria-label="Đóng thanh toán">&times;</button>
             <div class="sepay-success-container">
               <div class="sepay-success-icon"><i class="fa-solid fa-check"></i></div>
               <div class="sepay-brand-tag" style="margin-bottom: 0.35rem;"><i class="fa-solid fa-gem"></i> GIAO DỊCH XÁC THỰC THÀNH CÔNG</div>
@@ -2206,12 +2292,19 @@ document.addEventListener('DOMContentLoaded', () => {
           } catch (err) {}
         }, 2500);
 
-        // Nút đóng modal
-        modal.querySelector('#close-sepay-modal')?.addEventListener('click', () => {
+        // Closing dismisses the payment view without changing the existing order.
+        const closePayment = () => {
           isPolling = false;
           clearInterval(pollTimer);
+          document.removeEventListener('keydown', closeOnEscape);
           modal.remove();
-        });
+          delete checkoutBtn.dataset.submitting;
+          window.Commerce.renderCheckoutSummary();
+        };
+        const closeOnEscape = event => { if (event.key === 'Escape') closePayment(); };
+        document.addEventListener('keydown', closeOnEscape);
+        modal.addEventListener('click', event => { if (event.target.closest('#close-sepay-modal')) closePayment(); });
+        modal.querySelector('#close-sepay-modal')?.setAttribute('aria-label', 'Đóng thanh toán');
 
         // Nút kiểm tra thủ công ngay
         modal.querySelector('#btn-sepay-manual-check')?.addEventListener('click', async () => {
@@ -2270,6 +2363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       })
       .catch(err => {
+        delete checkoutBtn.dataset.submitting;
         checkoutBtn.disabled = false;
         checkoutBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> Thanh Toán Tự Động Qua SePay <i class="fa-solid fa-bolt" style="color: #ffd700;"></i>';
         window.showLuxuryAlert({
@@ -2281,48 +2375,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 15. Order Tracking Modal Search Functionality
-  window.openOrderTrackerModal = () => {
-    const code = prompt('Nhập Mã Đơn Hàng cần tra cứu trong CSDL (ví dụ: AUR-2026-992, AUR-2026-781):', 'AUR-2026-992');
-    if (!code) return;
-
-    fetch(`/api/v1/orders/track/${code.trim()}`)
-      .then(res => res.json())
-      .then(result => {
-        if (result.status === 'success' && result.data) {
-          const order = result.data;
-          const timeline = order.timeline || [
-            { time: 'Mới nhất', step: 'Đã xuất kho và đang giao hàng theo thời gian thực' }
-          ];
-          const modal = document.createElement('div');
-          modal.className = 'modal-overlay active';
-          modal.innerHTML = `
-            <div class="modal-container" style="max-width: 580px; padding: 1.5rem;">
-              <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">&times;</button>
-              <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-truck-fast" style="color: var(--accent-gold);"></i> Tra Cứu Đơn Hàng ${order.orderCode} (Live CSDL)</h3>
-              <div style="background: #faf8f5; padding: 1rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1.25rem;">
-                <p><strong>Khách hàng:</strong> ${order.customerName}</p>
-                <p><strong>Đơn vị vận chuyển:</strong> ${order.carrier}</p>
-                <p><strong>Mã vận đơn:</strong> <code style="color: #c9a24d;">${order.trackingCode}</code></p>
-                <p><strong>Trạng thái:</strong> <span style="color: #2e7d32; font-weight: bold;">${order.statusText}</span></p>
-                <p><strong>Tổng giá trị:</strong> ${Number(order.totalAmount).toLocaleString('vi-VN')} ₫</p>
-                <p><strong>Địa chỉ nhận hàng:</strong> ${order.shippingAddress || 'Landmark 81, TP.HCM'}</p>
-              </div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem;">Tiến Độ Hành Trình:</h4>
-              <div style="display: flex; flex-direction: column; gap: 0.75rem; border-left: 2px solid var(--accent-gold); padding-left: 1rem; font-size: 0.82rem;">
-                ${timeline.map(t => `<div><strong>${t.time}</strong><br><span style="color: #555;">${t.step}</span></div>`).join('')}
-              </div>
-            </div>
-          `;
-          document.body.appendChild(modal);
-        } else {
-          alert('Không tìm thấy thông tin đơn hàng ' + code + ' trong CSDL!');
-        }
-      })
-      .catch(() => {
-        alert('Đơn hàng ' + code + ' đang được đóng gói chuẩn bị giao cho đơn vị GHN Express.');
-      });
-  };
+  // 15. Order tracking uses a website dialog, never a browser prompt.
+  window.openOrderTrackerModal = window.Commerce.openTracker;
+  if (checkoutBtn && new URLSearchParams(location.search).has('checkout')) {
+    history.replaceState(null, '', 'cart.html');
+    checkoutBtn.click();
+  }
 
   // 16. Luxury AI Concierge / Stylist Live Chat Widget
   const createChatWidget = () => {
@@ -2860,8 +2918,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 21. Wishlist Actions (wishlist.html)
   const addAllWishlistBtn = document.querySelector('a[href="cart.html"].btn-primary-luxury');
   if (addAllWishlistBtn && (window.location.pathname.includes('wishlist.html') || document.querySelector('.fashion-card [title="Bỏ yêu thích"]'))) {
-    addAllWishlistBtn.addEventListener('click', (e) => {
+    addAllWishlistBtn.addEventListener('click', async (e) => {
       e.preventDefault();
+      if (!await window.Commerce.requireUser('cart.html')) return;
       const cards = document.querySelectorAll('.fashion-card');
       if (cards.length === 0) {
         window.showLuxuryAlert({

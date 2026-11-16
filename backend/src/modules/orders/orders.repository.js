@@ -421,6 +421,7 @@ class OrderRepository {
         oi.id,
         oi.order_id,
         oi.variant_id,
+        pv.product_id,
         oi.quantity,
         oi.price,
         COALESCE(oi.size, pv.size) AS size,
