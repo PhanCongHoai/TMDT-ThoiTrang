@@ -44,6 +44,32 @@ def health_check():
     return {"status": "ok", "service": "auralie-ai-demand-forecasting"}
 
 
+@app.get("/ready")
+def readiness_check():
+    try:
+        with db_cursor() as cur:
+            cur.execute("SELECT 1 AS ok")
+            cur.execute("""
+                SELECT TOP 1 model_version, model_type, status
+                FROM MLModelVersions
+                WHERE is_production = 1 AND status = 'ACTIVE'
+                ORDER BY id DESC
+            """)
+            row = cur.fetchone()
+            return {
+                "status": "ready",
+                "db_connected": True,
+                "active_model": {
+                    "model_version": row[0],
+                    "model_type": row[1],
+                    "status": row[2],
+                } if row else None,
+            }
+    except Exception as exc:
+        logger.error("Readiness check failed: %s", exc)
+        raise HTTPException(status_code=503, detail="Database or model registry unavailable")
+
+
 @app.post("/api/ml/train")
 def api_train(req: TrainRequest, x_internal_api_key: Optional[str] = Header(default=None)):
     verify_internal_key(x_internal_api_key)

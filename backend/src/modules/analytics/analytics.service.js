@@ -3,27 +3,45 @@ const { query } = require('../../config/db');
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
 const AI_INTERNAL_API_KEY = process.env.AI_INTERNAL_API_KEY || 'auralie_internal_ml_secret_2026';
 
-async function callPythonAI(path, method = 'GET', body = null, timeoutMs = 15000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const res = await fetch(`${AI_SERVICE_URL}${path}`, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Internal-API-Key': AI_INTERNAL_API_KEY
-      },
-      body: body ? JSON.stringify(body) : undefined,
-      signal: controller.signal
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data?.detail || `AI Service HTTP ${res.status}`);
+async function callPythonAI(path, method = 'GET', body = null, timeoutMs = 15000, maxRetries = 2) {
+  let lastError;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(`${AI_SERVICE_URL}${path}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Internal-API-Key': AI_INTERNAL_API_KEY
+        },
+        body: body ? JSON.stringify(body) : undefined,
+        signal: controller.signal
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const err = new Error(data?.detail || `AI Service HTTP ${res.status}`);
+        err.statusCode = res.status;
+        // Không retry lỗi client 4xx (400, 401, 403, 404)
+        if (res.status >= 400 && res.status < 500) {
+          throw err;
+        }
+        throw err;
+      }
+      return data;
+    } catch (err) {
+      lastError = err;
+      if (err.statusCode && err.statusCode >= 400 && err.statusCode < 500) {
+        throw err;
+      }
+      if (attempt < maxRetries) {
+        await new Promise((r) => setTimeout(r, 300 * (attempt + 1)));
+      }
+    } finally {
+      clearTimeout(timer);
     }
-    return data;
-  } finally {
-    clearTimeout(timer);
   }
+  throw lastError;
 }
 
 class AnalyticsService {
@@ -324,24 +342,116 @@ class AnalyticsService {
     return res.recordset;
   }
 
-  static async getCustomerJourney(userId) {
+  static async getCustomerJourney(userId, filters = {}) {
+    const page = Math.max(1, Number(filters.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(filters.limit) || 20));
+    const offset = (page - 1) * limit;
+
+    const customerRes = await query(`
+      SELECT id, full_name, email, phone, created_at
+      FROM users
+      WHERE id = @userId
+    `, { userId });
+    const customer = customerRes.recordset[0] || null;
+
     const summary = await query(`
       SELECT
+        COUNT(*) AS total_events,
+        COUNT(DISTINCT session_id) AS total_sessions,
         SUM(CASE WHEN event_name = 'page_view' THEN 1 ELSE 0 END) AS pages_viewed,
         SUM(CASE WHEN event_name = 'product_view' THEN 1 ELSE 0 END) AS products_viewed,
-        SUM(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) AS cart_adds
+        SUM(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) AS cart_adds,
+        SUM(CASE WHEN event_name IN ('search', 'search_no_result') THEN 1 ELSE 0 END) AS searches,
+        SUM(CASE WHEN event_name = 'purchase' THEN 1 ELSE 0 END) AS purchases
       FROM user_events
       WHERE user_id = @userId
     `, { userId });
 
+    const whereClauses = ['e.user_id = @userId'];
+    const params = { userId, offset, limit };
+    if (filters.eventName) {
+      whereClauses.push('e.event_name = @eventName');
+      params.eventName = String(filters.eventName).slice(0, 64);
+    }
+    if (filters.sessionId) {
+      whereClauses.push('e.session_id = @sessionId');
+      params.sessionId = String(filters.sessionId).slice(0, 128);
+    }
+    if (filters.productId) {
+      whereClauses.push('e.product_id = @productId');
+      params.productId = Number(filters.productId);
+    }
+    if (filters.from) {
+      whereClauses.push('e.event_timestamp >= @fromDate');
+      params.fromDate = new Date(filters.from);
+    }
+    if (filters.to) {
+      whereClauses.push('e.event_timestamp <= @toDate');
+      params.toDate = new Date(filters.to);
+    }
+    const whereSql = whereClauses.join(' AND ');
+
+    const countRes = await query(`SELECT COUNT(*) AS total FROM user_events e WHERE ${whereSql}`, params);
+    const total = Number(countRes.recordset[0]?.total || 0);
+
+    const eventsRes = await query(`
+      SELECT
+        e.id, e.event_id, e.event_name, e.session_id, e.product_id, p.name AS product_name,
+        e.category_id, e.event_timestamp, e.page_url, e.device_type, e.browser, e.event_properties
+      FROM user_events e
+      LEFT JOIN products p ON p.id = e.product_id
+      WHERE ${whereSql}
+      ORDER BY e.event_timestamp DESC, e.id DESC
+      OFFSET @offset ROWS FETCH NEXT @limit ROWS ONLY
+    `, params);
+
+    const sessionsRes = await query(`
+      SELECT TOP 30
+        session_id, device_type, browser, operating_system AS os, landing_page, started_at, last_activity_at
+      FROM user_sessions
+      WHERE user_id = @userId
+      ORDER BY started_at DESC
+    `, { userId });
+
     const orders = await query(`
-      SELECT TOP 10 id, order_code, total_amount, status, payment_status, created_at
+      SELECT TOP 15 id, order_code, total_amount, status, payment_status, created_at
       FROM orders
       WHERE user_id = @userId
       ORDER BY created_at DESC
     `, { userId });
 
-    return { summary: summary.recordset[0], recentOrders: orders.recordset };
+    const searchesRes = await query(`
+      SELECT TOP 15 keyword, result_count, created_at
+      FROM user_search_history
+      WHERE user_id = @userId
+      ORDER BY created_at DESC
+    `, { userId });
+
+    const s = summary.recordset[0] || {};
+    return {
+      customer,
+      summary: {
+        total_events: Number(s.total_events || 0),
+        total_sessions: Number(s.total_sessions || 0),
+        pages_viewed: Number(s.pages_viewed || 0),
+        products_viewed: Number(s.products_viewed || 0),
+        cart_adds: Number(s.cart_adds || 0),
+        searches: Number(s.searches || 0),
+        purchases: Number(s.purchases || 0),
+        total_orders: orders.recordset.length,
+        total_spent: orders.recordset.reduce((acc, o) => acc + (o.status !== 'CANCELLED' ? Number(o.total_amount || 0) : 0), 0)
+      },
+      sessions: sessionsRes.recordset,
+      events: eventsRes.recordset,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / limit))
+      },
+      recentOrders: orders.recordset,
+      recentSearches: searchesRes.recordset
+    };
   }
 
   // ====================================================================

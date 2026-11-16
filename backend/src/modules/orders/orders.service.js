@@ -3,6 +3,7 @@ const { SEPAY } = require('../../config/env');
 const { ORDER_STATUS, PAYMENT_STATUS, PAYMENT_METHOD, ORDER_HOLD_MINUTES } = require('./orders.constants');
 const { OrderStateMachine } = require('./orders.state-machine');
 const { query } = require('../../config/db');
+const TrackingRepository = require('../tracking/tracking.repository');
 
 /**
  * OrderService - Xử lý Business Logic cho Đơn Hàng & Tồn Kho & SePay
@@ -10,6 +11,52 @@ const { query } = require('../../config/db');
 class OrderService {
   static getSepayConfig() {
     return SEPAY;
+  }
+
+  /**
+   * Ghi nhận sự kiện purchase phía server-side (idempotent theo orderId, không làm lỗi luồng thanh toán)
+   */
+  static async recordPurchaseEvent({ orderId, orderCode, userId = null, totalAmount, paymentMethod, items = [] }) {
+    try {
+      const sessionId = `srv-order-${orderId}`;
+      const anonymousId = userId ? `user-${userId}` : `guest-order-${orderId}`;
+      await TrackingRepository.upsertSession({
+        sessionId,
+        anonymousId,
+        userId: userId || null,
+        deviceType: 'server',
+        browser: 'backend-order-hook',
+        os: 'server',
+        landingPage: '/checkout'
+      });
+
+      const firstItem = Array.isArray(items) && items.length > 0 ? items[0] : null;
+      await TrackingRepository.insertEventsBatch([{
+        eventId: `purchase-order-${orderId}`,
+        eventName: 'purchase',
+        userId: userId || null,
+        anonymousId,
+        sessionId,
+        productId: firstItem && firstItem.product_id ? Number(firstItem.product_id) : null,
+        categoryId: null,
+        eventTimestamp: new Date(),
+        pageUrl: '/checkout/success',
+        referrerUrl: null,
+        deviceType: 'server',
+        browser: 'backend-order-hook',
+        os: 'server',
+        eventProperties: {
+          order_id: orderId,
+          order_code: orderCode,
+          total_amount: Number(totalAmount || 0),
+          payment_method: paymentMethod,
+          item_count: Array.isArray(items) ? items.length : 0,
+          source: 'server_verified'
+        }
+      }]);
+    } catch (err) {
+      console.error(`[Tracking] Non-blocking purchase event error for order ${orderCode}:`, err.message);
+    }
   }
 
   /**
@@ -162,6 +209,17 @@ class OrderService {
       items: resolvedItems,
       couponId
     });
+
+    if (orderStatus === ORDER_STATUS.CONFIRMED) {
+      await this.recordPurchaseEvent({
+        orderId,
+        orderCode,
+        userId: user ? user.id : null,
+        totalAmount,
+        paymentMethod: effectivePaymentMethod,
+        items: resolvedItems
+      });
+    }
 
     // 8. Cấu hình thông tin chuyển khoản VietQR SePay
     const sepayCfg = this.getSepayConfig();
@@ -460,6 +518,16 @@ class OrderService {
       };
     }
 
+    if (newPaymentStatus === PAYMENT_STATUS.PAID) {
+      await this.recordPurchaseEvent({
+        orderId: matchedOrder.id,
+        orderCode: matchedOrder.order_code,
+        userId: matchedOrder.user_id || null,
+        totalAmount: Number(matchedOrder.total_amount || 0),
+        paymentMethod: PAYMENT_METHOD.SEPAY_QR
+      });
+    }
+
     return {
       success: true,
       orderCode: matchedOrder.order_code,
@@ -512,6 +580,14 @@ class OrderService {
       txStatus: 'SUCCESS',
       newPaymentStatus: PAYMENT_STATUS.PAID,
       newOrderStatus: ORDER_STATUS.CONFIRMED
+    });
+
+    await this.recordPurchaseEvent({
+      orderId: order.id,
+      orderCode: order.order_code,
+      userId: order.user_id || null,
+      totalAmount: Number(order.total_amount || 0),
+      paymentMethod: PAYMENT_METHOD.SEPAY_QR
     });
 
     return {

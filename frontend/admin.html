@@ -1131,6 +1131,73 @@
         </div>
       </div>
 
+      <!-- CUSTOMER JOURNEY MODAL -->
+      <div id="admin-customer-journey-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,15,20,0.65); z-index:2000; align-items:center; justify-content:center; padding:1.5rem;">
+        <div style="background:#fff; border-radius:14px; max-width:1050px; width:100%; max-height:90vh; overflow-y:auto; padding:1.75rem; box-shadow:0 24px 60px rgba(0,0,0,0.28);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; border-bottom:1px solid #eee; padding-bottom:1rem; margin-bottom:1rem;">
+            <div>
+              <h3 id="cj-modal-title" style="font-family:var(--font-serif); font-size:1.35rem; margin:0 0 0.25rem 0;">Hành Trình Khách Hàng</h3>
+              <div id="cj-modal-subtitle" style="font-size:0.85rem; color:var(--text-muted);">Đang tải...</div>
+            </div>
+            <button type="button" onclick="window.closeCustomerJourney()" style="background:#f5f5f5; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:1rem;">&times;</button>
+          </div>
+
+          <div id="cj-kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:0.75rem; margin-bottom:1.1rem;"></div>
+
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; background:#faf8f5; padding:0.75rem 1rem; border-radius:10px; margin-bottom:1rem;">
+            <select id="cj-filter-event" style="padding:0.45rem 0.65rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;">
+              <option value="">Tất cả sự kiện</option>
+              <option value="page_view">page_view</option>
+              <option value="product_view">product_view</option>
+              <option value="product_variant_select">product_variant_select</option>
+              <option value="add_to_cart">add_to_cart</option>
+              <option value="remove_from_cart">remove_from_cart</option>
+              <option value="search">search</option>
+              <option value="checkout_start">checkout_start</option>
+              <option value="coupon_apply">coupon_apply</option>
+              <option value="purchase">purchase</option>
+            </select>
+            <select id="cj-filter-session" style="padding:0.45rem 0.65rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem; max-width:220px;">
+              <option value="">Tất cả phiên (Sessions)</option>
+            </select>
+            <input type="date" id="cj-filter-from" style="padding:0.4rem 0.6rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;" title="Từ ngày">
+            <input type="date" id="cj-filter-to" style="padding:0.4rem 0.6rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;" title="Đến ngày">
+            <button type="button" class="btn-primary-luxury" style="padding:0.45rem 0.9rem; font-size:0.8rem;" onclick="window.loadCustomerJourneyPage(1)">
+              <i class="fa-solid fa-filter"></i> Lọc Timeline
+            </button>
+          </div>
+
+          <div class="table-responsive-wrapper" style="max-height:320px; overflow-y:auto; border:1px solid #eee; border-radius:8px;">
+            <table class="admin-table" style="font-size:0.82rem;">
+              <thead>
+                <tr>
+                  <th>Thời gian</th>
+                  <th>Sự kiện</th>
+                  <th>Sản phẩm</th>
+                  <th>Trang / URL</th>
+                  <th>Thiết bị</th>
+                  <th>Chi tiết</th>
+                </tr>
+              </thead>
+              <tbody id="cj-events-tbody"></tbody>
+            </table>
+          </div>
+
+          <div id="cj-pagination" style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem; font-size:0.82rem;"></div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1.1rem;">
+            <div style="border:1px solid #eee; border-radius:8px; padding:0.85rem;">
+              <h4 style="margin:0 0 0.5rem 0; font-size:0.9rem;">Đơn Hàng Gần Nhất</h4>
+              <div id="cj-orders-list" style="font-size:0.8rem; color:#444;"></div>
+            </div>
+            <div style="border:1px solid #eee; border-radius:8px; padding:0.85rem;">
+              <h4 style="margin:0 0 0.5rem 0; font-size:0.9rem;">Tìm Kiếm Gần Đây</h4>
+              <div id="cj-searches-list" style="font-size:0.8rem; color:#444;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- CUSTOMER BEHAVIOR ANALYTICS SECTION -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-behavior" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:1.25rem;">
@@ -1678,6 +1745,7 @@
                     <td><strong style="color:var(--accent-gold);">${Number(u.total_spent || 0).toLocaleString('vi-VN')} ₫</strong></td>
                     <td>${u.role_name === 'ADMIN' ? 'Quản Trị' : 'Khách VIP'}</td>
                     <td>
+                      <button class="admin-action-btn btn-edit" onclick="window.openCustomerJourney(${u.id})">Hành Trình</button>
                       <button class="admin-action-btn btn-edit" onclick="alert('Hồ sơ hội viên ${u.full_name.replace(/'/g, "\\'")}: Tổng điểm thưởng ${u.vip_points || 0} điểm, địa chỉ: ${(u.address || 'Landmark 81').replace(/'/g, "\\'")}')">Chi Tiết</button>
                     </td>
                   </tr>
@@ -1689,6 +1757,112 @@
             console.error('Lỗi tải khách hàng admin:', err);
             tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Lỗi tải khách hàng từ CSDL.</td></tr>`;
           });
+      };
+
+      let currentJourneyUserId = null;
+      window.openCustomerJourney = (userId) => {
+        currentJourneyUserId = userId;
+        const modal = document.getElementById('admin-customer-journey-modal');
+        if (!modal) return;
+        document.getElementById('cj-filter-event').value = '';
+        document.getElementById('cj-filter-session').innerHTML = '<option value="">Tất cả phiên (Sessions)</option>';
+        document.getElementById('cj-filter-from').value = '';
+        document.getElementById('cj-filter-to').value = '';
+        modal.style.display = 'flex';
+        window.loadCustomerJourneyPage(1);
+      };
+
+      window.closeCustomerJourney = () => {
+        const modal = document.getElementById('admin-customer-journey-modal');
+        if (modal) modal.style.display = 'none';
+      };
+
+      window.loadCustomerJourneyPage = async (page = 1) => {
+        if (!currentJourneyUserId) return;
+        const tbody = document.getElementById('cj-events-tbody');
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:1.5rem;">Đang tải hành trình...</td></tr>';
+
+        const params = new URLSearchParams({ page: String(page), limit: '15' });
+        const ev = document.getElementById('cj-filter-event').value;
+        const sess = document.getElementById('cj-filter-session').value;
+        const from = document.getElementById('cj-filter-from').value;
+        const to = document.getElementById('cj-filter-to').value;
+        if (ev) params.set('eventName', ev);
+        if (sess) params.set('sessionId', sess);
+        if (from) params.set('from', from);
+        if (to) params.set('to', to + 'T23:59:59Z');
+
+        try {
+          const res = await window.ApiClient.get(`/api/admin/analytics/customer/${currentJourneyUserId}?${params.toString()}`);
+          const data = res.data || res;
+          const c = data.customer || {};
+          const s = data.summary || {};
+
+          document.getElementById('cj-modal-title').textContent = `Hành Trình: ${c.full_name || 'Khách hàng #' + currentJourneyUserId}`;
+          document.getElementById('cj-modal-subtitle').textContent = `${c.email || ''} ${c.phone ? ' | ' + c.phone : ''}`;
+
+          document.getElementById('cj-kpi-grid').innerHTML = [
+            ['Tổng Sự Kiện', s.total_events || 0],
+            ['Số Phiên', s.total_sessions || 0],
+            ['Xem SP', s.products_viewed || 0],
+            ['Thêm Giỏ', s.cart_adds || 0],
+            ['Mua Hàng', s.purchases || 0],
+            ['Tổng Chi Tiêu', `${Number(s.total_spent || 0).toLocaleString('vi-VN')} ₫`]
+          ].map(([lbl, val]) => `
+            <div style="background:#faf8f5; border:1px solid #eee; border-radius:8px; padding:0.6rem 0.75rem;">
+              <div style="font-size:0.72rem; color:var(--text-muted);">${lbl}</div>
+              <div style="font-size:1rem; font-weight:700; color:var(--primary-dark);">${val}</div>
+            </div>
+          `).join('');
+
+          const sessSelect = document.getElementById('cj-filter-session');
+          if (sessSelect.options.length <= 1 && Array.isArray(data.sessions)) {
+            data.sessions.forEach(ss => {
+              const opt = document.createElement('option');
+              opt.value = ss.session_id;
+              opt.textContent = `${ss.session_id.slice(0, 14)}... (${ss.device_type || 'web'} · ${ss.page_views_count || 0} pv)`;
+              sessSelect.appendChild(opt);
+            });
+            if (sess) sessSelect.value = sess;
+          }
+
+          const events = data.events || [];
+          if (!events.length) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:1.5rem; color:var(--text-muted);">Chưa có sự kiện hành vi nào khớp bộ lọc.</td></tr>';
+          } else {
+            tbody.innerHTML = events.map(e => `
+              <tr>
+                <td>${new Date(e.event_timestamp).toLocaleString('vi-VN')}</td>
+                <td><span class="status-badge active">${e.event_name}</span></td>
+                <td>${e.product_name || (e.product_id ? '#' + e.product_id : '-')}</td>
+                <td style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${e.page_url || '-'}</td>
+                <td>${[e.device_type, e.browser].filter(Boolean).join(' / ') || '-'}</td>
+                <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${String(e.event_properties || '').replace(/"/g, '&quot;')}">${e.event_properties || '-'}</td>
+              </tr>
+            `).join('');
+          }
+
+          const pg = data.pagination || { page: 1, totalPages: 1, total: events.length };
+          document.getElementById('cj-pagination').innerHTML = `
+            <span>Trang ${pg.page} / ${pg.totalPages} (${pg.total} sự kiện)</span>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="admin-action-btn" ${pg.page <= 1 ? 'disabled' : ''} onclick="window.loadCustomerJourneyPage(${pg.page - 1})">Trước</button>
+              <button class="admin-action-btn" ${pg.page >= pg.totalPages ? 'disabled' : ''} onclick="window.loadCustomerJourneyPage(${pg.page + 1})">Sau</button>
+            </div>
+          `;
+
+          const orders = data.recentOrders || [];
+          document.getElementById('cj-orders-list').innerHTML = orders.length
+            ? orders.map(o => `<div style="padding:0.25rem 0; border-bottom:1px dashed #eee;"><strong>${o.order_code}</strong> · ${Number(o.total_amount).toLocaleString('vi-VN')} ₫ · <em>${o.status}</em> (${o.payment_status})</div>`).join('')
+            : '<span style="color:var(--text-muted);">Chưa có đơn hàng.</span>';
+
+          const searches = data.recentSearches || [];
+          document.getElementById('cj-searches-list').innerHTML = searches.length
+            ? searches.map(sr => `<div style="padding:0.25rem 0; border-bottom:1px dashed #eee;">"${sr.keyword}" · ${sr.result_count} kết quả</div>`).join('')
+            : '<span style="color:var(--text-muted);">Chưa có lịch sử tìm kiếm.</span>';
+        } catch (err) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Lỗi tải dữ liệu: ${err.message}</td></tr>`;
+        }
       };
 
       // Modal Thêm Sản Phẩm Mới (Lưu Trực Tiếp Vào SQL Server)

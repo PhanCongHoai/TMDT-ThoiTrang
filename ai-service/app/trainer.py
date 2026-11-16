@@ -155,8 +155,9 @@ def train_models(trigger_type: str = "MANUAL", force: bool = False) -> dict:
 
     for horizon in (7, 14, 30):
         sub = df[df[f"target_{horizon}d"].notna()].copy()
-        # Business Safety: bỏ qua mẫu mà kỳ mục tiêu hoàn toàn hết hàng làm triệt tiêu doanh số giả
-        tr = sub[sub["metric_date"] <= train_end]
+        # Business Safety: loại bỏ các mẫu huấn luyện bị hết hàng hoàn toàn khiến doanh số bằng 0 giả tạo (stockout censoring)
+        sub_train_pool = sub[(sub["is_out_of_stock"] == 0) | (sub[f"target_{horizon}d"] > 0)]
+        tr = sub_train_pool[sub_train_pool["metric_date"] <= train_end]
         va = sub[(sub["metric_date"] > train_end) & (sub["metric_date"] <= val_end)]
         te = sub[sub["metric_date"] > val_end]
 
@@ -173,17 +174,21 @@ def train_models(trigger_type: str = "MANUAL", force: bool = False) -> dict:
         xgb = XGBRegressor(n_estimators=100, learning_rate=0.05, max_depth=4, random_state=42, verbosity=0)
         xgb.fit(X_tr, y_tr)
 
-        pred_te_lgbm = lgbm.predict(X_te)
-        pred_te_xgb = xgb.predict(X_te)
-        pred_te_base = np.array([
+        pred_te_lgbm = np.maximum(0.0, lgbm.predict(X_te))
+        pred_te_xgb = np.maximum(0.0, xgb.predict(X_te))
+        pred_te_naive = np.maximum(0.0, te["sales_1_day_ago"].values * horizon)
+        pred_te_ma7 = np.maximum(0.0, te["avg_sales_7_days"].values * horizon)
+        pred_te_base = np.maximum(0.0, np.array([
             _baseline_predict_row(r["avg_sales_7_days"], r["avg_sales_30_days"], r["views_7_days"], r["cart_adds_7_days"], horizon)
             for _, r in te.iterrows()
-        ])
+        ]))
 
-        m_tr = compute_metrics(y_tr, lgbm.predict(X_tr))
-        m_va = compute_metrics(y_va, lgbm.predict(X_va))
+        m_tr = compute_metrics(y_tr, np.maximum(0.0, lgbm.predict(X_tr)))
+        m_va = compute_metrics(y_va, np.maximum(0.0, lgbm.predict(X_va)))
         m_te_lgbm = compute_metrics(y_te, pred_te_lgbm)
         m_te_xgb = compute_metrics(y_te, pred_te_xgb)
+        m_te_naive = compute_metrics(y_te, pred_te_naive)
+        m_te_ma7 = compute_metrics(y_te, pred_te_ma7)
         m_te_base = compute_metrics(y_te, pred_te_base)
 
         if horizon == 7:
@@ -196,6 +201,8 @@ def train_models(trigger_type: str = "MANUAL", force: bool = False) -> dict:
             "lightgbm": m_te_lgbm,
             "xgboost": m_te_xgb,
             "baseline": m_te_base,
+            "moving_average_7d": m_te_ma7,
+            "naive": m_te_naive,
         }
 
     if 7 not in artifacts:
@@ -222,7 +229,7 @@ def train_models(trigger_type: str = "MANUAL", force: bool = False) -> dict:
     beats_prev = (prev_mae is None) or (lgbm_mae_7d <= prev_mae)
     promoted = bool(beats_baseline and beats_prev)
 
-    new_version = f"v{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M')}-lgbm"
+    new_version = f"v{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M%S')}-lgbm"
     artifact_file = ARTIFACTS_DIR / f"{new_version}.joblib"
     joblib.dump({"models": artifacts, "features": FEATURE_COLUMNS, "version": new_version}, artifact_file)
 
@@ -314,7 +321,8 @@ def run_daily_predictions() -> dict:
 
             for horizon in (7, 14, 30):
                 if loaded_models and horizon in loaded_models:
-                    pred_qty = float(max(0.0, loaded_models[horizon].predict(row[FEATURE_COLUMNS].to_frame().T)[0]))
+                    X_row = row[FEATURE_COLUMNS].to_frame().T.astype(float)
+                    pred_qty = float(max(0.0, loaded_models[horizon].predict(X_row)[0]))
                     used_ver = model_version
                 else:
                     pred_qty = _baseline_predict_row(avg_7, avg_30, views_7, cart_7, horizon)

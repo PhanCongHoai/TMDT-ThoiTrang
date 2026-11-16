@@ -64,8 +64,17 @@ router.get('/analytics/product/:id', async (req, res, next) => {
 router.get('/analytics/customer/:id', async (req, res, next) => {
   try {
     const id = Number(req.params.id);
-    if (!id) return ApiResponse.error(res, 'ID khách hàng không hợp lệ', 400);
-    const data = await AnalyticsService.getCustomerJourney(id);
+    if (!id || id <= 0) return ApiResponse.error(res, 'ID khách hàng không hợp lệ', 400);
+    const data = await AnalyticsService.getCustomerJourney(id, {
+      eventName: req.query.eventName,
+      sessionId: req.query.sessionId,
+      productId: req.query.productId,
+      from: req.query.from,
+      to: req.query.to,
+      page: req.query.page,
+      limit: req.query.limit
+    });
+    if (!data.customer) return ApiResponse.error(res, 'Không tìm thấy khách hàng', 404);
     return ApiResponse.success(res, data, 'Lấy hành trình khách hàng thành công');
   } catch (err) {
     next(err);

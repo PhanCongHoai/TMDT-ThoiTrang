@@ -362,21 +362,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalTotal = Math.max(0, subtotal - discountAmount);
     if (finalTotalVal) finalTotalVal.textContent = finalTotal.toLocaleString('vi-VN') + ' ₫';
     window.currentCartTotal = finalTotal;
+
+    if (!window._trackedCartView && window.AuralieTracking) {
+      window._trackedCartView = true;
+      window.AuralieTracking.track('cart_view', {
+        properties: { item_count: cart.length, total_qty: totalQty, subtotal },
+        dedupeKey: 'cart-view'
+      });
+    }
   };
 
   window.changeCartQty = function(index, delta) {
     const cart = window.getCart();
     if (cart[index]) {
-      cart[index].qty = Math.max(1, (cart[index].qty || 1) + delta);
+      const prevQty = cart[index].qty || 1;
+      const newQty = Math.max(1, prevQty + delta);
+      cart[index].qty = newQty;
       window.saveCart(cart);
+      if (window.AuralieTracking && newQty !== prevQty) {
+        const pid = parseInt(String(cart[index].id || '').replace(/\D/g, ''), 10) || null;
+        window.AuralieTracking.track('update_cart_quantity', {
+          productId: pid,
+          properties: {
+            product_name: cart[index].name,
+            old_qty: prevQty,
+            new_qty: newQty,
+            delta,
+            size: cart[index].size,
+            color: cart[index].color
+          }
+        });
+      }
     }
   };
 
   window.removeCartItem = function(index) {
     const cart = window.getCart();
     if (cart[index]) {
+      const removed = cart[index];
       cart.splice(index, 1);
       window.saveCart(cart);
+      if (window.AuralieTracking) {
+        const pid = parseInt(String(removed.id || '').replace(/\D/g, ''), 10) || null;
+        window.AuralieTracking.track('remove_from_cart', {
+          productId: pid,
+          properties: {
+            product_name: removed.name,
+            qty: removed.qty || 1,
+            price: Number(removed.price || 0),
+            size: removed.size,
+            color: removed.color
+          }
+        });
+      }
     }
   };
 
@@ -1150,7 +1188,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Thumbnail Gallery Switcher in Modal
   const modalThumbs = document.querySelectorAll('.modal-thumb');
   if (modalThumbs.length > 0 && modalMainImg) {
-    modalThumbs.forEach(thumb => {
+    modalThumbs.forEach((thumb, idx) => {
       thumb.addEventListener('click', () => {
         modalThumbs.forEach(t => t.classList.remove('active'));
         thumb.classList.add('active');
@@ -1160,6 +1198,14 @@ document.addEventListener('DOMContentLoaded', () => {
           modalMainImg.src = thumb.src;
           modalMainImg.style.opacity = '1';
         }, 150);
+        if (window.AuralieTracking) {
+          const pid = parseInt(String((productModal && productModal.getAttribute('data-product-id')) || '').replace(/\D/g, ''), 10) || null;
+          window.AuralieTracking.track('product_image_view', {
+            productId: pid,
+            properties: { image_index: idx, image_src: thumb.getAttribute('src') },
+            dedupeKey: `img-view-${pid}-${idx}`
+          });
+        }
       });
     });
   }
@@ -1252,6 +1298,14 @@ document.addEventListener('DOMContentLoaded', () => {
       dot.classList.add('selected');
       const colorName = dot.getAttribute('data-color') || 'Đen Tuyền';
       if (modalSelectedColorText) modalSelectedColorText.textContent = colorName;
+      if (window.AuralieTracking) {
+        const pid = parseInt(String((productModal && productModal.getAttribute('data-product-id')) || '').replace(/\D/g, ''), 10) || null;
+        window.AuralieTracking.track('product_variant_select', {
+          productId: pid,
+          properties: { variant_type: 'color', color: colorName, size: modalSelectedSizeText ? modalSelectedSizeText.textContent.trim() : null },
+          dedupeKey: `var-color-${pid}-${colorName}`
+        });
+      }
     });
   });
 
@@ -1263,6 +1317,14 @@ document.addEventListener('DOMContentLoaded', () => {
       modalSizeBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       if (modalSelectedSizeText) modalSelectedSizeText.textContent = btn.textContent;
+      if (window.AuralieTracking) {
+        const pid = parseInt(String((productModal && productModal.getAttribute('data-product-id')) || '').replace(/\D/g, ''), 10) || null;
+        window.AuralieTracking.track('product_variant_select', {
+          productId: pid,
+          properties: { variant_type: 'size', size: btn.textContent.trim(), color: modalSelectedColorText ? modalSelectedColorText.textContent.trim() : null },
+          dedupeKey: `var-size-${pid}-${btn.textContent.trim()}`
+        });
+      }
     });
   });
 
@@ -1733,6 +1795,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (resData.status === 'success' && resData.data) {
           window.appliedCouponDiscount = resData.data.discountAmount;
           window.appliedCouponCode = code;
+          if (window.AuralieTracking) {
+            window.AuralieTracking.track('coupon_apply', {
+              properties: { coupon_code: code, discount_amount: Number(resData.data.discountAmount || 0), order_amount: subtotal, success: true }
+            });
+          }
           window.renderCartPage();
           window.showLuxuryAlert({
             title: 'Áp Dụng Mã Ưu Đãi Thành Công',
@@ -1741,6 +1808,11 @@ document.addEventListener('DOMContentLoaded', () => {
             btnText: 'Tuyệt Vời'
           });
         } else {
+          if (window.AuralieTracking) {
+            window.AuralieTracking.track('coupon_apply', {
+              properties: { coupon_code: code, order_amount: subtotal, success: false }
+            });
+          }
           window.showLuxuryAlert({
             title: 'Mã Không Hợp Lệ',
             message: resData.message || 'Mã ưu đãi không hợp lệ hoặc đã hết hạn áp dụng!',
@@ -1781,6 +1853,12 @@ document.addEventListener('DOMContentLoaded', () => {
       paymentCards.forEach(c => c.classList.remove('active'));
       card.classList.add('active');
       selectedPaymentMethod = card.getAttribute('data-method') || 'SEPAY_QR';
+      if (window.AuralieTracking) {
+        window.AuralieTracking.track('payment_method_select', {
+          properties: { payment_method: selectedPaymentMethod },
+          dedupeKey: `pm-select-${selectedPaymentMethod}`
+        });
+      }
 
       const checkoutBtnElem = document.getElementById('btn-proceed-checkout');
       if (checkoutBtnElem) {
@@ -1814,6 +1892,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const discount = window.appliedCouponDiscount || 0;
       const finalTotal = Math.max(0, rawSubtotal - discount);
       const userName = localStorage.getItem('userName') || 'Nguyễn Thanh Vân';
+
+      if (window.AuralieTracking) {
+        window.AuralieTracking.track('checkout_start', {
+          properties: {
+            item_count: cart.length,
+            subtotal: rawSubtotal,
+            discount,
+            final_total: finalTotal,
+            payment_method: selectedPaymentMethod,
+            coupon_code: window.appliedCouponCode || null
+          },
+          dedupeKey: 'checkout-start'
+        });
+        window.AuralieTracking.track('checkout_information_submit', {
+          properties: {
+            payment_method: selectedPaymentMethod,
+            has_coupon: Boolean(window.appliedCouponCode),
+            final_total: finalTotal
+          },
+          dedupeKey: 'checkout-info-submit'
+        });
+      }
 
       const authToken = (window.getAuthToken && window.getAuthToken()) || sessionStorage.getItem('auralie_token');
       const authHeaders = {
@@ -2992,8 +3092,61 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function initBannerTracking() {
+    if (!window.AuralieTracking) return;
+    const banners = document.querySelectorAll('.d-hero-banner, .promo-widget, [data-banner-id]');
+    if (!banners.length) return;
+
+    const seen = new Set();
+    const emitBannerView = (el, idx) => {
+      const bannerId = el.getAttribute('data-banner-id') || (el.classList.contains('d-hero-banner') ? 'hero-banner' : `promo-widget-${idx}`);
+      if (seen.has(bannerId)) return;
+      seen.add(bannerId);
+      const titleEl = el.querySelector('h1, h2, h3, h4, .promo-title');
+      window.AuralieTracking.track('banner_view', {
+        properties: {
+          banner_id: bannerId,
+          banner_title: titleEl ? titleEl.textContent.trim().slice(0, 80) : bannerId
+        },
+        dedupeKey: `banner-view-${bannerId}`
+      });
+    };
+
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Array.from(banners).indexOf(entry.target);
+            emitBannerView(entry.target, idx);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      banners.forEach((b) => obs.observe(b));
+    } else {
+      banners.forEach((b, idx) => emitBannerView(b, idx));
+    }
+
+    banners.forEach((el, idx) => {
+      el.addEventListener('click', (e) => {
+        const target = e.target.closest('a, button');
+        if (!target) return;
+        const bannerId = el.getAttribute('data-banner-id') || (el.classList.contains('d-hero-banner') ? 'hero-banner' : `promo-widget-${idx}`);
+        window.AuralieTracking.track('banner_click', {
+          properties: {
+            banner_id: bannerId,
+            cta_text: target.textContent.trim().slice(0, 60),
+            cta_href: target.getAttribute('href') || null
+          },
+          dedupeKey: `banner-click-${bannerId}`
+        });
+      });
+    });
+  }
+
   initMobileBottomNav();
   initAbandonedCartNotification();
+  initBannerTracking();
 
 });
 
