@@ -2,14 +2,6 @@ const ProductRepository = require('./products.repository');
 const ProductImage = require('./product-image');
 
 class ProductService {
-  static async getFilters() {
-    const variants = await ProductRepository.findCatalogVariantOptions();
-    return {
-      sizes: [...new Set(variants.map(variant => variant.size))],
-      colors: [...new Set(variants.map(variant => variant.color))]
-    };
-  }
-
   static async getProducts(filters) {
     return await ProductRepository.findAll(filters);
   }

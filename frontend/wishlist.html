@@ -761,7 +761,7 @@
     <!-- PAGE TITLE SECTION -->
     <section class="wishlist-page-header">
       <span class="wishlist-supertitle">AURALIÈ PRIVATE SELECTION</span>
-      <h1 class="wishlist-main-title" id="page-wishlist-title">Danh Sách Yêu Thích</h1>
+      <h1 class="wishlist-main-title" id="page-wishlist-title">Danh Sách Yêu Thích (4 Tuyệt Tác)</h1>
       <p class="wishlist-subtitle">Các thiết kế thời trang may đo cao cấp Quý khách đã lưu giữ để trải nghiệm và đặt may riêng.</p>
     </section>
 
@@ -769,10 +769,15 @@
     <section class="page-section" style="max-width: 1280px; margin: 0 auto; padding: 2rem 1.25rem 4rem 1.25rem;">
       
       <!-- INTERACTIVE TOOLBAR -->
-      <div class="wishlist-toolbar-wrap" id="wishlist-toolbar" style="display:none;">
+      <div class="wishlist-toolbar-wrap" id="wishlist-toolbar">
         
         <!-- Category Filter Pills -->
-        <div class="wishlist-filter-pills" id="wishlist-filter-pills"></div>
+        <div class="wishlist-filter-pills" id="wishlist-filter-pills">
+          <button class="wl-pill-btn active" data-category="all" onclick="filterWishlistCategory('all')">Tất Cả (4)</button>
+          <button class="wl-pill-btn" data-category="vest" onclick="filterWishlistCategory('vest')">Áo Vest & Blazer (2)</button>
+          <button class="wl-pill-btn" data-category="dress" onclick="filterWishlistCategory('dress')">Đầm Dạ Hội (1)</button>
+          <button class="wl-pill-btn" data-category="accessories" onclick="filterWishlistCategory('accessories')">Giày & Phụ Kiện (1)</button>
+        </div>
 
         <!-- Controls: Sort + View Switcher + Batch Buttons -->
         <div class="wishlist-toolbar-controls">
@@ -809,7 +814,7 @@
 
       <!-- WISHLIST PRODUCTS CONTAINER -->
       <div id="wishlist-items-container" class="wishlist-grid-view">
-        <p role="status">Đang tải danh sách yêu thích…</p>
+        <!-- Rendered dynamically by JavaScript -->
       </div>
 
     </section>
@@ -907,53 +912,107 @@
        =================================================================== -->
   <script>
     (function() {
-      let wishlistData = [];
-      const escape = window.Commerce.escape;
+      // 1. Initial State & High-Fashion Dataset
+      const DEFAULT_WISHLIST = [
+        {
+          id: 1,
+          name: "Double-Breasted Tailored Suit",
+          category: "vest",
+          categoryName: "Áo Vest & Blazer",
+          material: "Dạ Cashmere Ý cao cấp • May đo thủ công",
+          price: 12500000,
+          img: "assets/card_1.jpg",
+          rating: 4.9,
+          stock: 3,
+          stockText: "Chỉ còn 3 chiếc",
+          isLowStock: true,
+          sizes: ["S", "M", "L", "XL"],
+          selectedSize: "M",
+          color: "Đen Tuyền (Jet Black)",
+          dateAdded: 1731600000000
+        },
+        {
+          id: 2,
+          name: "Minimalist Silk Trench Dress",
+          category: "dress",
+          categoryName: "Đầm Dạ Hội",
+          material: "100% Lụa Tơ Tằm Tự Nhiên Mulberry",
+          price: 18900000,
+          img: "assets/card_2.jpg",
+          rating: 5.0,
+          stock: 2,
+          stockText: "Chỉ còn 2 chiếc",
+          isLowStock: true,
+          sizes: ["S", "M", "L"],
+          selectedSize: "S",
+          color: "Trắng Ngà (Ivory Pearl)",
+          dateAdded: 1731610000000
+        },
+        {
+          id: 3,
+          name: "Royale Gold Buckle Boots",
+          category: "accessories",
+          categoryName: "Giày & Phụ Kiện",
+          material: "Da Bê Thượng Hạng Ý • Khóa mạ vàng 18K",
+          price: 15800000,
+          img: "assets/card_3.jpg",
+          rating: 4.95,
+          stock: 5,
+          stockText: "Sẵn sàng xuất kho",
+          isLowStock: false,
+          sizes: ["36", "37", "38", "39"],
+          selectedSize: "38",
+          color: "Nâu Cognac Cổ Điển",
+          dateAdded: 1731620000000
+        },
+        {
+          id: 4,
+          name: "Signature Cashmere Evening Cape",
+          category: "vest",
+          categoryName: "Áo Vest & Blazer",
+          material: "100% Cashmere Nguyên Bản Vùng Biella",
+          price: 24500000,
+          img: "assets/card_4.jpg",
+          rating: 5.0,
+          stock: 1,
+          stockText: "Độc bản duy nhất",
+          isLowStock: true,
+          sizes: ["Freesize"],
+          selectedSize: "Freesize",
+          color: "Xanh Đêm Midnight",
+          dateAdded: 1731630000000
+        }
+      ];
 
-      function toWishlistItem(item, detail) {
-        const variants = (detail?.variants ?? []).filter(variant => variant.stock_quantity > 0);
-        const sizes = [...new Set(variants.map(variant => variant.size))];
-        const stock = variants.reduce((quantity, variant) => quantity + variant.stock_quantity, 0);
-        return {
-          ...item,
-          category: item.category_slug,
-          categoryName: item.category || 'Haute Couture',
-          dateAdded: Date.parse(item.added_at),
-          variants,
-          sizes,
-          selectedSize: sizes[0],
-          isLowStock: stock < 4,
-          stockText: stock ? `Chỉ còn ${stock} chiếc` : 'Hết hàng'
-        };
+      // Retrieve from localStorage or fallback
+      let wishlistData = [];
+      try {
+        const stored = localStorage.getItem('auralie_wishlist_items');
+        wishlistData = stored ? JSON.parse(stored) : DEFAULT_WISHLIST;
+        if (!Array.isArray(wishlistData) || wishlistData.length === 0) {
+          wishlistData = DEFAULT_WISHLIST;
+          localStorage.setItem('auralie_wishlist_items', JSON.stringify(wishlistData));
+        }
+      } catch (e) {
+        wishlistData = DEFAULT_WISHLIST;
       }
 
       let currentView = localStorage.getItem('wishlist_view_mode') || 'grid';
       let currentCategory = 'all';
       let currentSort = 'newest';
 
+      // Save to localStorage helper
+      function persistWishlist() {
+        localStorage.setItem('auralie_wishlist_items', JSON.stringify(wishlistData));
+        updateBadges();
+      }
+
       // Update badge counters everywhere
       function updateBadges() {
         const count = wishlistData.length;
-        window.setWishlistBadge(count);
-        const categories = new Map([['all', { label: 'Tất cả', count }]]);
-        wishlistData.forEach(item => {
-          if (!item.category) return;
-          const category = categories.get(item.category) || { label: item.categoryName, count: 0 };
-          category.count++;
-          categories.set(item.category, category);
+        document.querySelectorAll('.wishlist-count-badge, .dropdown-badge').forEach(b => {
+          b.textContent = count;
         });
-        if (!categories.has(currentCategory)) currentCategory = 'all';
-        const pills = document.getElementById('wishlist-filter-pills');
-        pills.replaceChildren(...Array.from(categories, ([slug, category]) => {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'wl-pill-btn';
-          button.classList.toggle('active', slug === currentCategory);
-          button.dataset.category = slug;
-          button.textContent = `${category.label} (${category.count})`;
-          button.addEventListener('click', () => window.filterWishlistCategory(slug));
-          return button;
-        }));
         const titleEl = document.getElementById('page-wishlist-title');
         if (titleEl) {
           titleEl.textContent = `Danh Sách Yêu Thích (${count} Tuyệt Tác)`;
@@ -999,6 +1058,7 @@
         const item = wishlistData.find(p => p.id === productId);
         if (item) {
           item.selectedSize = size;
+          persistWishlist();
           renderWishlist();
         }
       };
@@ -1008,44 +1068,89 @@
         const item = wishlistData.find(p => p.id === productId);
         if (!item) return;
 
-        const variant = item.variants.find(entry => entry.size === item.selectedSize);
-        if (!variant) return;
-        await window.addToCart({
-          id: item.id,
-          name: item.name,
-          category: item.categoryName,
-          price: variant.variant_price ?? item.price,
-          img: item.img,
-          size: variant.size,
-          color: variant.color,
-          qty: 1
-        });
+        if (typeof window.addToCart === 'function') {
+          await window.addToCart({
+            id: item.id,
+            name: item.name,
+            category: item.categoryName,
+            price: item.price,
+            img: item.img,
+            size: item.selectedSize || 'M',
+            color: item.color || 'Tiêu chuẩn',
+            qty: 1
+          });
+        }
       };
 
-      async function deleteWishlistItems(productIds) {
-        const results = await Promise.allSettled(productIds.map(productId =>
-          window.Commerce.request(`/api/v1/wishlist/${productId}`, { method: 'DELETE' })
-        ));
-        const removed = new Set(productIds.filter((_, index) => results[index].status === 'fulfilled'));
-        wishlistData = wishlistData.filter(item => !removed.has(item.id));
-        updateBadges();
-        renderWishlist();
-        if (removed.size !== productIds.length) {
-          window.showLuxuryAlert({ title: 'Danh sách yêu thích', message: 'Không thể xóa một số sản phẩm. Vui lòng thử lại.', type: 'warning' });
+      // 7. Remove Single Item from Wishlist
+      window.removeWishlistItem = function(productId) {
+        const el = document.getElementById(`wl-item-${productId}`);
+        if (el) {
+          el.style.transition = 'all 0.3s ease';
+          el.style.opacity = '0';
+          el.style.transform = 'scale(0.85)';
         }
-      }
 
-      window.removeWishlistItem = productId => deleteWishlistItems([productId]);
+        setTimeout(() => {
+          wishlistData = wishlistData.filter(p => p.id !== productId);
+          persistWishlist();
+          renderWishlist();
+          if (typeof window.showLuxuryAlert === 'function') {
+            window.showLuxuryAlert({
+              title: 'Đã Cập Nhật Yêu Thích',
+              message: 'Đã bỏ sản phẩm khỏi danh sách yêu thích của Quý khách.',
+              type: 'warning',
+              autoCloseMs: 2000
+            });
+          }
+        }, 250);
+      };
 
+      // 8. Move All Wishlist to Cart
       window.moveAllWishlistToCart = async function() {
-        for (const item of wishlistData.filter(item => item.selectedSize)) {
-          await window.addWishlistItemToCart(item.id);
+        if (!wishlistData.length) {
+          alert('Danh sách yêu thích của Quý khách hiện đang trống!');
+          return;
+        }
+
+        if (window.Commerce && typeof window.Commerce.requireUser === 'function') {
+          if (!await window.Commerce.requireUser('cart.html')) return;
+        }
+
+        for (const item of wishlistData) {
+          if (typeof window.addToCart === 'function') {
+            await window.addToCart({
+              id: item.id,
+              name: item.name,
+              category: item.categoryName,
+              price: item.price,
+              img: item.img,
+              size: item.selectedSize || 'M',
+              color: item.color || 'Tiêu chuẩn',
+              qty: 1
+            });
+          }
+        }
+
+        if (typeof window.showLuxuryAlert === 'function') {
+          window.showLuxuryAlert({
+            title: 'Chuyển Vào Giỏ Hàng Thành Công',
+            message: `Đã chuyển toàn bộ ${wishlistData.length} sản phẩm yêu thích vào giỏ hàng của Quý khách!`,
+            type: 'success',
+            btnText: 'Đến Giỏ Hàng Ngay',
+            redirectUrl: 'cart.html',
+            autoCloseMs: 3000
+          });
         }
       };
 
+      // 9. Clear All Wishlist
       window.clearAllWishlist = function() {
-        if (wishlistData.length && confirm('Xóa toàn bộ sản phẩm khỏi danh sách yêu thích?')) {
-          return deleteWishlistItems(wishlistData.map(item => item.id));
+        if (!wishlistData.length) return;
+        if (confirm('Quý khách có chắc chắn muốn xóa toàn bộ sản phẩm khỏi danh sách yêu thích?')) {
+          wishlistData = [];
+          persistWishlist();
+          renderWishlist();
         }
       };
 
@@ -1103,7 +1208,7 @@
             return `
               <article class="wl-card" id="wl-item-${item.id}">
                 <div class="wl-card-img-wrap">
-                  <img src="${escape(item.img)}" alt="${escape(item.name)}">
+                  <img src="${item.img}" alt="${item.name}">
                   <span class="wl-badge-tag ${item.isLowStock ? 'low-stock' : ''}">
                     ${item.isLowStock ? item.stockText : 'WISHLIST'}
                   </span>
@@ -1112,27 +1217,27 @@
                   </button>
                 </div>
                 <div class="wl-card-content">
-                  <span class="wl-card-cat">${escape(item.categoryName)}</span>
-                  <h3 class="wl-card-title">${escape(item.name)}</h3>
-                  <div class="wl-card-material">${escape(item.material)}</div>
+                  <span class="wl-card-cat">${item.categoryName}</span>
+                  <h3 class="wl-card-title">${item.name}</h3>
+                  <div class="wl-card-material">${item.material}</div>
                   
                   <!-- Size Selection Pills -->
                   <div class="wl-size-row">
                     <span class="wl-size-label">Size:</span>
                     ${item.sizes.map(s => `
-                      <button class="wl-size-pill ${item.selectedSize === s ? 'active' : ''}" onclick="selectWishlistSize(${item.id}, this.value)" value="${escape(s)}">
-                        ${escape(s)}
+                      <button class="wl-size-pill ${item.selectedSize === s ? 'active' : ''}" onclick="selectWishlistSize(${item.id}, '${s}')">
+                        ${s}
                       </button>
                     `).join('')}
                   </div>
 
                   <div class="wl-card-price-row">
                     <span class="wl-card-price">${priceFormatted}</span>
-                    <span class="wl-card-rating"><i class="fa-solid fa-star"></i> ${escape(item.rating)}</span>
+                    <span class="wl-card-rating"><i class="fa-solid fa-star"></i> ${item.rating}</span>
                   </div>
 
-                  <button class="btn-add-to-cart-card" onclick="addWishlistItemToCart(${item.id})" ${item.selectedSize ? '' : 'disabled'}>
-                    <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng (Size ${escape(item.selectedSize || '—')})
+                  <button class="btn-add-to-cart-card" onclick="addWishlistItemToCart(${item.id})">
+                    <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng (Size ${item.selectedSize || 'M'})
                   </button>
                 </div>
               </article>
@@ -1146,13 +1251,13 @@
             return `
               <div class="wl-list-row" id="wl-item-${item.id}">
                 <div class="wl-list-thumb">
-                  <img src="${escape(item.img)}" alt="${escape(item.name)}">
+                  <img src="${item.img}" alt="${item.name}">
                 </div>
                 
                 <div class="wl-list-info">
-                  <span class="wl-list-cat">${escape(item.categoryName)}</span>
-                  <h3 class="wl-list-title">${escape(item.name)}</h3>
-                  <div class="wl-list-material">${escape(item.material)}</div>
+                  <span class="wl-list-cat">${item.categoryName}</span>
+                  <h3 class="wl-list-title">${item.name}</h3>
+                  <div class="wl-list-material">${item.material}</div>
                   <div class="wl-stock-badge ${item.isLowStock ? 'low-stock' : 'in-stock'}">
                     <i class="fa-solid ${item.isLowStock ? 'fa-fire' : 'fa-circle-check'}"></i> ${item.stockText}
                   </div>
@@ -1162,8 +1267,8 @@
                   <span style="font-size:0.75rem; color:var(--wl-text-sub); font-weight:700;">CHỌN KÍCH CỠ:</span>
                   <div style="display:flex; gap:6px;">
                     ${item.sizes.map(s => `
-                      <button class="wl-size-pill ${item.selectedSize === s ? 'active' : ''}" onclick="selectWishlistSize(${item.id}, this.value)" value="${escape(s)}">
-                        ${escape(s)}
+                      <button class="wl-size-pill ${item.selectedSize === s ? 'active' : ''}" onclick="selectWishlistSize(${item.id}, '${s}')">
+                        ${s}
                       </button>
                     `).join('')}
                   </div>
@@ -1171,8 +1276,8 @@
 
                 <div class="wl-list-actions">
                   <span class="wl-list-price">${priceFormatted}</span>
-                  <button class="btn-add-to-cart-list" onclick="addWishlistItemToCart(${item.id})" ${item.selectedSize ? '' : 'disabled'}>
-                    <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ (Size ${escape(item.selectedSize || '—')})
+                  <button class="btn-add-to-cart-list" onclick="addWishlistItemToCart(${item.id})">
+                    <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ (Size ${item.selectedSize || 'M'})
                   </button>
                   <button class="wl-list-remove-btn" onclick="removeWishlistItem(${item.id})">
                     <i class="fa-solid fa-trash-can"></i> Xóa khỏi yêu thích
@@ -1185,24 +1290,9 @@
       }
 
       // Initial Call
-      document.addEventListener('DOMContentLoaded', async () => {
-        if (!sessionStorage.getItem('auralie_token')) {
-          sessionStorage.setItem('commerce_return', 'wishlist.html');
-          location.replace('login.html');
-          return;
-        }
-
-        try {
-          const saved = await window.loadWishlist();
-          wishlistData = await Promise.all(saved.map(async item => {
-            const detail = await window.Commerce.request(`/api/v1/products/${item.id}`).catch(() => null);
-            return toWishlistItem(item, detail);
-          }));
-          updateBadges();
-          setWishlistViewMode(currentView);
-        } catch (error) {
-          document.getElementById('wishlist-items-container').textContent = 'Không thể tải danh sách yêu thích. Vui lòng đăng nhập lại hoặc thử lại.';
-        }
+      document.addEventListener('DOMContentLoaded', () => {
+        updateBadges();
+        setWishlistViewMode(currentView);
       });
     })();
   </script>

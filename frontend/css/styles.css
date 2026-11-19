@@ -4303,18 +4303,3 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
 
 
 
-
-[data-catalog-filter] {
-  flex-wrap: wrap;
-}
-
-.size-btn.catalog-option {
-  width: auto;
-  min-width: 32px;
-  padding-inline: 0.5rem;
-}
-
-html:not(.has-cart-count) :is(#cart-count, .cart-count-badge),
-html:not(.has-wishlist-count) a[href="wishlist.html"] :is(.badge-count, .dropdown-badge) {
-  display: none;
-}

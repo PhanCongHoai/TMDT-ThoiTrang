@@ -6,7 +6,6 @@ const { verifyToken, requireAdmin } = require('../../middlewares/auth.middleware
 
 // Public endpoints
 router.get('/', ProductController.getProducts);
-router.get('/filters', ProductController.getFilters);
 router.get('/:id', ProductValidation.validateGetById, ProductController.getProductById);
 
 // Admin-only endpoints với validation và RBAC guard
