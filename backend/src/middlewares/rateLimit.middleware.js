@@ -23,5 +23,13 @@ const authLimiter = rateLimit({
   }
 });
 
-module.exports = { globalLimiter, authLimiter };
+const passwordResetLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => ApiResponse.error(res, 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau 15 phút.', 429)
+});
+
+module.exports = { globalLimiter, authLimiter, passwordResetLimiter };
 

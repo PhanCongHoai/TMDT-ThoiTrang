@@ -2,10 +2,22 @@ const ProductService = require('./products.service');
 const ApiResponse = require('../../utils/response');
 
 class ProductController {
+  static async getFilters(req, res, next) {
+    try {
+      return ApiResponse.success(res, await ProductService.getFilters(), 'Đã tải bộ lọc');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getProducts(req, res, next) {
     try {
-      const { category, search, tag, limit } = req.query;
-      const products = await ProductService.getProducts({ category, search, tag, limit });
+      const { category, search, tag, limit, size, color } = req.query;
+      if ([size, color].some(value => value !== undefined && typeof value !== 'string')
+          || size?.length > 20 || color?.length > 100) {
+        return ApiResponse.error(res, 'Kích cỡ hoặc màu sắc không hợp lệ.', 400);
+      }
+      const products = await ProductService.getProducts({ category, search, tag, limit, size: size?.trim(), color: color?.trim() });
       return ApiResponse.success(res, products, 'Lấy danh sách sản phẩm thành công', 200, {
         total: products.length
       });

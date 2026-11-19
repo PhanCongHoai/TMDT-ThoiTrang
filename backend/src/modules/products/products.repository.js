@@ -1,7 +1,18 @@
 const { query, sql, poolPromise } = require('../../config/db');
 
 class ProductRepository {
-  static async findAll({ category, search, tag, includeOutOfStock = false } = {}) {
+  static async findCatalogVariantOptions() {
+    const result = await query(`
+      SELECT DISTINCT v.size, v.color
+      FROM product_variants v
+      JOIN products p ON p.id = v.product_id
+      WHERE p.is_active = 1 AND v.stock_quantity > 0
+      ORDER BY v.size, v.color
+    `);
+    return result.recordset;
+  }
+
+  static async findAll({ category, search, tag, size, color, includeOutOfStock = false } = {}) {
     let sqlQuery = `
       SELECT 
         p.id, 
@@ -41,6 +52,18 @@ class ProductRepository {
     if (search) {
       sqlQuery += ` AND (p.name LIKE @search OR p.description LIKE @search)`;
       params.search = `%${search}%`;
+    }
+    if (size || color) {
+      sqlQuery += `
+        AND EXISTS (
+          SELECT 1 FROM product_variants v
+          WHERE v.product_id = p.id AND v.stock_quantity > 0
+          ${size ? 'AND v.size = @size' : ''}
+          ${color ? 'AND v.color = @color' : ''}
+        )
+      `;
+      if (size) params.size = size;
+      if (color) params.color = color;
     }
     if (tag) {
       sqlQuery += ` AND p.tag = @tag`;

@@ -129,8 +129,8 @@
       <li><a href="blog.html"><i class="fa-solid fa-newspaper"></i> Tạp chí</a></li>
       <li><a href="about.html"><i class="fa-solid fa-building"></i> Về chúng tôi</a></li>
       <li><a href="contact.html"><i class="fa-solid fa-envelope"></i> Liên hệ</a></li>
-      <li><a href="wishlist.html"><i class="fa-regular fa-heart"></i> Yêu thích (2)</a></li>
-      <li><a href="cart.html"><i class="fa-solid fa-bag-shopping"></i> Giỏ hàng (3)</a></li>
+      <li><a href="wishlist.html"><i class="fa-regular fa-heart"></i> Yêu thích <span class="dropdown-badge wishlist-count-badge">0</span></a></li>
+      <li><a href="cart.html"><i class="fa-solid fa-bag-shopping"></i> Giỏ hàng <span class="dropdown-badge cart-count-badge">0</span></a></li>
     </ul>
   </div>
   <div class="drawer-overlay" id="drawer-overlay"></div>
@@ -156,22 +156,12 @@
 
       <div class="filter-group">
         <span class="filter-label">Tông Màu Sắc</span>
-        <div class="color-options">
-          <div class="color-dot selected" style="background: #1a1a1a;" title="Đen Lux"></div>
-          <div class="color-dot" style="background: #d4c5b9;" title="Beige Nhẹ"></div>
-          <div class="color-dot" style="background: #1b263b;" title="Xanh Navy"></div>
-          <div class="color-dot" style="background: #8b263e;" title="Đỏ Burgundy"></div>
-        </div>
+        <div class="color-options" data-catalog-filter="color" role="group" aria-label="Màu sắc"></div>
       </div>
 
       <div class="filter-group">
         <span class="filter-label">Kích Cỡ</span>
-        <div class="size-options">
-          <button class="size-btn">S</button>
-          <button class="size-btn active">M</button>
-          <button class="size-btn">L</button>
-          <button class="size-btn">XL</button>
-        </div>
+        <div class="size-options" data-catalog-filter="size" role="group" aria-label="Kích cỡ"></div>
       </div>
     </div>
     <div class="filter-drawer-footer">
@@ -261,22 +251,12 @@
           
           <div class="filter-group">
             <span class="filter-label">Tông Màu Sắc</span>
-            <div class="color-options">
-              <div class="color-dot selected" style="background: #1a1a1a;" title="Đen Lux"></div>
-              <div class="color-dot" style="background: #d4c5b9;" title="Beige Nhẹ"></div>
-              <div class="color-dot" style="background: #1b263b;" title="Xanh Navy"></div>
-              <div class="color-dot" style="background: #8b263e;" title="Đỏ Burgundy"></div>
-            </div>
+            <div class="color-options" data-catalog-filter="color" role="group" aria-label="Màu sắc"></div>
           </div>
 
           <div class="filter-group">
             <span class="filter-label">Kích Cỡ</span>
-            <div class="size-options">
-              <button class="size-btn">S</button>
-              <button class="size-btn active">M</button>
-              <button class="size-btn">L</button>
-              <button class="size-btn">XL</button>
-            </div>
+            <div class="size-options" data-catalog-filter="size" role="group" aria-label="Kích cỡ"></div>
           </div>
         </div>
 

@@ -267,7 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.updateCartBadge = function() {
-    const cart = window.getCart();
+    const signedIn = Boolean(sessionStorage.getItem('auralie_token'));
+    document.documentElement.classList.toggle('has-cart-count', signedIn);
+    const cart = signedIn ? window.getCart() : [];
     const totalQty = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
     document.querySelectorAll('#cart-count, .cart-count-badge').forEach(badge => {
       badge.textContent = totalQty;
@@ -452,9 +454,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // ====================================================================
   // 4. DYNAMIC DATABASE PRODUCTS CATALOG LOADER (TRUY VẤN TRỰC TIẾP TỪ SQL SERVER)
   // ====================================================================
-  window.loadCatalogProducts = async function(categorySlug = 'all', searchQuery = '') {
+  const catalogFilters = { size: '', color: '' };
+  let appliedCatalogFilters = { ...catalogFilters };
+  let catalogCategory = 'all';
+  let catalogSearch = '';
+  let catalogRequest;
+
+  window.loadCatalogProducts = async function(categorySlug = catalogCategory, searchQuery = catalogSearch) {
     const grid = document.getElementById('product-grid-container');
     if (!grid) return;
+    catalogCategory = categorySlug;
+    catalogSearch = searchQuery;
+    appliedCatalogFilters = { ...catalogFilters };
+    catalogRequest?.abort();
+    const request = new AbortController();
+    catalogRequest = request;
 
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--accent-gold);">
@@ -464,10 +478,14 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     try {
-      let url = `/api/v1/products?category=${categorySlug}`;
-      if (searchQuery) url += `&search=${encodeURIComponent(searchQuery)}`;
-      const res = await fetch(url);
+      const params = new URLSearchParams({ category: categorySlug });
+      if (searchQuery) params.set('search', searchQuery);
+      if (catalogFilters.size) params.set('size', catalogFilters.size);
+      if (catalogFilters.color) params.set('color', catalogFilters.color);
+      const res = await fetch(`/api/v1/products?${params}`, { signal: request.signal });
       const result = await res.json();
+      if (request.signal.aborted) return;
+      if (!res.ok || result.status !== 'success') throw new Error('Không thể tải danh mục.');
 
       if (result.status === 'success' && result.data) {
         const products = result.data;
@@ -478,12 +496,23 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (categorySlug && categorySlug !== 'all' && window.AuralieTracking) {
           window.AuralieTracking.track('category_view', { properties: { category_slug: categorySlug } });
         }
+        const catalogTitle = document.getElementById('catalog-title');
+        const catalogSubtitle = document.getElementById('catalog-subtitle');
+        const categoryName = document.querySelector('.category-list a.active')?.firstChild?.textContent.trim();
+        if (catalogTitle) {
+          catalogTitle.textContent = categorySlug === 'all'
+            ? 'Bộ Sưu Tập Nổi Bật (Live Database)'
+            : `Danh Mục: ${products[0]?.category || categoryName || categorySlug}`;
+        }
+        if (catalogSubtitle) {
+          catalogSubtitle.textContent = `Hiển thị ${products.length} sản phẩm`;
+        }
         if (products.length === 0) {
           grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
               <i class="fa-solid fa-box-open" style="font-size: 2.5rem; color: #888; margin-bottom: 1rem;"></i>
               <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">Không tìm thấy sản phẩm phù hợp</h3>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Vui lòng thử chọn danh mục khác hoặc tìm kiếm với từ khóa khác.</p>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">Hãy thử đổi kích cỡ, màu sắc, danh mục hoặc từ khóa tìm kiếm.</p>
             </div>
           `;
           return;
@@ -532,16 +561,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </article>
         `).join('');
 
-        // Cập nhật tiêu đề catalog
-        const catalogTitle = document.getElementById('catalog-title');
-        const catalogSubtitle = document.getElementById('catalog-subtitle');
-        if (catalogTitle) {
-          catalogTitle.textContent = categorySlug === 'all' ? 'Bộ Sưu Tập Nổi Bật (Live Database)' : `Danh Mục: ${products[0]?.category || categorySlug}`;
-        }
-        if (catalogSubtitle) {
-          catalogSubtitle.textContent = `Hiển thị ${products.length} sản phẩm truy vấn trực tiếp từ CSDL MSSQL`;
-        }
-
         // Binds event listeners to dynamically rendered cards
         grid.querySelectorAll('.product-clickable').forEach(card => {
           card.addEventListener('click', (e) => {
@@ -559,6 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     } catch (err) {
+      if (request.signal.aborted) return;
       console.error('Lỗi tải sản phẩm từ CSDL:', err);
       grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: red; padding: 3rem;">Lỗi kết nối tới cơ sở dữ liệu.</div>`;
     }
@@ -587,6 +607,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const catalogOptions = document.querySelectorAll('[data-catalog-filter]');
+  const updateCatalogOptions = () => {
+    catalogOptions.forEach(group => {
+      group.querySelectorAll('button').forEach(button => {
+        const selected = button.value === catalogFilters[group.dataset.catalogFilter];
+        button.classList.toggle('active', selected);
+        button.setAttribute('aria-pressed', String(selected));
+      });
+    });
+  };
+
+  if (catalogOptions.length) {
+    fetch('/api/v1/products/filters')
+      .then(response => {
+        if (!response.ok) throw new Error('Không thể tải bộ lọc.');
+        return response.json();
+      })
+      .then(({ data }) => {
+        catalogOptions.forEach(group => {
+          const kind = group.dataset.catalogFilter;
+          const options = kind === 'size' ? data.sizes : data.colors;
+          const buttons = ['', ...options].map(value => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'size-btn catalog-option';
+            button.value = value;
+            button.textContent = value || 'Tất cả';
+            button.addEventListener('click', () => {
+              catalogFilters[kind] = value;
+              updateCatalogOptions();
+              if (!group.closest('#mobile-filter-drawer')) window.loadCatalogProducts();
+            });
+            return button;
+          });
+          group.replaceChildren(...buttons);
+        });
+        updateCatalogOptions();
+      })
+      .catch(() => {
+        catalogOptions.forEach(group => { group.textContent = 'Tạm thời không tải được bộ lọc.'; });
+      });
+
+    const resetDraft = () => {
+      Object.assign(catalogFilters, appliedCatalogFilters);
+      updateCatalogOptions();
+    };
+    applyFilterBtn?.addEventListener('click', () => window.loadCatalogProducts());
+    closeFilterBtn?.addEventListener('click', resetDraft);
+    filterOverlay?.addEventListener('click', resetDraft);
+  }
+
   // Wire Category links to live database queries
   const catLinks = document.querySelectorAll('.category-list a');
   catLinks.forEach(link => {
@@ -598,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
         l.classList.toggle('active', l.getAttribute('data-cat') === selectedCat);
       });
 
-      window.loadCatalogProducts(selectedCat);
+      window.loadCatalogProducts(selectedCat, '');
     });
   });
 
@@ -613,6 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const isCatalogPresent = document.getElementById('product-grid-container');
         if (isCatalogPresent) {
+          catLinks.forEach(link => link.classList.toggle('active', link.dataset.cat === 'all'));
           window.loadCatalogProducts('all', query);
           const catalogSection = document.getElementById('catalog');
           if (catalogSection) catalogSection.scrollIntoView({ behavior: 'smooth' });
@@ -1706,8 +1778,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const wishlistBadgeSelector = 'a[href="wishlist.html"] :is(.badge-count, .dropdown-badge)';
+  window.setWishlistBadge = count => {
+    document.querySelectorAll(wishlistBadgeSelector).forEach(badge => { badge.textContent = count; });
+    document.documentElement.classList.toggle('has-wishlist-count', Boolean(sessionStorage.getItem('auralie_token')));
+  };
+
+  window.loadWishlist = async () => {
+    const items = await window.Commerce.request('/api/v1/wishlist');
+    window.setWishlistBadge(items.length);
+    return items;
+  };
+
+  document.querySelectorAll('a[href="wishlist.html"]').forEach(link => {
+    link.addEventListener('click', event => {
+      if (sessionStorage.getItem('auralie_token')) return;
+      event.preventDefault();
+      sessionStorage.setItem('commerce_return', 'wishlist.html');
+      location.href = 'login.html';
+    });
+  });
+
+  if (sessionStorage.getItem('auralie_token') && !document.getElementById('wishlist-items-container')
+      && document.querySelector(wishlistBadgeSelector)) {
+    window.loadWishlist().catch(() => {});
+  }
+
+  const modalWishlistButton = document.getElementById('modal-btn-wishlist');
+  modalWishlistButton?.addEventListener('click', async () => {
+    const productId = window.activeModalProductId;
+    if (!productId) return;
+    if (!sessionStorage.getItem('auralie_token')) {
+      sessionStorage.setItem('commerce_return', 'index.html#catalog');
+      location.href = 'login.html';
+      return;
+    }
+
+    modalWishlistButton.disabled = true;
+    try {
+      const response = await fetch('/api/v1/wishlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionStorage.getItem('auralie_token')}`
+        },
+        body: JSON.stringify({ productId })
+      });
+      if (response.status === 401) {
+        sessionStorage.removeItem('auralie_token');
+        sessionStorage.removeItem('auralie_user');
+        sessionStorage.setItem('commerce_return', 'index.html#catalog');
+        location.href = 'login.html';
+        return;
+      }
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
+      window.showLuxuryAlert({ title: 'Danh sách yêu thích', message: 'Sản phẩm đã có trong danh sách yêu thích của bạn.', autoCloseMs: 2000 });
+      window.loadWishlist().catch(() => {});
+    } catch (error) {
+      window.showLuxuryAlert({ title: 'Danh sách yêu thích', message: 'Không thể lưu sản phẩm. Vui lòng thử lại.', type: 'warning' });
+    } finally {
+      modalWishlistButton.disabled = false;
+    }
+  });
+
   // 11. User Profile Dropdown Toggle & Dynamic Role-Based Status
-  const userRole = localStorage.getItem('userRole');
+  const userRole = sessionStorage.getItem('auralie_token') ? localStorage.getItem('userRole') : null;
   const userName = localStorage.getItem('userName') || 'Bà Nguyễn Thanh Vân';
   const userMenuTriggers = document.querySelectorAll('#user-menu-trigger');
 
@@ -1729,7 +1865,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (linksList) {
         linksList.innerHTML = `
           <li><a href="login.html" style="color: var(--accent-gold); font-weight: bold;"><i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập / Đăng Ký</a></li>
-          <li><a href="wishlist.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích</a></li>
+          <li><a href="login.html"><i class="fa-solid fa-heart"></i> Danh Sách Yêu Thích</a></li>
           <li><a href="contact.html"><i class="fa-solid fa-gem"></i> Đặt Lịch VIP Concierge</a></li>
         `;
       }

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { query } = require('../../config/db');
-const { verifyToken, optionalAuth } = require('../../middlewares/auth.middleware');
+const { verifyToken } = require('../../middlewares/auth.middleware');
 const ApiResponse = require('../../utils/response');
 
 // GET Wishlist
@@ -10,8 +10,8 @@ router.get('/', verifyToken, async (req, res, next) => {
     const userId = req.user.id;
     const result = await query(`
       SELECT w.id AS wishlist_id, w.created_at AS added_at,
-             p.id, p.name, p.slug, p.base_price AS price, p.tag,
-             c.name AS category,
+             p.id, p.name, p.slug, p.base_price AS price, p.tag, p.material,
+             c.name AS category, c.slug AS category_slug,
              COALESCE(img.image_url, 'assets/card_1.jpg') AS img,
              COALESCE(AVG(CAST(r.rating AS FLOAT)), 5.0) AS rating,
              COUNT(r.id) AS review_count
@@ -24,7 +24,7 @@ router.get('/', verifyToken, async (req, res, next) => {
       ) img ON p.id = img.product_id AND img.rn = 1
       LEFT JOIN product_reviews r ON p.id = r.product_id
       WHERE w.user_id = @userId
-      GROUP BY w.id, w.created_at, p.id, p.name, p.slug, p.base_price, p.tag, c.name, img.image_url
+      GROUP BY w.id, w.created_at, p.id, p.name, p.slug, p.base_price, p.tag, p.material, c.name, c.slug, img.image_url
       ORDER BY w.created_at DESC
     `, { userId });
 
@@ -50,17 +50,18 @@ router.post('/', verifyToken, async (req, res, next) => {
       return ApiResponse.error(res, 'Sản phẩm không tồn tại', 404);
     }
 
-    const existing = await query('SELECT id FROM wishlists WHERE user_id = @userId AND product_id = @productId', {
-      userId, productId: Number(productId)
-    });
+    const insert = await query(`
+      INSERT INTO wishlists (user_id, product_id)
+      SELECT @userId, @productId
+      WHERE NOT EXISTS (
+        SELECT 1 FROM wishlists WITH (UPDLOCK, HOLDLOCK)
+        WHERE user_id = @userId AND product_id = @productId
+      )
+    `, { userId, productId: Number(productId) });
 
-    if (existing.recordset.length > 0) {
+    if (!insert.rowsAffected[0]) {
       return ApiResponse.success(res, null, 'Sản phẩm đã có trong danh sách yêu thích.');
     }
-
-    await query('INSERT INTO wishlists (user_id, product_id) VALUES (@userId, @productId)', {
-      userId, productId: Number(productId)
-    });
 
     return ApiResponse.success(res, null, `Đã thêm "${prodCheck.recordset[0].name}" vào danh sách yêu thích!`, 201);
   } catch (err) {
