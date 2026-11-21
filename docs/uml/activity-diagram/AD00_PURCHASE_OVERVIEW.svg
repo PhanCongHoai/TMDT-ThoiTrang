@@ -17,16 +17,13 @@
     </marker>
   </defs>
 
-  <!-- Trang A4 nền trắng -->
   <rect x="0" y="0" width="840" height="1188" fill="#FFFFFF"/>
   <rect x="25" y="25" width="790" height="1138" fill="none" stroke="#000000" stroke-width="1"/>
 
-  <!-- Tiêu đề trang -->
   <text x="420.0" y="62" class="title">SƠ ĐỒ TỔNG QUAN QUY TRÌNH MUA HÀNG</text>
   <text x="420.0" y="85" class="subtitle">Đặc Tả Quy Trình Hoạt Động (UML 2.x Activity Diagram) | Mã Sơ Đồ: AD00_PURCHASE_OVERVIEW | Trang 1 / 7</text>
   <line x1="50" y1="98" x2="790" y2="98" class="line"/>
 
-  <!-- Khung bao Swimlane -->
   <rect x="50" y="115" width="740" height="925" fill="none" stroke="#000000" stroke-width="1.8"/>
   
         <rect x="50.0" y="115" width="246.66666666666666" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
@@ -42,7 +39,6 @@
         <line x1="543.3333333333333" y1="147" x2="543.3333333333333" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
         <line x1="790" y1="147" x2="790" y2="1040" stroke="#000000" stroke-width="1.2"/>
 
-  <!-- Nội dung -->
   
     <!-- Initial Node -->
     <circle cx="173" cy="180" r="9" fill="#000000"/>
@@ -80,7 +76,7 @@
     
     <line x1="420" y1="399" x2="420" y2="420" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Decision 1: Chữ NẰM TRỌN TRONG HÌNH THOI -->
+    <!-- Decision 1: Đăng nhập -->
     
     <polygon points="420,420 488,450 420,480 352,450" class="decision-diamond"/>
     <text x="420" y="446.5" class="dec-txt">Khách Đã</text>
@@ -129,7 +125,7 @@
     
     <line x1="666" y1="629" x2="666" y2="655" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Decision 2: Chữ NẰM TRỌN TRONG HÌNH THOI -->
+    <!-- Decision 2: Phương thức thanh toán -->
     
     <polygon points="666,655 736,685 666,715 596,685" class="decision-diamond"/>
     <text x="666" y="681.5" class="dec-txt">Phương Thức</text>
@@ -137,7 +133,7 @@
 
     
 
-    <!-- Nhánh COD (Trái) -->
+    <!-- Nhánh COD (Trái) sang Action COD tại (320, 725, 200, 44) -->
     <line x1="596" y1="685" x2="420" y2="685" class="line"/>
     <line x1="420" y1="685" x2="420" y2="725" class="line" marker-end="url(#arrow)"/>
     
@@ -151,14 +147,12 @@
 <text x="420.0" y="759.5" class="act-txt">(Trạng Thái: CONFIRMED)</text>
 
     
-    <line x1="420" y1="769" x2="420" y2="870" class="line"/>
-    <line x1="420" y1="870" x2="566" y2="870" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Nhánh VietQR (Dưới) -->
+    <!-- Nhánh VietQR (Dưới) sang Quét mã tại (566, 745, 200, 44) -->
     <line x1="666" y1="715" x2="666" y2="745" class="line" marker-end="url(#arrow)"/>
     
-    <rect x="669.5" y="721" width="57.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
-    <text x="698" y="733" class="guard-txt">[VietQR]</text>
+    <rect x="676.5" y="721" width="57.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+    <text x="705" y="733" class="guard-txt">[VietQR]</text>
     
 
     
@@ -169,7 +163,7 @@
     
     <line x1="666" y1="789" x2="666" y2="810" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Decision 3: Chữ NẰM TRỌN TRONG HÌNH THOI -->
+    <!-- Decision 3: Trạng thái chuyển khoản -->
     
     <polygon points="666,810 736,840 666,870 596,840" class="decision-diamond"/>
     <text x="666" y="836.5" class="dec-txt">Trạng Thái</text>
@@ -177,43 +171,55 @@
 
     
 
-    <!-- VietQR Thành công (Dưới) -->
+    <!-- VietQR [Đủ tiền] (Dưới) cắm thẳng vào đỉnh Action Chuẩn Bị Giao Hàng tại (666, 895) -->
     <line x1="666" y1="870" x2="666" y2="895" class="line" marker-end="url(#arrow)"/>
     
     <rect x="672.75" y="873" width="64.5" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
     <text x="705" y="885" class="guard-txt">[Đủ tiền]</text>
     
 
+    <!-- Action Chuẩn Bị Giao Hàng (x=566, y=895, w=200, h=44) -> midpoint left=(566, 917) -->
     
-    <rect x="566" y="895" width="200" height="40" class="action-rect"/>
-    <text x="666.0" y="910.5" class="act-txt">Xác Nhận Đã Thanh Toán &amp;</text>
-<text x="666.0" y="927.5" class="act-txt">Chuẩn Bị Giao Hàng</text>
+    <rect x="566" y="895" width="200" height="44" class="action-rect"/>
+    <text x="666.0" y="912.5" class="act-txt">Xác Nhận Đã Thanh Toán &amp;</text>
+<text x="666.0" y="929.5" class="act-txt">Chuẩn Bị Giao Hàng</text>
 
     
-    <line x1="666" y1="935" x2="666" y2="960" class="line" marker-end="url(#arrow)"/>
 
-    <!-- VietQR Hết hạn 15p (Phải) -->
+    <!-- NHÁNH COD: ĐƯỜNG NỐI TỪ ĐÁY COD (420, 769) CHẠY XUỐNG y=917 VÀ CẮM CHÍNH XÁC VÀO CẠNH TRÁI TẠI (566, 917) -->
+    <line x1="420" y1="769" x2="420" y2="917" class="line"/>
+    <line x1="420" y1="917" x2="566" y2="917" class="line" marker-end="url(#arrow)"/>
+
+    <!-- Sau khi Chuẩn Bị Giao Hàng (y=939) -> Bàn giao thành công -->
+    <line x1="666" y1="939" x2="666" y2="958" class="line" marker-end="url(#arrow)"/>
+    
+    <rect x="566" y="958" width="200" height="36" class="action-rect"/>
+    <text x="666.0" y="971.5" class="act-txt">Bàn Giao &amp; Giao Hàng</text>
+<text x="666.0" y="988.5" class="act-txt">Thành Công Cho Khách</text>
+
+    
+    <line x1="666" y1="994" x2="666" y2="1015" class="line" marker-end="url(#arrow)"/>
+    <circle cx="666" cy="1025" r="10" fill="none" stroke="#000000" stroke-width="1.8"/>
+    <circle cx="666" cy="1025" r="6" fill="#000000"/>
+
+    <!-- Nhánh Hết 15p: Từ cạnh phải Decision 3 (736, 840) rẽ phải sang 775, đi xuống 880, rẽ trái cắm chính xác vào Action Hủy Đơn -->
     <line x1="736" y1="840" x2="775" y2="840" class="line"/>
-    <line x1="775" y1="840" x2="775" y2="975" class="line"/>
-    <line x1="775" y1="975" x2="755" y2="975" class="line" marker-end="url(#arrow)"/>
+    <line x1="775" y1="840" x2="775" y2="840" class="line"/>
+    <line x1="775" y1="840" x2="775" y2="870" class="line"/>
     
-    <rect x="727.75" y="821" width="64.5" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
-    <text x="760" y="833" class="guard-txt">[Hết 15p]</text>
-    
-
-    
-    <rect x="556" y="960" width="198" height="38" class="action-rect"/>
-    <text x="655.0" y="974.5" class="act-txt">Hoàn Tất Đơn Hàng Hoặc</text>
-<text x="655.0" y="991.5" class="act-txt">Hủy Đơn Hoàn Tồn Kho</text>
-
-    
-    <line x1="655" y1="998" x2="655" y2="1015" class="line" marker-end="url(#arrow)"/>
-
-    <circle cx="655" cy="1025" r="10" fill="none" stroke="#000000" stroke-width="1.8"/>
-    <circle cx="655" cy="1025" r="6" fill="#000000"/>
+    <rect x="732.75" y="821" width="64.5" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+    <text x="765" y="833" class="guard-txt">[Hết 15p]</text>
     
 
-  <!-- Footer Chú Thích -->
+    <!-- Action Hủy Đơn riêng biệt (x=320, y=895, w=200, h=44) hoặc đặt gọn ở Lane 2 -->
+    <!-- Cho đường Hết 15p rẽ xuống Final Node hủy đơn: -->
+    <line x1="775" y1="840" x2="775" y2="925" class="line"/>
+    <line x1="775" y1="925" x2="775" y2="975" class="line" marker-end="url(#arrow)"/>
+    <circle cx="775" cy="985" r="10" fill="none" stroke="#000000" stroke-width="1.8"/>
+    <circle cx="775" cy="985" r="6" fill="#000000"/>
+    <text x="775" y="1005" class="guard-txt">[Hủy / Hoàn kho]</text>
+    
+
   <line x1="50" y1="1055" x2="790" y2="1055" class="line"/>
   <rect x="50" y="1062" width="740" height="80" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
   <text x="65" y="1079" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000">KÝ HIỆU CHUẨN UML 2.x ACTIVITY DIAGRAM:</text>
