@@ -186,3 +186,37 @@ Dựa trên kiểm tra thực tế cấu trúc xác thực JWT (`backend/src/mid
   * *Ý nghĩa:* Kích hoạt khi khách chọn phương thức COD. Mũi tên hướng từ UC13 về UC09.
 * `UC23 (Hủy Đơn Hàng Chờ Xử Lý)` -.-> `«extend»` .-> `UC22 (Tra Cứu Lịch Sử Đơn Hàng)`:
   * *Ý nghĩa:* Chỉ khả dụng khi đơn hàng ở trạng thái `PENDING`. Mũi tên hướng từ UC23 về UC22.
+
+---
+
+## 4. BỘ SƠ ĐỒ CHUẨN A4 DỌC (A4 PORTRAIT) DÀNH CHO BÁO CÁO TỐT NGHIỆP
+
+Nhằm phục vụ trực tiếp việc đóng cuốn luận văn tốt nghiệp, toàn bộ hệ thống Use Case đã được chia trang khoa học và tối ưu hóa 100% theo chuẩn **A4 Portrait (210 x 297 mm)** với font chữ lớn (18–20pt cho Tiêu đề, 15–16pt cho Boundary, 13–14pt cho Actor, 12–14pt cho Use Case), độ tương phản cao đơn sắc Đen - Trắng:
+
+1. **Trang 1 / Diagram 01: Phân Hệ Khám Phá & Duyệt Sản Phẩm**
+   - **Tệp nguồn:** [UC_01_STOREFRONT_DISCOVERY.puml](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_01_STOREFRONT_DISCOVERY.puml)
+   - **Vector SVG:** [UC_01_STOREFRONT_DISCOVERY.svg](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_01_STOREFRONT_DISCOVERY.svg)
+   - **Ảnh PNG:** [UC_01_STOREFRONT_DISCOVERY.png](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_01_STOREFRONT_DISCOVERY.png)
+   - **Quy mô:** 7 Use Cases (UC01 - UC07), 1 Actor chính (`Khách Hàng Chưa Đăng Nhập`).
+
+2. **Trang 2 / Diagram 02: Phân Hệ Giỏ Hàng, Đặt Hàng & Thanh Toán**
+   - **Tệp nguồn:** [UC_02_CART_CHECKOUT.puml](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_02_CART_CHECKOUT.puml)
+   - **Vector SVG:** [UC_02_CART_CHECKOUT.svg](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_02_CART_CHECKOUT.svg)
+   - **Ảnh PNG:** [UC_02_CART_CHECKOUT.png](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_02_CART_CHECKOUT.png)
+   - **Quy mô:** 6 Use Cases (UC08 - UC13), Actor chính `Khách Hàng Đã Đăng Nhập`, Tác nhân ngoài `Cổng Thanh Toán SePay (External System)`. Thể hiện quan hệ `<<include>>` và `<<extend>>`.
+
+3. **Trang 3 / Diagram 03: Phân Hệ Xác Thực, Tài Khoản & Tương Tác**
+   - **Tệp nguồn:** [UC_03_AUTH_INTERACTION.puml](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_03_AUTH_INTERACTION.puml)
+   - **Vector SVG:** [UC_03_AUTH_INTERACTION.svg](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_03_AUTH_INTERACTION.svg)
+   - **Ảnh PNG:** [UC_03_AUTH_INTERACTION.png](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_03_AUTH_INTERACTION.png)
+   - **Quy mô:** 7 Use Cases (UC14 - UC20), Thể hiện trực quan quan hệ kế thừa Actor `Khách Hàng Đã Đăng Nhập` --▷ `Khách Hàng Chưa Đăng Nhập`.
+
+4. **Trang 4 / Diagram 04: Phân Hệ Hồ Sơ Cá Nhân & Quản Lý Đơn Hàng**
+   - **Tệp nguồn:** [UC_04_PROFILE_ORDERS.puml](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_04_PROFILE_ORDERS.puml)
+   - **Vector SVG:** [UC_04_PROFILE_ORDERS.svg](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_04_PROFILE_ORDERS.svg)
+   - **Ảnh PNG:** [UC_04_PROFILE_ORDERS.png](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/UC_04_PROFILE_ORDERS.png)
+   - **Quy mô:** 6 Use Cases (UC21 - UC26), Actor `Khách Hàng Đã Đăng Nhập`. Quan hệ `<<extend>>` hủy đơn pending.
+
+5. **Tài Liệu PDF In Ấn & Đóng Tập Trực Tiếp:**
+   - [AURALIE_UML_USE_CASE_A4_PORTRAIT.pdf](file:///c:/Users/ASUS/Documents/Demo/DATN/AURALIE_UML_USE_CASE_A4_PORTRAIT.pdf) (Thư mục gốc dự án)
+   - [AURALIE_UML_USE_CASE_A4_PORTRAIT.html](file:///c:/Users/ASUS/Documents/Demo/DATN/docs/uml/use-case/AURALIE_UML_USE_CASE_A4_PORTRAIT.html) (Bản xem trước HTML tương tác)

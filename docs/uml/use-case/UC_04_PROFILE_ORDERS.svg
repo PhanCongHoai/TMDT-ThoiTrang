@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 840 1188" xmlns="http://www.w3.org/2000/svg" width="840" height="1188">
+  
+  <defs>
+    <!-- Open Arrow for <<include>> and <<extend>> -->
+    <marker id="open-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5" fill="none" stroke="#000000" stroke-width="1.8" />
+    </marker>
+    <!-- Solid Arrow for Associations if needed -->
+    <marker id="solid-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <polygon points="0,2 8,5 0,8" fill="#000000" />
+    </marker>
+    <!-- Hollow Triangle for Generalization -->
+    <marker id="gen-arr" viewBox="0 0 14 14" refX="13" refY="7" markerWidth="11" markerHeight="11" orient="auto">
+      <polygon points="1,2 12,7 1,12" fill="#FFFFFF" stroke="#000000" stroke-width="1.8" />
+    </marker>
+  </defs>
+
+  <rect width="840" height="1188" fill="#FFFFFF" />
+
+  
+  <!-- PAGE HEADER -->
+  <rect x="30" y="24" width="780" height="60" fill="#FFFFFF" stroke="#000000" stroke-width="2" />
+  <text x="420" y="50" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">AURALIÈ — UML USE CASE DIAGRAM (A4 DỌC)</text>
+  <text x="420" y="70" font-family="Arial, Helvetica, sans-serif" font-size="11.5" fill="#000000" text-anchor="middle">PHÂN HỆ 4: HỒ SƠ CÁ NHÂN &amp; QUẢN LÝ ĐƠN HÀNG (PROFILE &amp; ORDERS)</text>
+  <rect x="730" y="36" width="65" height="24" fill="#000000" />
+  <text x="762" y="52" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="middle">TRANG 4/4</text>
+    
+
+  <!-- ACTOR (LEFT) -->
+  
+  <!-- ACTOR: Khách Hàng -->
+  <g class="actor">
+    <!-- Head -->
+    <circle cx="120" cy="480" r="15" fill="#FFFFFF" stroke="#000000" stroke-width="2.2" />
+    <!-- Body -->
+    <line x1="120" y1="495" x2="120" y2="532" stroke="#000000" stroke-width="2.2" />
+    <!-- Arms -->
+    <line x1="92" y1="510" x2="148" y2="510" stroke="#000000" stroke-width="2.2" />
+    <!-- Left Leg -->
+    <line x1="120" y1="532" x2="100" y2="568" stroke="#000000" stroke-width="2.2" />
+    <!-- Right Leg -->
+    <line x1="120" y1="532" x2="140" y2="568" stroke="#000000" stroke-width="2.2" />
+    <!-- Label -->
+    <text x="120" y="590" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#000000" text-anchor="middle">Khách Hàng</text>
+    <text x="120" y="607" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#000000" text-anchor="middle">(Customer / VIP)</text>
+  </g>
+    
+
+  <!-- SYSTEM BOUNDARY -->
+  <rect x="235" y="105" width="575" height="990" fill="#FFFFFF" stroke="#000000" stroke-width="2" />
+  <rect x="235" y="105" width="575" height="34" fill="#000000" />
+  <text x="250" y="128" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF">Phân Hệ: Hồ Sơ Cá Nhân &amp; Đơn Hàng</text>
+
+  <!-- USE CASES -->
+  
+  <!-- USE CASE: UC21 -->
+  <g class="usecase">
+    <ellipse cx="420" cy="200" rx="150" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="2.2" />
+    <text x="420" y="194" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">UC21: Quản Lý Hồ Sơ Cá Nhân</text>
+    <text x="420" y="213" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#000000" text-anchor="middle">Họ tên, SĐT, Địa chỉ nhận hàng</text>
+  </g>
+    
+  
+  <!-- USE CASE: UC22 -->
+  <g class="usecase">
+    <ellipse cx="390" cy="360" rx="140" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="2.2" />
+    <text x="390" y="354" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">UC22: Tra Cứu Lịch Sử Đơn Hàng</text>
+    <text x="390" y="373" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#000000" text-anchor="middle">my-orders • Trạng thái đơn hàng</text>
+  </g>
+    
+  
+  <!-- UC23: Hủy đơn hàng (Extend UC22) -->
+  
+  <!-- USE CASE: UC23 -->
+  <g class="usecase">
+    <ellipse cx="675" cy="360" rx="115" ry="34" fill="#FFFFFF" stroke="#000000" stroke-width="2.2" />
+    <text x="675" y="354" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">UC23: Hủy Đơn Hàng</text>
+    <text x="675" y="373" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#000000" text-anchor="middle">Áp dụng đơn PENDING</text>
+  </g>
+    
+
+  
+  <!-- USE CASE: UC24 -->
+  <g class="usecase">
+    <ellipse cx="420" cy="540" rx="155" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="2.2" />
+    <text x="420" y="534" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">UC24: Viết Đánh Giá Sản Phẩm</text>
+    <text x="420" y="553" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#000000" text-anchor="middle">Đánh giá 1-5 sao sản phẩm đã mua</text>
+  </g>
+    
+  
+  <!-- USE CASE: UC25 -->
+  <g class="usecase">
+    <ellipse cx="420" cy="720" rx="155" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="2.2" />
+    <text x="420" y="714" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">UC25: Tra Cứu Điểm &amp; Hạng VIP</text>
+    <text x="420" y="733" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#000000" text-anchor="middle">Silver / Gold / Platinum / VIP</text>
+  </g>
+    
+  
+  <!-- USE CASE: UC26 -->
+  <g class="usecase">
+    <ellipse cx="420" cy="900" rx="155" ry="36" fill="#FFFFFF" stroke="#000000" stroke-width="2.2" />
+    <text x="420" y="894" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#000000" text-anchor="middle">UC26: Thẻ Bảo Hành Điện Tử</text>
+    <text x="420" y="913" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#000000" text-anchor="middle">Bảo hành phom dáng 12 tháng</text>
+  </g>
+    
+
+  <!-- EXTEND: UC23 -> UC22 -->
+  <line x1="560" y1="360" x2="530" y2="360" stroke="#000000" stroke-width="1.8" stroke-dasharray="6,4" marker-end="url(#open-arr)" />
+  <text x="545" y="350" font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-style="italic" fill="#000000" text-anchor="middle">«extend»</text>
+
+  <!-- ASSOCIATIONS (SOLID LINES) -->
+  <line x1="160" y1="460" x2="270" y2="200" stroke="#000000" stroke-width="1.8" />
+  <line x1="160" y1="480" x2="250" y2="360" stroke="#000000" stroke-width="1.8" />
+  <line x1="160" y1="500" x2="265" y2="540" stroke="#000000" stroke-width="1.8" />
+  <line x1="160" y1="510" x2="265" y2="720" stroke="#000000" stroke-width="1.8" />
+  <line x1="160" y1="520" x2="265" y2="900" stroke="#000000" stroke-width="1.8" />
+
+  
+  <!-- PAGE FOOTER (ISO 5807 / UML 2.X MONOCHROME) -->
+  <rect x="30" y="1120" width="780" height="42" fill="#FFFFFF" stroke="#000000" stroke-width="1.5" />
+  <text x="45" y="1146" font-family="Arial, Helvetica, sans-serif" font-size="10.5" fill="#000000">
+    <tspan font-weight="bold">Quy ước UML 2.x:</tspan> Người = Actor | Ellipse = Use Case | Nét liền = Association | ┈▷ = Generalization | ┈&gt; = Include / Extend
+  </text>
+  <text x="795" y="1146" font-family="Arial, Helvetica, sans-serif" font-size="10.5" font-weight="bold" fill="#000000" text-anchor="end">
+    Sơ Đồ 4: Hồ Sơ Cá Nhân &amp; Đơn Hàng • A4 Portrait
+  </text>
+    
+</svg>

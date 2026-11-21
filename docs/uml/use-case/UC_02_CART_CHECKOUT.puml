@@ -1,0 +1,32 @@
+@startuml UC_02_CART_CHECKOUT
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam arrowThickness 1.5
+skinparam usecaseBorderThickness 2.0
+skinparam rectangleBorderThickness 2.0
+left to right direction
+
+actor "Khách Hàng\n(Customer / VIP)" as Customer
+actor "Cổng Thanh Toán SePay\n<<Secondary System>>" as SePay
+
+rectangle "Hệ Thống AURALIÈ: Giỏ Hàng & Thanh Toán" {
+  usecase "UC08: Quản Lý Giỏ Hàng\n<size:10>Thêm, sửa số lượng, xóa</size>" as UC08
+  usecase "UC09: Đặt Hàng & Thanh Toán\n<size:10>POST /api/v1/orders</size>" as UC09
+  usecase "UC10: Xác Thực Thông Tin Giao\n<size:10>Họ tên, SĐT, Địa chỉ, Hỏa tốc</size>" as UC10
+  usecase "UC11: Áp Dụng Mã Ưu Đãi (Coupon)\n<size:10>Kiểm tra chiết khấu</size>" as UC11
+  usecase "UC12: Thanh Toán QR (SePay)\n<size:10>VietQR Napas 24/7</size>" as UC12
+  usecase "UC13: Thanh Toán Tiền Mặt (COD)\n<size:10>Thanh toán khi nhận</size>" as UC13
+
+  UC09 .> UC10 : <<include>>
+  UC11 .> UC09 : <<extend>>
+  UC12 .> UC09 : <<extend>>
+  UC13 .> UC09 : <<extend>>
+}
+
+Customer --> UC08
+Customer --> UC09
+SePay --> UC12 : <<Webhook>>
+@enduml

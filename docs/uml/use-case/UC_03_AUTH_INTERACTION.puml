@@ -1,0 +1,35 @@
+@startuml UC_03_AUTH_INTERACTION
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam arrowThickness 1.5
+skinparam usecaseBorderThickness 2.0
+skinparam rectangleBorderThickness 2.0
+left to right direction
+
+actor "Khách Hàng\n(Guest / Vãng Lai)" as Guest
+actor "Khách Đã Đăng Nhập\n(Customer / VIP)" as Customer
+
+Customer --|> Guest
+
+rectangle "Hệ Thống AURALIÈ: Tài Khoản & Tương Tác" {
+  usecase "UC17: Đăng Ký Tài Khoản\n<size:10>Bcrypt salt=12 • JWT</size>" as UC17
+  usecase "UC18: Đăng Nhập Hệ Thống\n<size:10>Xác thực email & mật khẩu</size>" as UC18
+  usecase "UC19: Quên & Đặt Lại Mật Khẩu\n<size:10>Token xác nhận</size>" as UC19
+  usecase "UC15: Gửi Liên Hệ / Tư Vấn May Đo\n<size:10>Form tư vấn Bespoke</size>" as UC15
+  usecase "UC16: Đăng Ký Nhận Bản Tin VIP\n<size:10>Newsletter độc quyền</size>" as UC16
+  usecase "UC14: Quản Lý Danh Sách Yêu Thích\n<size:10>Wishlist tim đỏ • Đồng bộ DB</size>" as UC14
+  usecase "UC20: Đăng Xuất\n<size:10>Hủy phiên làm việc</size>" as UC20
+}
+
+Guest --> UC17
+Guest --> UC18
+Guest --> UC19
+Guest --> UC15
+Guest --> UC16
+
+Customer --> UC14
+Customer --> UC20
+@enduml

@@ -1,0 +1,30 @@
+@startuml UC_04_PROFILE_ORDERS
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam arrowThickness 1.5
+skinparam usecaseBorderThickness 2.0
+skinparam rectangleBorderThickness 2.0
+left to right direction
+
+actor "Khách Hàng\n(Customer / VIP)" as Customer
+
+rectangle "Hệ Thống AURALIÈ: Hồ Sơ Cá Nhân & Đơn Hàng" {
+  usecase "UC21: Quản Lý Hồ Sơ Cá Nhân\n<size:10>Họ tên, SĐT, Địa chỉ</size>" as UC21
+  usecase "UC22: Tra Cứu Lịch Sử Đơn Hàng\n<size:10>my-orders • Trạng thái đơn</size>" as UC22
+  usecase "UC23: Hủy Đơn Hàng Chờ Xử Lý\n<size:10>Áp dụng đơn PENDING</size>" as UC23
+  usecase "UC24: Viết Đánh Giá Sản Phẩm Đã Mua\n<size:10>Đánh giá 1-5 sao</size>" as UC24
+  usecase "UC25: Tra Cứu Điểm & Hạng Hội Viên VIP\n<size:10>Silver/Gold/Platinum/VIP</size>" as UC25
+  usecase "UC26: Tra Cứu Thẻ Bảo Hành Điện Tử\n<size:10>Bảo hành phom dáng 12 tháng</size>" as UC26
+
+  UC23 .> UC22 : <<extend>>
+}
+
+Customer --> UC21
+Customer --> UC22
+Customer --> UC24
+Customer --> UC25
+Customer --> UC26
+@enduml
