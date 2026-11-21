@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const categoryName = document.querySelector('.category-list a.active')?.firstChild?.textContent.trim();
         if (catalogTitle) {
           catalogTitle.textContent = categorySlug === 'all'
-            ? 'Bộ Sưu Tập Nổi Bật (Live Database)'
+            ? 'Bộ Sưu Tập Nổi Bật'
             : `Danh Mục: ${products[0]?.category || categoryName || categorySlug}`;
         }
         if (catalogSubtitle) {

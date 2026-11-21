@@ -351,7 +351,7 @@
       const target = sessionStorage.getItem('commerce_return');
       sessionStorage.removeItem('commerce_return');
       if (['cart.html', 'cart.html?checkout=1', 'checkout.html', 'shipping.html', 'shipping.html?checkout=1', 'profile.html#orders', 'index.html#catalog', 'wishlist.html'].includes(target)) return target;
-      return user.role === 'ADMIN' ? 'admin.html' : 'profile.html';
+      return user.role === 'ADMIN' ? 'admin.html' : 'index.html';
     }
 
     function getAuthToken() {
