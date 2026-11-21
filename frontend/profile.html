@@ -154,14 +154,13 @@
           <div id="section-orders" class="profile-section-content">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
               <h2 style="font-family: var(--font-serif); font-size: 1.8rem;">Lịch Sử Đơn Hàng VIP</h2>
-              <span id="orders-count-text" style="font-size: 0.85rem; color: var(--text-muted);">Đang tải dữ liệu từ CSDL...</span>
             </div>
 
             <!-- DANH SÁCH ĐƠN HÀNG RENDER TỰ ĐỘNG -->
             <div id="orders-list-container" style="display: flex; flex-direction: column; gap: 1.5rem;">
               <div style="text-align: center; padding: 3rem; color: var(--text-muted); background: #fff; border-radius: 12px; border: 1px solid var(--border-light);">
                 <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 1.8rem; color: var(--accent-gold); margin-bottom: 0.8rem;"></i>
-                <p>Đang tải lịch sử đơn hàng từ Microsoft SQL Server...</p>
+                <p>Đang tải lịch sử đơn hàng...</p>
               </div>
             </div>
           </div>
@@ -194,7 +193,7 @@
               </div>
 
               <button type="submit" id="profile-save-btn" class="btn-primary-luxury" style="padding: 0.8rem 1.8rem; width: fit-content; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-                <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi Vào CSDL
+                <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi
               </button>
             </form>
           </div>
@@ -349,14 +348,14 @@
         if (!container) return;
 
         if (countText) {
-          countText.textContent = `Hiển thị ${orders.length} đơn hàng trong CSDL`;
+          countText.textContent = '';
         }
 
         if (!orders.length) {
           container.innerHTML = `
             <div style="background: #fff; border: 1px solid var(--border-light); border-radius: 12px; padding: 2.5rem; text-align: center; color: var(--text-muted);">
               <i class="fa-solid fa-bag-shopping" style="font-size: 2.5rem; color: var(--border-light); margin-bottom: 0.8rem;"></i>
-              <p>Quý khách chưa có đơn hàng nào trong Cơ Sở Dữ Liệu.</p>
+              <p>Quý khách chưa có đơn hàng nào.</p>
               <a href="index.html#catalog" class="btn-primary-luxury" style="display: inline-block; margin-top: 1rem; padding: 0.6rem 1.4rem; text-decoration: none; font-size: 0.85rem;">Khám Phá Bộ Sưu Tập</a>
             </div>
           `;
@@ -455,8 +454,8 @@
               document.getElementById('address-phone-text').textContent = 'SĐT: ' + phone;
 
               window.showLuxuryAlert({
-                title: 'Lưu CSDL Thành Công',
-                message: 'Thông tin của Quý khách đã được cập nhật trực tiếp vào <strong>Microsoft SQL Server (AURALIE_FashionDB)</strong>!',
+                title: 'Cập Nhật Thành Công',
+                message: 'Thông tin của Quý khách đã được cập nhật thành công!',
                 type: 'success',
                 btnText: 'Hoàn Tất',
                 autoCloseMs: 2500
