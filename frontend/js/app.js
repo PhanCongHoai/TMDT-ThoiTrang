@@ -81,12 +81,12 @@ window.alert = function(msg) {
 document.addEventListener('DOMContentLoaded', () => {
   
   // 1. Mobile Menu Drawer Toggle
-  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-  const closeDrawerBtn = document.getElementById('close-drawer-btn');
+  const mobileMenuToggles = document.querySelectorAll('#mobile-menu-toggle, .mobile-menu-btn');
+  const closeDrawerBtns = document.querySelectorAll('#close-drawer-btn, #mobile-menu-close, .close-drawer-btn, .drawer-close-btn');
   const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
   const drawerOverlay = document.getElementById('drawer-overlay');
 
-  if (mobileMenuToggle && mobileNavDrawer && drawerOverlay) {
+  if (mobileNavDrawer && drawerOverlay) {
     const openDrawer = () => {
       mobileNavDrawer.classList.add('open');
       drawerOverlay.classList.add('active');
@@ -99,9 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = '';
     };
 
-    mobileMenuToggle.addEventListener('click', openDrawer);
-    if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
+    mobileMenuToggles.forEach(btn => btn.addEventListener('click', openDrawer));
+    closeDrawerBtns.forEach(btn => btn.addEventListener('click', closeDrawer));
     drawerOverlay.addEventListener('click', closeDrawer);
+
+    // Also close drawer when clicking on internal hash links (e.g. #catalog)
+    mobileNavDrawer.querySelectorAll('a[href^="#"], a[href*="#"]').forEach(link => {
+      link.addEventListener('click', () => {
+        closeDrawer();
+      });
+    });
   }
 
   // 2. Mobile Search Overlay Toggle
@@ -1845,7 +1852,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 11. User Profile Dropdown Toggle & Dynamic Role-Based Status
   const userRole = sessionStorage.getItem('auralie_token') ? localStorage.getItem('userRole') : null;
   const userName = localStorage.getItem('userName') || 'Bà Nguyễn Thanh Vân';
-  const userMenuTriggers = document.querySelectorAll('#user-menu-trigger');
+  const userMenuTriggers = document.querySelectorAll('#user-menu-trigger, #user-dropdown-trigger, .desktop-user-btn');
 
   // Cập nhật thông tin Header Dropdown theo trạng thái đăng nhập
   document.querySelectorAll('.user-dropdown-menu').forEach(menu => {
@@ -1911,7 +1918,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   userMenuTriggers.forEach(trigger => {
-    const dropdown = trigger.nextElementSibling;
+    const dropdown = trigger.nextElementSibling || trigger.parentElement?.querySelector('.user-dropdown-menu');
     if (dropdown && dropdown.classList.contains('user-dropdown-menu')) {
       trigger.addEventListener('click', (e) => {
         if (window.innerWidth <= 1024) {
@@ -1923,7 +1930,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.user-dropdown-wrapper')) {
+    if (!e.target.closest('.user-dropdown-wrapper') && !e.target.closest('.user-dropdown-container')) {
       document.querySelectorAll('.user-dropdown-menu').forEach(menu => menu.classList.remove('active'));
     }
   });

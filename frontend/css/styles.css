@@ -1006,9 +1006,9 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
   color: #777;
 }
 
-/* MOBILE BOTTOM NAV - LUXURY GLASSMORPHISM EDITION */
+/* MOBILE BOTTOM NAV - HIDDEN PER USER SPEC (REPLACED BY TOP HEADER USER ACTIONS & EXPANDED DRAWER) */
 .m-bottom-nav {
-  display: none;
+  display: none !important;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1134,8 +1134,10 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
   transform: translateX(-100%);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 5px 0 30px rgba(0,0,0,0.25);
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1.25rem 2rem;
   will-change: transform;
+  display: flex;
+  flex-direction: column;
 }
 
 .mobile-nav-drawer.open {
@@ -1146,8 +1148,8 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -1175,21 +1177,69 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
 
 .mobile-nav-links {
   list-style: none;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+  padding-right: 4px;
 }
 
 .mobile-nav-links li {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .mobile-nav-links a {
   text-decoration: none;
   color: var(--text-main);
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.85rem;
   transition: color 0.2s ease, transform 0.2s ease;
+  padding: 0.3rem 0;
+}
+
+.mobile-nav-links a:hover,
+.mobile-nav-links a.active {
+  color: var(--accent-gold);
+}
+
+.mobile-nav-links a i {
+  width: 22px;
+  text-align: center;
+  color: var(--accent-gold);
+  font-size: 1rem;
+}
+
+.drawer-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 0.75rem 0 !important;
+}
+
+.drawer-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin: 0.75rem 0 0.4rem;
+  padding-left: 2px;
+}
+
+.mobile-nav-links .dropdown-badge {
+  margin-left: auto;
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--primary-dark);
+  color: #fff;
+  font-weight: 600;
+}
+
+.mobile-nav-links .dropdown-badge.gold {
+  background: var(--accent-gold);
+  color: #121212;
 }
 
 .mobile-nav-links a:active {
@@ -1299,9 +1349,14 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
   .mobile-search-btn {
     display: inline-flex !important;
   }
-  .desktop-user-btn,
   .user-dropdown-wrapper {
-    display: none !important;
+    display: inline-flex !important;
+    position: relative;
+  }
+  .desktop-user-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
   }
   .d-logo {
     font-size: 1.4rem;
@@ -1338,9 +1393,9 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
 }
 
 @media (max-width: 768px) {
-  /* 5. ADD BODY PADDING BUFFER FOR MOBILE BOTTOM NAV WITH SAFE AREA */
+  /* 5. REMOVE BOTTOM NAV BUFFER FOR STREAMLINED MOBILE VIEWPORT */
   body {
-    padding-bottom: calc(75px + env(safe-area-inset-bottom, 12px)) !important;
+    padding-bottom: 0 !important;
   }
 
   html {
@@ -1376,26 +1431,51 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
     letter-spacing: 1.5px;
   }
   .d-user-actions {
-    gap: 0.5rem;
+    gap: 0.35rem;
+    display: flex;
+    align-items: center;
   }
   .d-btn-icon {
     font-size: 1.15rem;
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
   .mobile-menu-btn,
   .mobile-search-btn {
-    min-width: 44px;
-    min-height: 44px;
+    min-width: 40px;
+    min-height: 40px;
+    width: 40px;
+    height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
-  .desktop-user-btn,
-  .user-dropdown-wrapper,
+  .user-dropdown-wrapper {
+    display: inline-flex !important;
+    position: relative;
+  }
+  .desktop-user-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  .user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 290px;
+    max-width: calc(100vw - 20px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+    z-index: 2500;
+  }
+  .user-dropdown-menu::before {
+    right: 14px;
+  }
   button[onclick*="openAIImageSearchModal"] {
     display: none !important;
   }
@@ -1565,7 +1645,7 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
   }
 
   .m-bottom-nav {
-    display: flex;
+    display: none !important;
   }
 
   .responsive-grid {
