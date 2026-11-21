@@ -16,16 +16,16 @@
 
   <style>
     :root {
-      --shp-bg: #0f172a;
-      --shp-card-bg: #1e293b;
-      --shp-card-border: #334155;
-      --shp-primary: #38bdf8;
-      --shp-accent: #f59e0b;
+      --shp-bg: #f8fafc;
+      --shp-card-bg: #ffffff;
+      --shp-card-border: #e2e8f0;
+      --shp-primary: #0284c7;
+      --shp-accent: #d97706;
       --shp-success: #10b981;
       --shp-danger: #ef4444;
-      --shp-text-main: #f8fafc;
-      --shp-text-muted: #94a3b8;
-      --shp-gold: #c5a880;
+      --shp-text-main: #0f172a;
+      --shp-text-muted: #64748b;
+      --shp-gold: #b45309;
     }
 
     * {
@@ -55,7 +55,7 @@
     /* Top Navigation Bar */
     .shp-header {
       width: 100%;
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
@@ -65,6 +65,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .shp-brand {
@@ -91,7 +92,7 @@
       font-size: 1rem;
       font-weight: 700;
       letter-spacing: 0.5px;
-      color: #ffffff;
+      color: var(--shp-text-main);
       line-height: 1.2;
     }
 
@@ -113,9 +114,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #34d399;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #059669;
       font-size: 0.72rem;
       font-weight: 700;
       padding: 4px 10px;
@@ -148,7 +149,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     }
 
     .driver-avatar-wrap {
@@ -160,12 +161,12 @@
       height: 52px;
       border-radius: 50%;
       border: 2px solid var(--shp-gold);
-      background: #334155;
+      background: #f1f5f9;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.3rem;
-      color: #f8fafc;
+      color: #0f172a;
     }
 
     .driver-rank-badge {
@@ -192,7 +193,7 @@
     .driver-name {
       font-size: 1.02rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--shp-text-main);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -209,14 +210,14 @@
 
     .driver-rating {
       font-size: 0.75rem;
-      color: #fbbf24;
+      color: #d97706;
       font-weight: 700;
       margin-top: 4px;
     }
 
     .driver-switch-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #f1f5f9;
+      border: 1px solid var(--shp-card-border);
       color: var(--shp-text-main);
       padding: 8px 12px;
       border-radius: 10px;
@@ -227,7 +228,7 @@
     }
 
     .driver-switch-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: #e2e8f0;
     }
 
     /* KPI Summary Strip */
@@ -246,11 +247,12 @@
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     }
 
     .shp-kpi-box:hover, .shp-kpi-box.active {
       border-color: var(--shp-primary);
-      background: #253348;
+      background: #f0f9ff;
     }
 
     .kpi-title {
@@ -266,13 +268,13 @@
       font-weight: 800;
       font-family: var(--font-sans);
       font-variant-numeric: tabular-nums lining-nums;
-      color: #fff;
+      color: var(--shp-text-main);
     }
 
-    .kpi-num.ready { color: #f59e0b; }
-    .kpi-num.shipping { color: #38bdf8; }
-    .kpi-num.completed { color: #10b981; }
-    .kpi-num.cod { color: #fbbf24; font-size: 0.95rem; }
+    .kpi-num.ready { color: #d97706; }
+    .kpi-num.shipping { color: #0284c7; }
+    .kpi-num.completed { color: #059669; }
+    .kpi-num.cod { color: #b45309; font-size: 0.95rem; }
 
     /* Action bar */
     .shp-action-bar {
@@ -301,7 +303,7 @@
       border: 1px solid var(--shp-card-border);
       border-radius: 10px;
       padding: 10px 12px 10px 36px;
-      color: #fff;
+      color: var(--shp-text-main);
       font-size: 0.85rem;
       font-family: inherit;
     }
@@ -309,6 +311,7 @@
     .shp-search-input:focus {
       outline: none;
       border-color: var(--shp-primary);
+      background: #ffffff;
     }
 
     .btn-create-sim {
@@ -335,7 +338,7 @@
     /* Tabs Filter Bar */
     .shp-tabs {
       display: flex;
-      background: var(--shp-card-bg);
+      background: #f1f5f9;
       border: 1px solid var(--shp-card-border);
       border-radius: 12px;
       padding: 4px;
@@ -367,21 +370,23 @@
     }
 
     .shp-tab-btn.active {
-      background: var(--shp-primary);
-      color: #0f172a;
+      background: #ffffff;
+      color: var(--shp-text-main);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
       font-weight: 700;
     }
 
     .tab-counter {
-      background: rgba(255, 255, 255, 0.2);
+      background: #e2e8f0;
+      color: #475569;
       padding: 1px 6px;
       border-radius: 10px;
       font-size: 0.7rem;
     }
 
     .shp-tab-btn.active .tab-counter {
-      background: #0f172a;
-      color: #fff;
+      background: var(--shp-primary);
+      color: #ffffff;
     }
 
     /* Order Card Component */
@@ -391,13 +396,13 @@
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
       transition: transform 0.2s ease, border-color 0.2s ease;
       position: relative;
     }
 
     .shp-order-card:hover {
-      border-color: rgba(56, 189, 248, 0.4);
+      border-color: rgba(2, 132, 199, 0.4);
     }
 
     .card-top {
@@ -417,7 +422,7 @@
     .order-code-title {
       font-size: 0.95rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--shp-text-main);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -444,31 +449,31 @@
     .status-badge.ready {
       background: rgba(245, 158, 11, 0.15);
       border: 1px solid rgba(245, 158, 11, 0.4);
-      color: #fbbf24;
+      color: #b45309;
     }
 
     .status-badge.shipping {
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.12);
+      border: 1px solid rgba(2, 132, 199, 0.35);
+      color: #0284c7;
     }
 
     .status-badge.completed {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      color: #34d399;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #059669;
     }
 
     .status-badge.cancelled {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #f87171;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #dc2626;
     }
 
     /* Customer Info Block */
     .cust-info-block {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: #f8fafc;
+      border: 1px solid var(--shp-card-border);
       border-radius: 12px;
       padding: 12px;
       margin-bottom: 12px;
@@ -484,7 +489,7 @@
     .cust-name {
       font-size: 0.92rem;
       font-weight: 700;
-      color: #f1f5f9;
+      color: var(--shp-text-main);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -511,7 +516,7 @@
 
     .cust-address {
       font-size: 0.82rem;
-      color: #cbd5e1;
+      color: #475569;
       line-height: 1.4;
       display: flex;
       align-items: flex-start;
@@ -530,7 +535,7 @@
       justify-content: space-between;
       font-size: 0.75rem;
       color: var(--shp-text-muted);
-      border-top: 1px dashed rgba(255, 255, 255, 0.08);
+      border-top: 1px dashed var(--shp-card-border);
       padding-top: 8px;
     }
 
@@ -544,7 +549,7 @@
     }
 
     .route-eta {
-      color: #fbbf24;
+      color: #d97706;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -563,13 +568,13 @@
     }
 
     .payment-strip.cod {
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.35);
+      background: #fef3c7;
+      border: 1px solid #fde68a;
     }
 
     .payment-strip.paid {
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
     }
 
     .pay-label {
@@ -580,8 +585,8 @@
       gap: 6px;
     }
 
-    .payment-strip.cod .pay-label { color: #f59e0b; }
-    .payment-strip.paid .pay-label { color: #34d399; }
+    .payment-strip.cod .pay-label { color: #b45309; }
+    .payment-strip.paid .pay-label { color: #047857; }
 
     .pay-amount {
       font-size: 1.05rem;
@@ -589,8 +594,8 @@
       font-variant-numeric: tabular-nums lining-nums;
     }
 
-    .payment-strip.cod .pay-amount { color: #fbbf24; }
-    .payment-strip.paid .pay-amount { color: #10b981; }
+    .payment-strip.cod .pay-amount { color: #b45309; }
+    .payment-strip.paid .pay-amount { color: #047857; }
 
     /* Items Toggle */
     .items-accordion {
@@ -613,7 +618,8 @@
 
     .items-list {
       display: none;
-      background: rgba(15, 23, 42, 0.4);
+      background: #f8fafc;
+      border: 1px solid var(--shp-card-border);
       border-radius: 8px;
       padding: 8px 12px;
       margin-top: 8px;
@@ -628,8 +634,8 @@
       justify-content: space-between;
       font-size: 0.75rem;
       padding: 4px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      color: #cbd5e1;
+      border-bottom: 1px solid var(--shp-card-border);
+      color: #334155;
     }
 
     .item-row:last-child {
@@ -667,31 +673,31 @@
     }
 
     .btn-pickup {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      color: #000;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
     }
 
     .btn-simulate-gps {
-      background: #334155;
-      color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
     }
 
     .btn-simulate-gps:hover {
-      background: #475569;
+      background: #bae6fd;
     }
 
     .btn-deliver {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #fff;
+      color: #ffffff;
       box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
     }
 
     .btn-fail {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #f87171;
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
       padding: 10px;
       font-size: 0.75rem;
     }
@@ -708,13 +714,13 @@
 
     .shp-empty i {
       font-size: 3rem;
-      color: #475569;
+      color: #94a3b8;
       margin-bottom: 12px;
     }
 
     .shp-empty h3 {
       font-size: 1.1rem;
-      color: #f1f5f9;
+      color: var(--shp-text-main);
       margin: 0 0 6px 0;
     }
 
@@ -730,13 +736,14 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(16px);
       border-top: 1px solid var(--shp-card-border);
       display: flex;
       justify-content: space-around;
       padding: 8px 12px 14px 12px;
       z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
     }
 
     .nav-item {
@@ -765,8 +772,8 @@
     .shp-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
       z-index: 200;
       display: none;
       align-items: center;
@@ -787,7 +794,7 @@
       max-height: 90vh;
       overflow-y: auto;
       padding: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
       animation: modal-up 0.25s ease-out;
     }
 
@@ -808,7 +815,7 @@
     .modal-title {
       font-size: 1.1rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--shp-text-main);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -825,7 +832,7 @@
 
     /* GPS Animation Screen */
     .gps-map-box {
-      background: #0f172a;
+      background: #f8fafc;
       border: 1px solid var(--shp-card-border);
       border-radius: 14px;
       height: 180px;
@@ -841,8 +848,8 @@
       position: absolute;
       inset: 0;
       background-image: 
-        linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(2, 132, 199, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2, 132, 199, 0.08) 1px, transparent 1px);
       background-size: 20px 20px;
     }
 
@@ -851,7 +858,7 @@
       left: 15%;
       right: 15%;
       height: 4px;
-      background: #334155;
+      background: #cbd5e1;
       border-radius: 2px;
     }
 
@@ -861,7 +868,7 @@
       top: 0;
       bottom: 0;
       width: 0%;
-      background: linear-gradient(90deg, #38bdf8, #10b981);
+      background: linear-gradient(90deg, #0284c7, #10b981);
       transition: width 0.3s linear;
     }
 
@@ -872,15 +879,15 @@
       transform: translateX(-50%);
       width: 36px;
       height: 36px;
-      background: #38bdf8;
+      background: #0284c7;
       border: 2px solid #fff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #0f172a;
+      color: #ffffff;
       font-size: 0.9rem;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+      box-shadow: 0 0 16px rgba(2, 132, 199, 0.5);
       transition: left 0.3s linear;
       z-index: 2;
     }
@@ -944,9 +951,9 @@
       position: absolute;
       top: 8px;
       right: 8px;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      border: none;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid var(--shp-card-border);
       padding: 4px 8px;
       border-radius: 6px;
       font-size: 0.7rem;
@@ -968,14 +975,14 @@
       top: 20px;
       left: 50%;
       transform: translateX(-50%) translateY(-50px);
-      background: #1e293b;
-      border: 1px solid var(--shp-primary);
+      background: #0f172a;
+      border: 1px solid var(--shp-card-border);
       color: #fff;
       padding: 12px 20px;
       border-radius: 30px;
       font-size: 0.85rem;
       font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
       z-index: 300;
       opacity: 0;
       transition: all 0.3s ease;
@@ -1150,27 +1157,27 @@
         </div>
       </div>
 
-      <div style="background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
+      <div style="background: #f8fafc; border: 1px solid var(--shp-card-border); border-radius: 12px; padding: 12px; margin-bottom: 16px;">
         <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
           <span style="color:var(--shp-text-muted);">Đơn Hàng:</span>
-          <strong id="gps-order-code" style="color:#fff;">AUR-...</strong>
+          <strong id="gps-order-code" style="color:var(--shp-text-main);">AUR-...</strong>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
           <span style="color:var(--shp-text-muted);">Điểm đến:</span>
-          <strong id="gps-dest-address" style="color:#38bdf8; text-align: right; max-width: 65%;">Địa chỉ khách</strong>
+          <strong id="gps-dest-address" style="color:var(--shp-primary); text-align: right; max-width: 65%;">Địa chỉ khách</strong>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
           <span style="color:var(--shp-text-muted);">Khoảng cách còn lại:</span>
-          <strong id="gps-remaining-km" style="color:#fbbf24; font-variant-numeric: tabular-nums lining-nums;">2.4 km</strong>
+          <strong id="gps-remaining-km" style="color:#d97706; font-variant-numeric: tabular-nums lining-nums;">2.4 km</strong>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
           <span style="color:var(--shp-text-muted);">Tiến độ di chuyển:</span>
-          <strong id="gps-percent-text" style="color:#10b981; font-variant-numeric: tabular-nums lining-nums;">0%</strong>
+          <strong id="gps-percent-text" style="color:#059669; font-variant-numeric: tabular-nums lining-nums;">0%</strong>
         </div>
       </div>
 
       <div style="display: flex; gap: 8px;">
-        <button class="btn-action" style="flex:1; background:#334155; color:#fff;" onclick="startGpsSimulation()" id="btn-start-gps">
+        <button class="btn-action" style="flex:1; background:#f1f5f9; color:var(--shp-text-main); border: 1px solid var(--shp-card-border);" onclick="startGpsSimulation()" id="btn-start-gps">
           <i class="fa-solid fa-play"></i> Bắt Đầu Chạy
         </button>
         <button class="btn-action btn-deliver" style="flex:1;" onclick="proceedToDeliverFromGps()" id="btn-gps-deliver" disabled>
@@ -1192,12 +1199,12 @@
         <button class="modal-close-btn" onclick="closeDeliverModal()">&times;</button>
       </div>
 
-      <div id="deliver-summary-box" style="background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+      <div id="deliver-summary-box" style="background: #f8fafc; border: 1px solid var(--shp-card-border); border-radius: 12px; padding: 12px; margin-bottom: 14px;">
         <!-- Filled by JS -->
       </div>
 
       <div style="margin-bottom: 12px;">
-        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
           <i class="fa-solid fa-camera"></i> Ảnh Gói Hàng Bàn Giao (Giả lập POD):
         </label>
         <div style="display: flex; gap: 8px; align-items: center;">
@@ -1209,7 +1216,7 @@
       </div>
 
       <div style="margin-bottom: 14px;">
-        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
           <i class="fa-solid fa-signature"></i> Chữ Ký Điện Tử Khách Hàng (Ký trực tiếp):
         </label>
         <div class="sig-canvas-wrap">
@@ -1220,7 +1227,7 @@
       </div>
 
       <div style="margin-bottom: 16px;">
-        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #cbd5e1; margin-bottom: 6px;">
+        <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
           Ghi chú bàn giao:
         </label>
         <input type="text" id="delivery-note" class="shp-search-input" value="Khách hàng đã kiểm tra kỹ bao bì Haute Couture và hài lòng." placeholder="Nhập ghi chú (tùy chọn)">
@@ -1249,17 +1256,17 @@
       </p>
 
       <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
-        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 8px;">
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: #f8fafc; border: 1px solid var(--shp-card-border); padding: 10px; border-radius: 8px; color: var(--shp-text-main);">
           <input type="radio" name="fail_reason" value="Khách bận họp hẹn giao lại vào buổi chiều" checked>
           <span>Khách bận họp, hẹn giao lại vào buổi chiều</span>
         </label>
-        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 8px;">
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: #f8fafc; border: 1px solid var(--shp-card-border); padding: 10px; border-radius: 8px; color: var(--shp-text-main);">
           <input type="radio" name="fail_reason" value="Thuê bao không liên lạc được sau 3 cuộc gọi">
           <span>Thuê bao không nghe máy (đã gọi 3 lần)</span>
         </label>
-        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 8px;">
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 0.82rem; cursor: pointer; background: #f8fafc; border: 1px solid var(--shp-card-border); padding: 10px; border-radius: 8px; color: var(--shp-text-main);">
           <input type="radio" name="fail_reason" value="Khách từ chối nhận hàng do thay đổi kế hoạch" data-action="cancel">
-          <span style="color:#f87171;">Khách từ chối nhận hàng (Hủy đơn & hoàn kho)</span>
+          <span style="color:#dc2626;">Khách từ chối nhận hàng (Hủy đơn & hoàn kho)</span>
         </label>
       </div>
 

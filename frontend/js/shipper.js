@@ -282,13 +282,13 @@
             ` : ''}
 
             ${isCompleted ? `
-              <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 10px; text-align: center; color: #34d399; font-size: 0.8rem; font-weight: 700;">
+              <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 10px; text-align: center; color: #059669; font-size: 0.8rem; font-weight: 700;">
                 <i class="fa-solid fa-badge-check"></i> Đơn hàng đã giao thành công và hoàn tất đối soát!
               </div>
             ` : ''}
 
             ${isCancelled ? `
-              <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 10px; text-align: center; color: #f87171; font-size: 0.8rem; font-weight: 700;">
+              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 10px; text-align: center; color: #dc2626; font-size: 0.8rem; font-weight: 700;">
                 <i class="fa-solid fa-triangle-exclamation"></i> Đơn hàng đã hủy và hoàn trả về kho AURALIÈ.
               </div>
             ` : ''}
@@ -436,17 +436,17 @@
     summaryBox.innerHTML = `
       <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.85rem;">
         <span style="color:var(--shp-text-muted);">Đơn Hàng:</span>
-        <strong style="color:#fff;">${order.orderCode}</strong>
+        <strong style="color:var(--shp-text-main);">${order.orderCode}</strong>
       </div>
       <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.85rem;">
         <span style="color:var(--shp-text-muted);">Khách hàng:</span>
-        <strong style="color:#f1f5f9;">${order.customerName} (${order.phoneNumber})</strong>
+        <strong style="color:var(--shp-text-main);">${order.customerName} (${order.phoneNumber})</strong>
       </div>
       <div style="display:flex; justify-content:space-between; font-size:0.92rem; border-top:1px dashed var(--shp-card-border); padding-top:8px;">
-        <span style="color:${isCod ? '#fbbf24' : '#34d399'}; font-weight:700;">
+        <span style="color:${isCod ? '#b45309' : '#047857'}; font-weight:700;">
           ${isCod ? 'TIỀN MẶT COD CẦN THU:' : 'HÌNH THỨC THANH TOÁN:'}
         </span>
-        <strong style="color:${isCod ? '#fbbf24' : '#34d399'}; font-size:1.1rem; font-variant-numeric:tabular-nums lining-nums;">
+        <strong style="color:${isCod ? '#b45309' : '#047857'}; font-size:1.1rem; font-variant-numeric:tabular-nums lining-nums;">
           ${isCod ? totalFormatted : 'ĐÃ TRẢ (0 ₫)'}
         </strong>
       </div>
