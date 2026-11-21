@@ -46,6 +46,7 @@ export default defineConfig({
         shippingPolicy: resolve(__dirname, 'shipping-policy.html'),
         privacyPolicy: resolve(__dirname, 'privacy-policy.html'),
         shipper: resolve(__dirname, 'shipper.html'),
+        adminDispatch: resolve(__dirname, 'admin-dispatch.html'),
       }
     }
   }
