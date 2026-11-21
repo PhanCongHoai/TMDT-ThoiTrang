@@ -1,0 +1,130 @@
+@startuml UC01_CUSTOMER_STOREFRONT
+' ====================================================================
+' UML 2.x Use Case Diagram - AURALIÈ Haute Couture Customer Storefront
+' Reverse-Engineered from Actual Source Code (Node.js/SQL Server/Frontend)
+' Quy chuẩn thiết kế: Đơn sắc đen trắng (Monochrome Black & White)
+' ====================================================================
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 11
+skinparam arrowColor #000000
+skinparam arrowThickness 1.2
+skinparam actorBorderColor #000000
+skinparam actorBackgroundColor #FFFFFF
+skinparam usecaseBorderColor #000000
+skinparam usecaseBackgroundColor #FFFFFF
+skinparam usecaseBorderThickness 1.5
+skinparam rectangleBorderColor #000000
+skinparam rectangleBackgroundColor #FFFFFF
+skinparam rectangleBorderThickness 2.0
+skinparam linetype ortho
+left to right direction
+
+' --- ACTORS ---
+actor "Khách Hàng Chưa Đăng Nhập\n(Guest / Visitor)" as Guest
+actor "Khách Hàng Đã Đăng Nhập\n(Registered Customer / VIP)" as Customer
+actor "Hệ Thống Thanh Toán SePay\n(External Payment Gateway)" as SePay <<Secondary System>>
+
+' Quan hệ thừa kế (Generalization): Customer kế thừa từ Guest
+Customer --|> Guest
+
+' --- SYSTEM BOUNDARY ---
+rectangle "Hệ Thống AURALIÈ Haute Couture — Phân Hệ Khách Hàng (Customer Storefront)" as SystemBoundary {
+
+  ' GÓI 1: KHÁM PHÁ & DUYỆT SẢN PHẨM
+  package "Khám Phá & Duyệt Sản Phẩm (Discovery)" {
+    usecase "UC01: Duyệt Danh Mục Sản Phẩm" as UC01
+    usecase "UC02: Tìm Kiếm & Lọc Sản Phẩm" as UC02
+    usecase "UC03: Xem Chi Tiết Sản Phẩm" as UC03
+    usecase "UC04: Tra Cứu Bảng Size May Đo" as UC04
+    usecase "UC05: Xem Đánh Giá & Số Sao" as UC05
+    usecase "UC06: Khám Phá Tạp Chí Thời Trang (Blog)" as UC06
+    usecase "UC07: Trò Chuyện Với AI Stylist" as UC07
+  }
+
+  ' GÓI 2: ĐẶT HÀNG & THANH TOÁN
+  package "Giỏ Hàng & Thanh Toán (Cart & Checkout)" {
+    usecase "UC08: Quản Lý Giỏ Hàng" as UC08
+    usecase "UC09: Đặt Hàng & Thanh Toán" as UC09
+    usecase "UC10: Xác Thực Thông Tin Giao Nhận" as UC10
+    usecase "UC11: Áp Dụng Mã Ưu Đãi (Coupon)" as UC11
+    usecase "UC12: Thanh Toán Chuyển Khoản QR (SePay)" as UC12
+    usecase "UC13: Thanh Toán Tiền Mặt Khi Nhận (COD)" as UC13
+  }
+
+  ' GÓI 3: DANH SÁCH YÊU THÍCH & TƯƠNG TÁC
+  package "Danh Sách Yêu Thích & Tương Tác" {
+    usecase "UC14: Quản Lý Danh Sách Yêu Thích (Wishlist)" as UC14
+    usecase "UC15: Gửi Yêu Cầu Tư Vấn May Đo (Contact)" as UC15
+    usecase "UC16: Đăng Ký Nhận Bản Tin VIP (Newsletter)" as UC16
+  }
+
+  ' GÓI 4: ĐỊNH DANH & XÁC THỰC
+  package "Tài Khoản & Định Danh (Authentication)" {
+    usecase "UC17: Đăng Ký Tài Khoản" as UC17
+    usecase "UC18: Đăng Nhập Hệ Thống" as UC18
+    usecase "UC19: Quên & Đặt Lại Mật Khẩu" as UC19
+    usecase "UC20: Đăng Xuất" as UC20
+  }
+
+  ' GÓI 5: HỒ SƠ & QUẢN LÝ ĐƠN HÀNG CÁ NHÂN
+  package "Hồ Sơ Cá Nhân & Đơn Hàng (Customer Profile)" {
+    usecase "UC21: Quản Lý Thông Tin Cá Nhân" as UC21
+    usecase "UC22: Tra Cứu Lịch Sử Đơn Hàng" as UC22
+    usecase "UC23: Hủy Đơn Hàng Chờ Xử Lý" as UC23
+    usecase "UC24: Viết Đánh Giá Sản Phẩm Đã Mua" as UC24
+    usecase "UC25: Tra Cứu Điểm & Hạng Thành Viên VIP" as UC25
+    usecase "UC26: Tra Cứu Thẻ Bảo Hành Phom Dáng" as UC26
+  }
+}
+
+' --- ASSOCIATIONS (GUEST) ---
+Guest --> UC01
+Guest --> UC02
+Guest --> UC03
+Guest --> UC05
+Guest --> UC06
+Guest --> UC07
+Guest --> UC08
+Guest --> UC15
+Guest --> UC16
+Guest --> UC17
+Guest --> UC18
+Guest --> UC19
+
+' --- ASSOCIATIONS (REGISTERED CUSTOMER) ---
+Customer --> UC09
+Customer --> UC14
+Customer --> UC20
+Customer --> UC21
+Customer --> UC22
+Customer --> UC24
+Customer --> UC25
+Customer --> UC26
+
+' --- ASSOCIATIONS (EXTERNAL SYSTEM) ---
+UC12 <-- SePay : <<Webhook Xác Nhận>>
+
+' --- INCLUDE & EXTEND RELATIONSHIPS ---
+' Bảng size may đo extend chi tiết sản phẩm khi khách bấm "Bảng Size"
+UC04 .> UC03 : <<extend>>
+
+' Đặt hàng bắt buộc include Xác thực thông tin giao nhận
+UC09 .> UC10 : <<include>>
+
+' Áp dụng mã ưu đãi extend đặt hàng (khi khách có mã)
+UC11 .> UC09 : <<extend>>
+
+' Thanh toán QR SePay extend đặt hàng (khi chọn phương thức QR)
+UC12 .> UC09 : <<extend>>
+
+' Thanh toán COD extend đặt hàng (khi chọn phương thức COD)
+UC13 .> UC09 : <<extend>>
+
+' Hủy đơn hàng extend Lịch sử đơn hàng (khi đơn ở trạng thái PENDING)
+UC23 .> UC22 : <<extend>>
+
+@enduml
