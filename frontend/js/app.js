@@ -1167,7 +1167,53 @@ document.addEventListener('DOMContentLoaded', () => {
     window.activeModalProductPrice = Number(rawPrice);
     window.activeModalProductName = title;
     window.activeModalProductCategory = category;
+    window.activeModalProductCatSlug = card.getAttribute('data-cat') || '';
     window.activeModalProductImg = img;
+
+    // Cập nhật các nút Size trong Modal theo đúng danh mục mặt hàng (Không dùng chung size quần áo)
+    const modalSizeBtnsContainer = document.querySelector('.modal-size-btns');
+    const modalSelectedSizeText = document.getElementById('modal-selected-size');
+    const catCheck = (category || '').toLowerCase();
+    const catSlugCheck = (card.getAttribute('data-cat') || '').toLowerCase();
+
+    if (modalSizeBtnsContainer) {
+      let availableSizes = ['S', 'M', 'L', 'XL'];
+      if (catCheck.includes('túi') || catSlugCheck.includes('tui')) {
+        // Túi Xách: Không dùng S/M/L quần áo mà dùng phân khúc kích thước túi
+        availableSizes = ['Petite', 'Classic', 'Grand Tote'];
+      } else if (catCheck.includes('giày') || catSlugCheck.includes('giay') || catCheck.includes('phụ kiện')) {
+        // Giày & Phụ kiện: Dùng size giày EU hoặc kích cỡ thắt lưng
+        if (catCheck.includes('nữ') || title.toLowerCase().includes('nữ') || title.toLowerCase().includes('cao gót') || title.toLowerCase().includes('sandal')) {
+          availableSizes = ['35', '36', '37', '38', '39'];
+        } else {
+          availableSizes = ['39', '40', '41', '42', '43'];
+        }
+      } else if (catCheck.includes('đầm') || catCheck.includes('váy') || catSlugCheck.includes('dam') || catSlugCheck.includes('vay')) {
+        // Đầm dạ hội
+        availableSizes = ['XS', 'S', 'M', 'L'];
+      } else if (catCheck.includes('khoác') || catSlugCheck.includes('khoac')) {
+        // Áo khoác Thu Đông
+        availableSizes = ['S', 'M', 'L', 'XL', 'XXL'];
+      } else {
+        // Áo Vest & Blazer
+        availableSizes = ['S', 'M', 'L', 'XL'];
+      }
+
+      modalSizeBtnsContainer.innerHTML = availableSizes.map((sz, idx) => `
+        <button type="button" class="size-btn ${idx === 1 || (availableSizes.length === 1 && idx === 0) ? 'active' : ''}">${sz}</button>
+      `).join('');
+
+      const defaultSelected = availableSizes[1] || availableSizes[0] || 'M';
+      if (modalSelectedSizeText) modalSelectedSizeText.textContent = defaultSelected;
+
+      modalSizeBtnsContainer.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          modalSizeBtnsContainer.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (modalSelectedSizeText) modalSelectedSizeText.textContent = btn.textContent.trim();
+        });
+      });
+    }
 
     // Cập nhật trạng thái biểu tượng trái tim (Đỏ nếu đã có trong Wishlist)
     if (typeof window.updateModalWishlistButtonState === 'function') {
@@ -1439,16 +1485,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 10.1. SIZE GUIDE MODAL LOGIC (BẢNG QUY ĐỔI KÍCH CỠ CHUẨN AURALIÈ)
+  // 10.1. SIZE GUIDE MODAL LOGIC (BẢNG QUY ĐỔI KÍCH CỠ CHUẨN AURALIÈ THEO TỪNG MẶT HÀNG)
   const sizeGuideModal = document.getElementById('size-guide-modal');
   const openSizeGuideBtn = document.getElementById('open-size-guide-btn');
   const closeSizeGuideModalBtn = document.getElementById('close-size-guide-modal');
   const btnCloseSizeGuide = document.getElementById('btn-close-size-guide');
-  const sizeNavTabs = document.querySelectorAll('.size-nav-tab');
-  const sizeGuideContents = document.querySelectorAll('.size-guide-tab-content');
+
+  // Hàm chuyển Tab Bảng Size tự động dựa theo Danh mục sản phẩm đang xem
+  const switchSizeGuideTabByCategory = (categoryStr) => {
+    const cat = (categoryStr || '').toLowerCase();
+    let targetTabId = 'tab-size-vest';
+    let subtitleText = 'Tiêu chuẩn may đo phom dáng Châu Âu - Dành cho Áo Vest & Blazer';
+
+    if (cat.includes('túi') || cat.includes('bag')) {
+      targetTabId = 'tab-size-bags';
+      subtitleText = 'Quy chuẩn kích thước & sức chứa túi xách da thủ công AURALIÈ (Không dùng size quần áo)';
+    } else if (cat.includes('giày') || cat.includes('phụ kiện') || cat.includes('shoe')) {
+      targetTabId = 'tab-size-shoes';
+      subtitleText = 'Bảng quy đổi kích cỡ Giày da, Giày cao gót & Thắt lưng chuẩn Quốc tế (Không dùng size quần áo)';
+    } else if (cat.includes('đầm') || cat.includes('váy') || cat.includes('gown')) {
+      targetTabId = 'tab-size-gown';
+      subtitleText = 'Tiêu chuẩn số đo 3 vòng & chiều dài đầm dạ hội AURALIÈ Haute Couture';
+    } else if (cat.includes('khoác') || cat.includes('len') || cat.includes('coat')) {
+      targetTabId = 'tab-size-coat';
+      subtitleText = 'Bảng size Áo khoác & Măng tô may đo - Có tính dung sai mặc lót Thu Đông';
+    } else {
+      targetTabId = 'tab-size-vest';
+      subtitleText = 'Tiêu chuẩn may đo phom dáng Châu Âu - Dành cho Áo Vest & Blazer';
+    }
+
+    const tabs = document.querySelectorAll('.size-nav-tab');
+    const panes = document.querySelectorAll('.size-guide-tab-content');
+
+    tabs.forEach(t => {
+      const isTarget = t.getAttribute('data-tab') === targetTabId;
+      t.classList.toggle('active', isTarget);
+      if (isTarget) {
+        try { t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } catch(e) {}
+      }
+    });
+
+    panes.forEach(pane => {
+      pane.classList.toggle('active', pane.id === targetTabId);
+    });
+
+    const subtitleEl = document.querySelector('.size-guide-subtitle');
+    if (subtitleEl) subtitleEl.textContent = subtitleText;
+  };
 
   const openSizeGuideModal = () => {
     if (!sizeGuideModal) return;
+    const currentCat = window.activeModalProductCategory || window.activeModalProductCatSlug || '';
+    switchSizeGuideTabByCategory(currentCat);
     sizeGuideModal.classList.add('active');
     sizeGuideModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -1468,6 +1556,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.openSizeGuideModal = openSizeGuideModal;
   window.closeSizeGuideModal = closeSizeGuideModal;
+  window.switchSizeGuideTabByCategory = switchSizeGuideTabByCategory;
 
   if (openSizeGuideBtn) {
     openSizeGuideBtn.addEventListener('click', (e) => {
@@ -1490,7 +1579,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Size Guide Tab Switching
+  // Size Guide Tab Switching (Hỗ trợ chuyển đổi mượt mà giữa các mặt hàng)
+  const sizeNavTabs = document.querySelectorAll('.size-nav-tab');
+  const sizeGuideContents = document.querySelectorAll('.size-guide-tab-content');
   sizeNavTabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const targetId = tab.getAttribute('data-tab');
@@ -1504,6 +1595,24 @@ document.addEventListener('DOMContentLoaded', () => {
           pane.classList.remove('active');
         }
       });
+
+      // Cập nhật subtitle khi người dùng tự click tab
+      const subtitleEl = document.querySelector('.size-guide-subtitle');
+      if (subtitleEl) {
+        if (targetId === 'tab-size-bags') {
+          subtitleEl.textContent = 'Quy chuẩn kích thước & sức chứa túi xách da thủ công AURALIÈ (Không dùng size quần áo)';
+        } else if (targetId === 'tab-size-shoes') {
+          subtitleEl.textContent = 'Bảng quy đổi kích cỡ Giày da, Giày cao gót & Thắt lưng chuẩn Quốc tế (Không dùng size quần áo)';
+        } else if (targetId === 'tab-size-gown') {
+          subtitleEl.textContent = 'Tiêu chuẩn số đo 3 vòng & chiều dài đầm dạ hội AURALIÈ Haute Couture';
+        } else if (targetId === 'tab-size-coat') {
+          subtitleEl.textContent = 'Bảng size Áo khoác & Măng tô may đo - Có tính dung sai mặc lót Thu Đông';
+        } else if (targetId === 'tab-size-vest') {
+          subtitleEl.textContent = 'Tiêu chuẩn may đo phom dáng Châu Âu - Dành cho Áo Vest & Blazer';
+        } else {
+          subtitleEl.textContent = 'Công cụ tính toán size đề xuất thông minh dựa trên thông số cơ thể';
+        }
+      }
     });
   });
 
