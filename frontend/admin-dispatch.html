@@ -612,6 +612,9 @@
       <a href="index.html" class="dsp-btn-nav" title="Xem giao diện người mua">
         <i class="fa-solid fa-store"></i> Cửa Hàng
       </a>
+      <a href="javascript:void(0)" onclick="if(typeof window.logout==='function'){window.logout();}else{sessionStorage.clear();localStorage.removeItem('userRole');localStorage.removeItem('userName');localStorage.removeItem('userEmail');localStorage.removeItem('userId');window.location.href='login.html';}return false;" class="dsp-btn-nav" style="color: #f87171;" title="Đăng xuất quản trị">
+        <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
+      </a>
     </div>
   </header>
 
@@ -784,8 +787,17 @@
 
   <!-- Scripts -->
   <script src="js/api/client.js"></script>
+  <script src="js/auth.js"></script>
   <script>
     (function () {
+      const userRole = localStorage.getItem('userRole');
+      const token = sessionStorage.getItem('auralie_token');
+      if (userRole !== 'ADMIN' || !token) {
+        alert('Khu vực dành riêng cho Quản Trị Viên! Vui lòng đăng nhập với tài khoản Admin.');
+        window.location.href = 'login.html';
+        return;
+      }
+
       let ordersList = [];
       let currentFilter = 'all';
       let searchQuery = '';
