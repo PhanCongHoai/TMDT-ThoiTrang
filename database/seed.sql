@@ -57,7 +57,47 @@ INSERT INTO products (id, name, slug, description, base_price, category_id, tag)
 (17, 'Royale Gold Buckle Boots', 'royale-gold-buckle-boots', 'Boots da bò cao cổ mũi nhọn kiêu hãnh với điểm nhấn khóa kim loại mạ vàng 18K và đế cao su chống trượt.', 15800000.00, 5, 'BESTSELLER'),
 (18, 'Handcrafted Calfskin Loafers', 'handcrafted-calfskin-loafers', 'Giày Loafer may thủ công từ da bê nguyên tấm màu đen bóng, cấu trúc đế may Goodyear Welted bền bỉ vĩnh cửu.', 11200000.00, 5, 'NEW ARRIVAL'),
 (19, '18K Gold Plated Silk Scarf Ring', '18k-gold-plated-silk-scarf-ring', 'Nhẫn cài khăn lụa mạ vàng 18K đính đá quý tinh tế, món phụ kiện hoàn hảo nâng tầm trang phục dạ hội.', 5500000.00, 5, 'EXCLUSIVE'),
-(20, 'Classic Leather Stiletto Heels', 'classic-leather-stiletto-heels', 'Giày cao gót 9cm da thuộc bóng kiêu kỳ, thiết kế đế giày đỏ tạo điểm nhấn quyến rũ trong từng bước sải.', 13500000.00, 5, 'BESTSELLER')
+(20, 'Classic Leather Stiletto Heels', 'classic-leather-stiletto-heels', 'Giày cao gót 9cm da thuộc bóng kiêu kỳ, thiết kế đế giày đỏ tạo điểm nhấn quyến rũ trong từng bước sải.', 13500000.00, 5, 'BESTSELLER'),
+
+-- Danh mục 1 bổ sung (IDs 21-26)
+(21, 'Ivory Satin Peak-Lapel Blazer', 'ivory-satin-peak-lapel-blazer', 'Áo Blazer lụa satin màu ngà với thiết kế ve nhọn Peak-Lapel hoàng gia, mang lại vẻ thanh lịch và quyền quý tuyệt đối.', 15500000.00, 1, 'NEW ARRIVAL'),
+(22, 'Midnight Navy Pinstripe Suit', 'midnight-navy-pinstripe-suit', 'Bộ Suit kẻ sọc Pinstripe xanh navy cổ điển, may từ sợi lông cừu Merino Super 150s mềm mượt cho quý ông thành đạt.', 18200000.00, 1, 'EXCLUSIVE'),
+(23, 'Burgundy Velvet Evening Tuxedo', 'burgundy-velvet-evening-tuxedo', 'Tuxedo nhung đỏ rượu vang Burgundy quý phái, phối ve sam cổ điển bọc lụa đen huyền thoại cho đêm dạ tiệc gala.', 21000000.00, 1, 'LIMITED'),
+(24, 'Double-Breasted Houndstooth Blazer', 'double-breasted-houndstooth-blazer', 'Áo Blazer họa tiết nanh sói Houndstooth đen trắng kinh điển, thiết kế 6 khuy đôi tôn dáng chuẩn phom Châu Âu.', 16500000.00, 1, 'BESTSELLER'),
+(25, 'Charcoal Grey Virgin Wool Suit', 'charcoal-grey-virgin-wool-suit', 'Bộ Suit màu xám than lịch lãm dệt từ 100% Virgin Wool nhập khẩu vùng Biella nước Ý, chống nhăn và thoáng khí tối ưu.', 17800000.00, 1, 'NEW ARRIVAL'),
+(26, 'Emerald Silk Jacquard Tuxedo', 'emerald-silk-jacquard-tuxedo', 'Áo Tuxedo gấm lụa Jacquard màu ngọc lục bảo dệt nổi hoa văn hoàng gia, khẳng định đẳng cấp xa xỉ tại các sự kiện thượng lưu.', 23500000.00, 1, 'EXCLUSIVE'),
+
+-- Danh mục 2 bổ sung (IDs 27-32)
+(27, 'Royal Scarlet Silk Mermaid Gown', 'royal-scarlet-silk-mermaid-gown', 'Đầm dạ hội đuôi cá màu đỏ Scarlet lộng lẫy bằng lụa Satin Duchesse, tà váy xòe tự nhiên tôn trọn đường cong quyến rũ.', 26800000.00, 2, 'LIMITED'),
+(28, 'Champagne Crystal Plissé Dress', 'champagne-crystal-plisse-dress', 'Đầm dạ tiệc màu Champagne dập ly Plissé đính kết pha lê Swarovski thủ công quanh cổ áo và eo, tỏa sáng kiêu sa.', 22500000.00, 2, 'BESTSELLER'),
+(29, 'Noir One-Shoulder Crepe Gown', 'noir-one-shoulder-crepe-gown', 'Đầm dạ hội lệch vai màu đen tuyền Noir may từ lụa Crepe cao cấp của Pháp, điểm nhấn xẻ tà cao kiêu kỳ và bí ẩn.', 19800000.00, 2, 'NEW ARRIVAL'),
+(30, 'Sapphire Blue Off-Shoulder Gown', 'sapphire-blue-off-shoulder-gown', 'Đầm dạ tiệc trễ vai xanh ngọc Sapphire lộng lẫy, chất liệu lụa Mikado dày dặn đứng phom tạo vẻ uy quyền quý phái.', 24000000.00, 2, 'EXCLUSIVE'),
+(31, 'Pearl White Backless Silk Dress', 'pearl-white-backless-silk-dress', 'Đầm lụa trắng ngọc trai hở lưng chữ V quyến rũ, thiết kế tối giản thanh lịch vượt thời gian cho những buổi tiệc tối sang trọng.', 21200000.00, 2, 'BESTSELLER'),
+(32, 'Rose Gold Metallic Pleated Gown', 'rose-gold-metallic-pleated-gown', 'Đầm dạ hội ánh kim vàng hồng Rose Gold dập ly toàn thân lấp lánh dưới ánh đèn vũ hội, tôn vinh thần thái nữ vương.', 27500000.00, 2, 'LIMITED'),
+
+-- Danh mục 3 bổ sung (IDs 33-38)
+(33, 'Camel Belted Wool Wrap Coat', 'camel-belted-wool-wrap-coat', 'Áo khoác dạ thắt đai màu nâu Camel kinh điển, dệt từ len lông cừu nguyên chất giữ ấm hoàn hảo với phom dáng mềm mại quý phái.', 23500000.00, 3, 'BESTSELLER'),
+(34, 'Oatmeal Cashmere Turtleneck Poncho', 'oatmeal-cashmere-turtleneck-poncho', 'Áo choàng Poncho cổ lọ màu yến mạch Oatmeal đan từ 100% Cashmere Mông Cổ siêu nhẹ, tạo nét phóng khoáng đầy thượng lưu.', 16800000.00, 3, 'NEW ARRIVAL'),
+(35, 'Black Shearling Leather Biker Jacket', 'black-shearling-leather-biker-jacket', 'Áo khoác da cừu lót lông Shearling cao cấp màu đen bóng, thiết kế Biker cá tính giữ ấm tuyệt đối trong mùa băng giá.', 29000000.00, 3, 'EXCLUSIVE'),
+(36, 'Houndstooth Wool Trench Coat', 'houndstooth-wool-trench-coat', 'Áo măng tô dạ họa tiết nanh sói Houndstooth dáng dài hai hàng khuy, ve áo bản to sang trọng chuẩn phong cách quý tộc Anh Quốc.', 25500000.00, 3, 'NEW ARRIVAL'),
+(37, 'Monochrome Quilted Down Parka', 'monochrome-quilted-down-parka', 'Áo phao lông vũ ngỗng trắng dáng dài phong cách Monochrome siêu nhẹ, chống gió và chống nước tối ưu cho các chuyến du lịch tuyết.', 19500000.00, 3, 'BESTSELLER'),
+(38, 'Ivory Double-Breasted Peacoat', 'ivory-double-breasted-peacoat', 'Áo khoác Peacoat dạ ngắn màu ngà Ivory hai hàng khuy mạ vàng, mang lại vẻ trẻ trung, năng động nhưng không kém phần đẳng cấp.', 17500000.00, 3, 'LIMITED'),
+
+-- Danh mục 4 bổ sung (IDs 39-44)
+(39, 'Burgundy Croc-Effect Kelly Bag', 'burgundy-croc-effect-kelly-bag', 'Túi xách phom dáng Kelly màu đỏ rượu vang dập vân cá sấu bóng mờ, quai xách tay cứng cáp cùng khóa xoay kim loại mạ vàng 18K.', 28500000.00, 4, 'LIMITED'),
+(40, 'Noir Quilted Lambskin Flap Bag', 'noir-quilted-lambskin-flap-bag', 'Túi đeo chéo nắp gập chần bông quả trám da cừu non Lambskin siêu mềm, dây xích luồn da kim loại vàng sang trọng vượt thời gian.', 26000000.00, 4, 'BESTSELLER'),
+(41, 'Taupe Grained Calfskin Tote', 'taupe-grained-calfskin-tote', 'Túi Tote da bê hạt màu xám Taupe thanh lịch, ngăn chứa rộng đựng vừa laptop 14 inch, hoàn hảo cho quý cô công sở bận rộn.', 23000000.00, 4, 'NEW ARRIVAL'),
+(42, 'Emerald Velvet Evening Minaudière', 'emerald-velvet-evening-minaudiere', 'Ví dạ tiệc Minaudière hình hộp bọc nhung ngọc lục bảo viền kim loại mạ vàng đính đá, phụ kiện thảm đỏ hoàn mỹ cho quý bà.', 19500000.00, 4, 'EXCLUSIVE'),
+(43, 'Caramel Saddle Leather Shoulder Bag', 'caramel-saddle-leather-shoulder-bag', 'Túi đeo vai phom yên ngựa Saddle màu nâu Caramel cổ điển, đường chỉ viền khâu tay thủ công bằng sáp ong bền bỉ trọn đời.', 21500000.00, 4, 'NEW ARRIVAL'),
+(44, 'Ivory Lizard-Embossed Baguette', 'ivory-lizard-embossed-baguette', 'Túi kẹp nách Baguette da dập vân kỳ đà màu trắng ngà Ivory tinh tế, phong cách Y2K thời thượng kết hợp nét cổ điển Haute Couture.', 20000000.00, 4, 'BESTSELLER'),
+
+-- Danh mục 5 bổ sung (IDs 45-50)
+(45, 'Crystal Embellished Satin Pumps', 'crystal-embellished-satin-pumps', 'Giày cao gót 8cm lụa satin đính cài bông hoa pha lê lấp lánh ở mũi giày, kiệt tác giày cưới và dạ tiệc hoàng gia.', 16500000.00, 5, 'LIMITED'),
+(46, 'Cognac Chelsea Boots Calfskin', 'cognac-chelsea-boots-calfskin', 'Giày bốt Chelsea da bê màu nâu Cognac may thủ công, thun co giãn hai bên tiện lợi cùng đế cao su đúc nguyên khối chống trượt.', 14800000.00, 5, 'BESTSELLER'),
+(47, '24K Gold Monogram Silk Scarf', '24k-gold-monogram-silk-scarf', 'Khăn choàng lụa tơ tằm dệt tay 90x90cm in họa tiết Monogram dát ánh kim vàng 24K, viền khăn cuộn mép thủ công tinh tế.', 6800000.00, 5, 'NEW ARRIVAL'),
+(48, 'Black Suede Knee-High Boots', 'black-suede-knee-high-boots', 'Giày bốt da lộn cổ cao dưới đầu gối màu đen tuyền, gót trụ 7cm vững chãi tôn đôi chân thon dài quyến rũ trong mùa lễ hội.', 18500000.00, 5, 'EXCLUSIVE'),
+(49, 'Bespoke 18K Gold Cufflinks Pair', 'bespoke-18k-gold-cufflinks-pair', 'Cặp khuy măng sét mạ vàng 18K khảm xà cừ tự nhiên chạm khắc logo AURALIÈ độc bản, mảnh ghép hoàn hảo cho áo sơ mi may đo.', 7200000.00, 5, 'NEW ARRIVAL'),
+(50, 'Burgundy Patent Strappy Sandals', 'burgundy-patent-strappy-sandals', 'Sandal cao gót 9cm quai mảnh da bóng màu đỏ mận Burgundy, tôn vinh đôi bàn chân ngọc ngà trong các đêm tiệc mùa hè và thu đông.', 13900000.00, 5, 'BESTSELLER')
 ON CONFLICT (id) DO NOTHING;
 
 -- 5. Thêm Biến thể sản phẩm (Size, Color, Tồn kho, SKU)
