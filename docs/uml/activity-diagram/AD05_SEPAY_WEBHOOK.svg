@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 1188" width="840" height="1188">
+  <defs>
+    <style>
+      .title { font-family: 'Times New Roman', serif; font-size: 19px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .subtitle { font-family: 'Times New Roman', serif; font-size: 12.5px; font-style: italic; fill: #000000; text-anchor: middle; }
+      .act-txt { font-family: 'Times New Roman', serif; font-size: 12.5px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .guard-txt { font-family: 'Times New Roman', serif; font-size: 11.5px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .leg-lbl { font-family: 'Times New Roman', serif; font-size: 11px; fill: #000000; }
+      .line { stroke: #000000; stroke-width: 1.5; fill: none; }
+      .action-rect { fill: #FFFFFF; stroke: #000000; stroke-width: 1.6; rx: 10px; ry: 10px; }
+      .decision-diamond { fill: #FFFFFF; stroke: #000000; stroke-width: 1.6; }
+      .sync-bar { fill: #000000; stroke: #000000; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 Z" fill="#000000"/>
+    </marker>
+  </defs>
+
+  <!-- Trang chuẩn A4 trắng -->
+  <rect x="0" y="0" width="840" height="1188" fill="#FFFFFF"/>
+  <rect x="25" y="25" width="790" height="1138" fill="none" stroke="#000000" stroke-width="1"/>
+
+  <!-- Tiêu đề trang -->
+  <text x="420.0" y="62" class="title">PHÂN HỆ XỬ LÝ SEPAY WEBHOOK THỜI GIAN THỰC</text>
+  <text x="420.0" y="85" class="subtitle">Đặc Tả Quy Trình Hoạt Động (UML 2.x Activity Diagram) | Mã Sơ Đồ: AD05_SEPAY_WEBHOOK | Trang 6 / 7</text>
+  <line x1="50" y1="98" x2="790" y2="98" class="line"/>
+
+  <!-- Khung bao Swimlane -->
+  <rect x="50" y="115" width="740" height="925" fill="none" stroke="#000000" stroke-width="1.8"/>
+  
+        <rect x="50.0" y="115" width="246.66666666666666" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
+        <text x="173.33333333333331" y="136" font-family="'Times New Roman', serif" font-size="13.5px" font-weight="bold" fill="#000000" text-anchor="middle">Cổng SePay Gateway</text>
+        <line x1="50.0" y1="147" x2="50.0" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
+        
+        <rect x="296.66666666666663" y="115" width="246.66666666666666" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
+        <text x="419.99999999999994" y="136" font-family="'Times New Roman', serif" font-size="13.5px" font-weight="bold" fill="#000000" text-anchor="middle">Backend (Webhook Route)</text>
+        <line x1="296.66666666666663" y1="147" x2="296.66666666666663" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
+        
+        <rect x="543.3333333333333" y="115" width="246.66666666666666" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
+        <text x="666.6666666666666" y="136" font-family="'Times New Roman', serif" font-size="13.5px" font-weight="bold" fill="#000000" text-anchor="middle">Cơ Sở Dữ Liệu SQL Server</text>
+        <line x1="543.3333333333333" y1="147" x2="543.3333333333333" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
+        <line x1="790" y1="147" x2="790" y2="1040" stroke="#000000" stroke-width="1.2"/>
+
+  <!-- Nội dung các nút & luồng -->
+  
+    <circle cx="173" cy="170" r="9" fill="#000000"/>
+    <line x1="173" y1="179" x2="173" y2="205" class="line" marker-end="url(#arrow)"/>
+
+    
+    <rect x="73" y="205" width="200" height="44" class="action-rect"/>
+    <text x="173.0" y="222.5" class="act-txt">SePay Gửi Yêu Cầu Webhook:</text>
+<text x="173.0" y="239.5" class="act-txt">POST /api/v1/sepay/webhook</text>
+
+    
+    <line x1="273" y1="227" x2="320" y2="227" class="line" marker-end="url(#arrow)"/>
+
+    
+    <rect x="320" y="205" width="200" height="44" class="action-rect"/>
+    <text x="420.0" y="222.5" class="act-txt">Kiểm Tra Chữ Ký Xác Thực</text>
+<text x="420.0" y="239.5" class="act-txt">API Key Trong Request Header</text>
+
+    
+    <line x1="420" y1="249" x2="420" y2="280" class="line" marker-end="url(#arrow)"/>
+
+    
+    <polygon points="420,280 450,300 420,320 390,300" class="decision-diamond"/>
+    
+    
+    
+    <rect x="434.25" y="290" width="111.5" height="18" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="490" y="303" class="guard-txt">[Token hợp lệ?]</text>
+    
+
+    <!-- Không hợp lệ -> 401 -->
+    <line x1="390" y1="300" x2="173" y2="300" class="line"/>
+    <line x1="173" y1="300" x2="173" y2="340" class="line" marker-end="url(#arrow)"/>
+    
+    <rect x="219.25" y="282" width="81.5" height="18" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="260" y="295" class="guard-txt">[Sai Token]</text>
+    
+    
+    <rect x="73" y="340" width="200" height="44" class="action-rect"/>
+    <text x="173.0" y="357.5" class="act-txt">Từ Chối Yêu Cầu &amp;</text>
+<text x="173.0" y="374.5" class="act-txt">Trả Mã Lỗi 401 Unauthorized</text>
+
+    
+    <line x1="173" y1="384" x2="173" y2="420" class="line" marker-end="url(#arrow)"/>
+    <circle cx="173" cy="430" r="10" fill="none" stroke="#000000" stroke-width="1.8"/>
+    <circle cx="173" cy="430" r="6" fill="#000000"/>
+
+    <!-- Hợp lệ -> Kiểm tra Idempotency -->
+    <line x1="420" y1="320" x2="420" y2="370" class="line" marker-end="url(#arrow)"/>
+    
+    <rect x="430.5" y="335" width="59.0" height="18" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="460" y="348" class="guard-txt">[Hợp lệ]</text>
+    
+
+    
+    <rect x="320" y="370" width="200" height="44" class="action-rect"/>
+    <text x="420.0" y="387.5" class="act-txt">Kiểm Tra Mã Giao Dịch Trùng Lặp</text>
+<text x="420.0" y="404.5" class="act-txt">(Idempotency Trong payments)</text>
+
+    
+    <line x1="520" y1="392" x2="566" y2="392" class="line" marker-end="url(#arrow)"/>
+
+    
+    <rect x="566" y="370" width="200" height="44" class="action-rect"/>
+    <text x="666.0" y="387.5" class="act-txt">Truy Vấn Mã Đơn Hàng Theo Cú</text>
+<text x="666.0" y="404.5" class="act-txt">Pháp Nội Dung Chuyển Khoản</text>
+
+    
+    <line x1="666" y1="414" x2="666" y2="450" class="line" marker-end="url(#arrow)"/>
+
+    
+    <polygon points="666,450 696,470 666,490 636,470" class="decision-diamond"/>
+    
+    
+    
+    <rect x="673.0" y="460" width="134.0" height="18" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="740" y="473" class="guard-txt">[So khớp số tiền?]</text>
+    
+
+    <!-- Nhánh 1: Chuyển đủ hoặc thừa tiền -->
+    <line x1="666" y1="490" x2="666" y2="540" class="line" marker-end="url(#arrow)"/>
+    
+    <rect x="673.0" y="505" width="104.0" height="18" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="725" y="518" class="guard-txt">[Đủ/Thừa tiền]</text>
+    
+    
+    <rect x="566" y="540" width="200" height="44" class="action-rect"/>
+    <text x="666.0" y="557.5" class="act-txt">Ghi Bảng payments &amp; Cập Nhật</text>
+<text x="666.0" y="574.5" class="act-txt">orders: payment_status = PAID</text>
+
+    
+    <line x1="666" y1="584" x2="666" y2="620" class="line" marker-end="url(#arrow)"/>
+
+    
+    <rect x="566" y="620" width="200" height="44" class="action-rect"/>
+    <text x="666.0" y="637.5" class="act-txt">Chuyển Trạng Thái Đơn Hàng</text>
+<text x="666.0" y="654.5" class="act-txt">status = CONFIRMED</text>
+
+    
+    <line x1="666" y1="664" x2="666" y2="700" class="line" marker-end="url(#arrow)"/>
+
+    <!-- Nhánh 2: Chuyển thiếu tiền -->
+    <line x1="636" y1="470" x2="420" y2="470" class="line"/>
+    <line x1="420" y1="470" x2="420" y2="540" class="line" marker-end="url(#arrow)"/>
+    
+    <rect x="465.5" y="452" width="89.0" height="18" fill="#FFFFFF" stroke="#000000" stroke-width="0.8"/>
+    <text x="510" y="465" class="guard-txt">[Thiếu tiền]</text>
+    
+    
+    <rect x="320" y="540" width="200" height="44" class="action-rect"/>
+    <text x="420.0" y="557.5" class="act-txt">Cập Nhật PARTIALLY_PAID,</text>
+<text x="420.0" y="574.5" class="act-txt">Giữ PENDING &amp; Ghi Thiếu</text>
+
+    
+    <line x1="420" y1="584" x2="420" y2="700" class="line"/>
+    <line x1="420" y1="700" x2="566" y2="700" class="line" marker-end="url(#arrow)"/>
+
+    
+    <rect x="566" y="700" width="200" height="44" class="action-rect"/>
+    <text x="666.0" y="717.5" class="act-txt">Gửi Phản Hồi 200 OK Cho SePay</text>
+<text x="666.0" y="734.5" class="act-txt">&amp; Gửi Thông Báo Cho Khách Hàng</text>
+
+    
+    <line x1="666" y1="744" x2="666" y2="785" class="line" marker-end="url(#arrow)"/>
+
+    <circle cx="666" cy="795" r="10" fill="none" stroke="#000000" stroke-width="1.8"/>
+    <circle cx="666" cy="795" r="6" fill="#000000"/>
+    
+
+  <!-- Footer Chú Thích Chuẩn UML 2.x -->
+  <line x1="50" y1="1055" x2="790" y2="1055" class="line"/>
+  <rect x="50" y="1062" width="740" height="80" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <text x="65" y="1079" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000">KÝ HIỆU CHUẨN UML 2.x ACTIVITY DIAGRAM:</text>
+  
+  <circle cx="80" cy="1103" r="8" fill="#000000"/>
+  <text x="96" y="1107" class="leg-lbl">Nút bắt đầu (Initial)</text>
+
+  <circle cx="80" cy="1127" r="9" fill="none" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="80" cy="1127" r="5" fill="#000000"/>
+  <text x="96" y="1131" class="leg-lbl">Nút kết thúc (Final)</text>
+
+  <rect x="250" y="1095" width="28" height="16" class="action-rect"/>
+  <text x="286" y="1107" class="leg-lbl">Hành động (Action)</text>
+
+  <polygon points="264,1120 274,1127 264,1134 254,1127" class="decision-diamond"/>
+  <text x="286" y="1131" class="leg-lbl">Điểm quyết định / Hợp nhất</text>
+
+  <rect x="460" y="1102" width="30" height="5" class="sync-bar"/>
+  <text x="498" y="1107" class="leg-lbl">Thanh phân nhánh / Kết hợp (Fork/Join)</text>
+
+  <line x1="460" y1="1127" x2="490" y2="1127" class="line" marker-end="url(#arrow)"/>
+  <text x="498" y="1131" class="leg-lbl">Luồng điều khiển (Control Flow)</text>
+
+  <text x="690" y="1119" class="leg-lbl" font-weight="bold">[Điều kiện rẽ nhánh]</text>
+</svg>
