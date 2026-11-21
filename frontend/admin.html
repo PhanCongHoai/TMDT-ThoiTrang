@@ -655,7 +655,7 @@
         <li><a href="#orders" class="admin-tab-link" data-tab="orders"><i class="fa-solid fa-cart-shopping"></i> <span>Quản Lý Đơn Hàng</span></a></li>
         <li><a href="admin-dispatch.html" target="_blank" style="color: #38bdf8;"><i class="fa-solid fa-boxes-packing"></i> <span>Thủ Tục Nhận & Bàn Giao Đơn</span> <span style="background: #38bdf8; color: #000; font-size: 0.65rem; padding: 1px 6px; border-radius: 10px; font-weight: 700;">HUB</span></a></li>
         <li><a href="#reviews" class="admin-tab-link" data-tab="reviews"><i class="fa-solid fa-star"></i> <span>Duyệt Đánh Giá (Reviews)</span></a></li>
-        <li><a href="#customers" class="admin-tab-link" data-tab="customers"><i class="fa-solid fa-users"></i> <span>Khách Hàng VIP</span></a></li>
+        <li><a href="#customers" class="admin-tab-link" data-tab="customers"><i class="fa-solid fa-users"></i> <span>Quản Lý Khách Hàng</span></a></li>
         <li><a href="#behavior" class="admin-tab-link" data-tab="behavior"><i class="fa-solid fa-eye"></i> <span>Phân Tích Hành Vi</span></a></li>
         <li><a href="#ai-forecast" class="admin-tab-link" data-tab="ai-forecast"><i class="fa-solid fa-wand-magic-sparkles"></i> <span>AI Dự Báo Nhu Cầu</span></a></li>
       </ul>
@@ -844,7 +844,7 @@
             <thead>
               <tr>
                 <th>Mã Đơn</th>
-                <th>Khách Hàng VIP</th>
+                <th>Khách Hàng</th>
                 <th>SĐT</th>
                 <th>Địa Chỉ</th>
                 <th>Tổng Tiền</th>
@@ -951,31 +951,64 @@
 
 
       <!-- ===================================================================
-           4. TRANG QUẢN LÝ KHÁCH HÀNG VIP (VIP CUSTOMERS PAGE)
+           4. TRANG QUẢN LÝ KHÁCH HÀNG (CUSTOMERS MANAGEMENT PAGE)
            =================================================================== -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-customers">
         <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">4. Quản Lý Khách Hàng VIP</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Danh sách 1,280 hội viên tích lũy và đặc quyền</span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">4. Quản Lý Khách Hàng</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);" id="admin-customers-count-subtitle">Quản lý danh sách khách hàng, cập nhật thông tin và phân quyền hội viên</span>
           </div>
           
-          <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" onclick="alert('Đã gửi Mã Ưu Đãi VIP AURALIE2026 tới 28 hội viên Platinum!')">
-            <i class="fa-solid fa-envelope"></i> Gửi Ưu Đãi VIP
-          </button>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" id="btn-open-add-customer-modal">
+              <i class="fa-solid fa-user-plus"></i> Thêm Khách Hàng
+            </button>
+            <button class="btn-secondary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" onclick="window.exportCustomersCSV()">
+              <i class="fa-solid fa-file-excel"></i> Xuất Excel
+            </button>
+            <button class="btn-secondary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" onclick="alert('Đã gửi thông báo ưu đãi chăm sóc tới khách hàng!')">
+              <i class="fa-solid fa-envelope"></i> Gửi Ưu Đãi
+            </button>
+          </div>
+        </div>
+
+        <!-- BỘ LỌC & TÌM KIẾM KHÁCH HÀNG -->
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; background: #faf8f5; padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border-light);">
+          <div style="flex: 1; min-width: 220px; position: relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+            <input type="text" id="admin-customer-search-input" placeholder="Tìm kiếm theo tên, email, số điện thoại..." style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.2rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff;">
+          </div>
+          <div style="min-width: 170px;">
+            <select id="admin-customer-filter-tier" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff; cursor: pointer;">
+              <option value="">Tất cả phân hạng</option>
+              <option value="DIAMOND">Diamond VIP</option>
+              <option value="PLATINUM">Platinum VIP</option>
+              <option value="GOLD">Gold VIP</option>
+              <option value="SILVER">Silver VIP</option>
+              <option value="STANDARD">Tiêu Chuẩn (Thường)</option>
+            </select>
+          </div>
+          <div style="min-width: 150px;">
+            <select id="admin-customer-filter-role" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff; cursor: pointer;">
+              <option value="">Tất cả vai trò</option>
+              <option value="CUSTOMER">Khách Hàng</option>
+              <option value="ADMIN">Quản Trị Viên</option>
+            </select>
+          </div>
         </div>
 
         <div class="table-responsive-wrapper">
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Hội Viên</th>
-                <th>Hạng Thẻ VIP</th>
+                <th>Khách Hàng</th>
+                <th>Phân Hạng</th>
                 <th>Số Điện Thoại</th>
                 <th>Email</th>
                 <th>Tổng Chi Tiêu</th>
-                <th>Ngày Tham Gia</th>
-                <th>Thao Tác</th>
+                <th>Vai Trò</th>
+                <th style="min-width: 220px; text-align: center;">Thao Tác Quản Lý</th>
               </tr>
             </thead>
             <tbody id="admin-customers-tbody"></tbody>
@@ -1230,7 +1263,7 @@
     </a>
     <a href="#customers" class="admin-bottom-tab-link" data-tab="customers">
       <i class="fa-solid fa-users"></i>
-      <span>Khách VIP</span>
+      <span>Khách Hàng</span>
     </a>
   </nav>
 
@@ -1297,7 +1330,7 @@
         'products': { title: 'Quản Lý Danh Sách Sản Phẩm', desc: 'Quản lý 8 mẫu thiết kế phom dáng, tồn kho & giá bán sản phẩm' },
         'orders': { title: 'Quản Lý Đơn Hàng & Vận Chuyển', desc: 'Theo dõi 142 đơn hàng, trạng thái thanh toán VNPAY & giao hỏa tốc' },
         'reviews': { title: 'Duyệt & Kiểm Duyệt Đánh Giá', desc: 'Kiểm duyệt nhận xét thực tế từ khách hàng mua trang phục Haute Couture' },
-        'customers': { title: 'Quản Lý Khách Hàng & Thẻ VIP', desc: 'Quản lý danh sách 1,280 hội viên tích lũy và đặc quyền VIP' },
+        'customers': { title: 'Quản Lý Khách Hàng', desc: 'Quản lý tài khoản khách hàng, cập nhật thông tin và phân quyền thành viên' },
         'behavior': { title: 'Phân Tích Hành Vi Khách Hàng', desc: 'Theo dõi phễu chuyển đổi, lượt xem, giỏ hàng và từ khóa tìm kiếm' },
         'ai-forecast': { title: 'AI Dự Báo Nhu Cầu & Quản Lý Mô Hình', desc: 'Dự báo LightGBM/Baseline 7-14-30 ngày, gợi ý nhập kho & giám sát drift' }
       };
@@ -1581,44 +1614,224 @@
           .catch(err => alert('Lỗi: ' + err.message));
       };
 
-      // 5. Danh Sách Khách Hàng VIP Từ Database
+      // 5. Danh Sách Khách Hàng & Quản Lý Khách Hàng Từ Database
+      let allAdminCustomers = [];
+
+      window.renderAdminCustomersTable = (customers) => {
+        const tbody = document.getElementById('admin-customers-tbody');
+        if (!tbody) return;
+
+        const countSubtitle = document.getElementById('admin-customers-count-subtitle');
+        if (countSubtitle) {
+          countSubtitle.textContent = `Tổng cộng ${customers.length} khách hàng trong hệ thống`;
+        }
+
+        if (!customers || customers.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--text-muted);"><i class="fa-solid fa-circle-info"></i> Không tìm thấy khách hàng nào phù hợp với bộ lọc.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = customers.map(u => {
+          const initials = (u.full_name || 'KH').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+          const tier = (u.vip_tier || 'STANDARD').toUpperCase();
+          let tierBadge = `<span class="status-badge" style="background:#f1f1f1; color:#555;">Tiêu Chuẩn</span>`;
+          if (tier.includes('DIAMOND')) {
+            tierBadge = `<span class="status-badge" style="background:linear-gradient(135deg, #0ea5e9, #38bdf8); color:#fff; font-weight:700;"><i class="fa-solid fa-gem"></i> Diamond VIP</span>`;
+          } else if (tier.includes('PLATINUM')) {
+            tierBadge = `<span class="status-badge gold" style="font-weight:700;"><i class="fa-solid fa-crown"></i> Platinum VIP</span>`;
+          } else if (tier.includes('GOLD')) {
+            tierBadge = `<span class="status-badge" style="background:#fef3c7; color:#92400e; font-weight:700; border:1px solid #fcd34d;"><i class="fa-solid fa-medal"></i> Gold VIP</span>`;
+          } else if (tier.includes('SILVER')) {
+            tierBadge = `<span class="status-badge" style="background:#f3f4f6; color:#4b5563; font-weight:600;"><i class="fa-solid fa-star"></i> Silver VIP</span>`;
+          }
+
+          const roleDisplay = u.role_name === 'ADMIN'
+            ? `<span style="background:var(--primary-dark); color:var(--accent-gold); padding:2px 8px; border-radius:12px; font-size:0.75rem; font-weight:bold;">Admin</span>`
+            : `<span style="color:#555; font-size:0.8rem;">Khách Hàng</span>`;
+
+          const safeUserJson = encodeURIComponent(JSON.stringify(u));
+
+          return `
+            <tr>
+              <td>
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                  <div style="width:34px; height:34px; border-radius:50%; background:var(--primary-dark); color:var(--accent-gold); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.78rem;">${initials}</div>
+                  <div>
+                    <strong>${AdminUI.escape(u.full_name)}</strong>
+                    <div style="font-size:0.74rem; color:var(--text-muted);">ID: #${u.id}</div>
+                  </div>
+                </div>
+              </td>
+              <td>${tierBadge}</td>
+              <td>${AdminUI.escape(u.phone || 'Chưa cung cấp')}</td>
+              <td>${AdminUI.escape(u.email)}</td>
+              <td><strong style="color:var(--accent-gold);">${Number(u.total_spent || 0).toLocaleString('vi-VN')} ₫</strong></td>
+              <td>${roleDisplay}</td>
+              <td style="text-align: center;">
+                <div style="display:inline-flex; gap:0.35rem; flex-wrap:wrap; justify-content:center;">
+                  <button class="admin-action-btn btn-edit" title="Chỉnh sửa thông tin" onclick="window.openEditCustomerModal('${safeUserJson}')">
+                    <i class="fa-solid fa-pen-to-square"></i> Sửa
+                  </button>
+                  <button class="admin-action-btn btn-edit" title="Xem chi tiết hồ sơ & đơn hàng" onclick="AdminUI.customerDetails(${Number(u.id)})">
+                    <i class="fa-solid fa-circle-info"></i> Chi Tiết
+                  </button>
+                  <button class="admin-action-btn btn-edit" title="Xem hành trình tracking" onclick="window.openCustomerJourney(${u.id})">
+                    <i class="fa-solid fa-route"></i> Hành Trình
+                  </button>
+                  <button class="admin-action-btn" title="Xóa khách hàng" style="background:#fee2e2; color:#ef4444; border:1px solid #fca5a5;" onclick="window.deleteAdminCustomer(${u.id}, '${AdminUI.escape(u.full_name)}')">
+                    <i class="fa-solid fa-trash-can"></i> Xóa
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      };
+
+      window.filterAdminCustomers = () => {
+        const searchVal = (document.getElementById('admin-customer-search-input')?.value || '').toLowerCase().trim();
+        const tierVal = (document.getElementById('admin-customer-filter-tier')?.value || '').toUpperCase().trim();
+        const roleVal = (document.getElementById('admin-customer-filter-role')?.value || '').toUpperCase().trim();
+
+        const filtered = allAdminCustomers.filter(u => {
+          const matchSearch = !searchVal ||
+            (u.full_name || '').toLowerCase().includes(searchVal) ||
+            (u.email || '').toLowerCase().includes(searchVal) ||
+            (u.phone || '').toLowerCase().includes(searchVal);
+
+          const uTier = (u.vip_tier || 'STANDARD').toUpperCase();
+          const matchTier = !tierVal || (tierVal === 'STANDARD' ? (!uTier || uTier === 'STANDARD' || uTier.includes('TIÊU CHUẨN')) : uTier.includes(tierVal));
+
+          const uRole = (u.role_name || 'CUSTOMER').toUpperCase();
+          const matchRole = !roleVal || uRole === roleVal;
+
+          return matchSearch && matchTier && matchRole;
+        });
+
+        window.renderAdminCustomersTable(filtered);
+      };
+
       window.loadAdminCustomers = () => {
         const tbody = document.getElementById('admin-customers-tbody');
         if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách hội viên VIP từ CSDL...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem; color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách khách hàng từ CSDL...</td></tr>`;
 
         window.ApiClient.get('/api/v1/users')
           .then(result => {
             if (result.status === 'success' && result.data) {
-              const users = result.data;
-              tbody.innerHTML = users.map(u => {
-                const initials = (u.full_name || 'KH').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-                return `
-                  <tr>
-                    <td>
-                      <div style="display:flex; align-items:center; gap:0.6rem;">
-                        <div style="width:32px; height:32px; border-radius:50%; background:var(--primary-dark); color:var(--accent-gold); display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.78rem;">${initials}</div>
-                        <strong>${AdminUI.escape(u.full_name)}</strong>
-                      </div>
-                    </td>
-                    <td><span class="status-badge gold"><i class="fa-solid fa-crown"></i> ${u.vip_tier || 'VIP'}</span></td>
-                    <td>${AdminUI.escape(u.phone || 'Chưa cung cấp')}</td>
-                    <td>${AdminUI.escape(u.email)}</td>
-                    <td><strong style="color:var(--accent-gold);">${Number(u.total_spent || 0).toLocaleString('vi-VN')} ₫</strong></td>
-                    <td>${u.role_name === 'ADMIN' ? 'Quản Trị' : 'Khách VIP'}</td>
-                    <td>
-                      <button class="admin-action-btn btn-edit" onclick="window.openCustomerJourney(${u.id})">Hành Trình</button>
-                      <button class="admin-action-btn btn-edit" onclick="AdminUI.customerDetails(${Number(u.id)})">Chi Tiết</button>
-                    </td>
-                  </tr>
-                `;
-              }).join('');
+              allAdminCustomers = result.data;
+              window.filterAdminCustomers();
             }
           })
           .catch(err => {
             console.error('Lỗi tải khách hàng admin:', err);
             tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Lỗi tải khách hàng từ CSDL.</td></tr>`;
           });
+      };
+
+      // Modal Thêm Khách Hàng
+      window.openAddCustomerModal = () => {
+        const modal = document.getElementById('admin-add-customer-modal');
+        if (modal) {
+          document.getElementById('admin-add-customer-form')?.reset();
+          const pwd = document.getElementById('add-cust-password');
+          if (pwd) pwd.value = 'Auralie123@';
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      };
+
+      window.closeAddCustomerModal = () => {
+        const modal = document.getElementById('admin-add-customer-modal');
+        if (modal) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
+
+      // Modal Sửa Khách Hàng
+      window.openEditCustomerModal = (userJsonEncoded) => {
+        try {
+          const user = JSON.parse(decodeURIComponent(userJsonEncoded));
+          document.getElementById('edit-cust-id').value = user.id;
+          document.getElementById('edit-cust-id-display').textContent = user.id;
+          document.getElementById('edit-cust-fullname').value = user.full_name || '';
+          document.getElementById('edit-cust-email').value = user.email || '';
+          document.getElementById('edit-cust-phone').value = user.phone || '';
+          document.getElementById('edit-cust-address').value = user.address || '';
+          document.getElementById('edit-cust-tier').value = user.vip_tier || 'STANDARD';
+          document.getElementById('edit-cust-role').value = user.role_name || 'CUSTOMER';
+          document.getElementById('edit-cust-password').value = '';
+
+          const modal = document.getElementById('admin-edit-customer-modal');
+          if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+        } catch (e) {
+          console.error('Lỗi mở modal sửa khách hàng:', e);
+        }
+      };
+
+      window.closeEditCustomerModal = () => {
+        const modal = document.getElementById('admin-edit-customer-modal');
+        if (modal) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      };
+
+      // Xóa Khách Hàng
+      window.deleteAdminCustomer = async (userId, userName) => {
+        if (!confirm(`Bạn có chắc chắn muốn xóa tài khoản khách hàng "${userName}" (ID: #${userId}) khỏi hệ thống?\nThao tác này không thể hoàn tác!`)) {
+          return;
+        }
+
+        try {
+          const res = await window.ApiClient.delete(`/api/v1/users/${userId}`);
+          if (res.status === 'success') {
+            alert(res.message || 'Đã xóa tài khoản khách hàng thành công!');
+            window.loadAdminCustomers();
+            loadAdminStats();
+          } else {
+            alert('Lỗi: ' + (res.message || 'Không thể xóa khách hàng.'));
+          }
+        } catch (err) {
+          alert('Lỗi: ' + err.message);
+        }
+      };
+
+      // Xuất Excel Khách Hàng (CSV)
+      window.exportCustomersCSV = () => {
+        if (!allAdminCustomers || allAdminCustomers.length === 0) {
+          alert('Không có dữ liệu khách hàng để xuất.');
+          return;
+        }
+        let csvContent = "\uFEFFMã Khách Hàng,Họ Và Tên,Email,Số Điện Thoại,Địa Chỉ,Hạng Thành Viên,Điểm VIP,Tổng Chi Tiêu (VNĐ),Vai Trò,Ngày Tham Gia\n";
+        allAdminCustomers.forEach(u => {
+          const row = [
+            u.id,
+            `"${(u.full_name || '').replace(/"/g, '""')}"`,
+            `"${(u.email || '').replace(/"/g, '""')}"`,
+            `"${(u.phone || '').replace(/"/g, '""')}"`,
+            `"${(u.address || '').replace(/"/g, '""')}"`,
+            `"${(u.vip_tier || 'STANDARD').replace(/"/g, '""')}"`,
+            u.vip_points || 0,
+            Number(u.total_spent || 0),
+            `"${(u.role_name || 'CUSTOMER').replace(/"/g, '""')}"`,
+            `"${(u.created_at || '').substring(0, 10)}"`
+          ];
+          csvContent += row.join(",") + "\n";
+        });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Danh_Sach_Khach_Hang_AURALIE_${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       };
 
       let currentJourneyUserId = null;
@@ -1751,6 +1964,79 @@
 
       const addProductForm = document.getElementById('admin-add-product-form');
       if (addProductForm) addProductForm.addEventListener('submit', AdminUI.addProduct);
+
+      // Quản Lý Khách Hàng: Events & Forms
+      const btnOpenAddCustomer = document.getElementById('btn-open-add-customer-modal');
+      if (btnOpenAddCustomer) btnOpenAddCustomer.addEventListener('click', window.openAddCustomerModal);
+
+      const custSearchInput = document.getElementById('admin-customer-search-input');
+      if (custSearchInput) custSearchInput.addEventListener('input', window.filterAdminCustomers);
+
+      const custTierFilter = document.getElementById('admin-customer-filter-tier');
+      if (custTierFilter) custTierFilter.addEventListener('change', window.filterAdminCustomers);
+
+      const custRoleFilter = document.getElementById('admin-customer-filter-role');
+      if (custRoleFilter) custRoleFilter.addEventListener('change', window.filterAdminCustomers);
+
+      const addCustForm = document.getElementById('admin-add-customer-form');
+      if (addCustForm) {
+        addCustForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const fullName = document.getElementById('add-cust-fullname').value.trim();
+          const email = document.getElementById('add-cust-email').value.trim();
+          const password = document.getElementById('add-cust-password').value.trim();
+          const phone = document.getElementById('add-cust-phone').value.trim();
+          const address = document.getElementById('add-cust-address').value.trim();
+          const vipTier = document.getElementById('add-cust-tier').value;
+          const roleName = document.getElementById('add-cust-role').value;
+
+          try {
+            const res = await window.ApiClient.post('/api/v1/users', {
+              fullName, email, password, phone, address, vipTier, roleName
+            });
+            if (res.status === 'success') {
+              alert(res.message || 'Thêm khách hàng thành công!');
+              window.closeAddCustomerModal();
+              window.loadAdminCustomers();
+              loadAdminStats();
+            } else {
+              alert('Lỗi: ' + (res.message || 'Không thể tạo khách hàng.'));
+            }
+          } catch (err) {
+            alert('Lỗi: ' + err.message);
+          }
+        });
+      }
+
+      const editCustForm = document.getElementById('admin-edit-customer-form');
+      if (editCustForm) {
+        editCustForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const userId = document.getElementById('edit-cust-id').value;
+          const fullName = document.getElementById('edit-cust-fullname').value.trim();
+          const phone = document.getElementById('edit-cust-phone').value.trim();
+          const address = document.getElementById('edit-cust-address').value.trim();
+          const vipTier = document.getElementById('edit-cust-tier').value;
+          const roleName = document.getElementById('edit-cust-role').value;
+          const newPassword = document.getElementById('edit-cust-password').value.trim();
+
+          const payload = { fullName, phone, address, vipTier, roleName };
+          if (newPassword) payload.newPassword = newPassword;
+
+          try {
+            const res = await window.ApiClient.put(`/api/v1/users/${userId}`, payload);
+            if (res.status === 'success') {
+              alert(res.message || 'Cập nhật thông tin khách hàng thành công!');
+              window.closeEditCustomerModal();
+              window.loadAdminCustomers();
+            } else {
+              alert('Lỗi: ' + (res.message || 'Không thể cập nhật thông tin.'));
+            }
+          } catch (err) {
+            alert('Lỗi: ' + err.message);
+          }
+        });
+      }
 
       loadAdminStats();
       window.loadAdminProducts();
@@ -2092,6 +2378,145 @@
             <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Vào Cơ Sở Dữ Liệu
           </button>
           <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;" onclick="closeAddProductModal()">
+            Hủy
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL THÊM KHÁCH HÀNG MỚI (ADD CUSTOMER) -->
+  <div id="admin-add-customer-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-container" style="max-width: 580px; padding: 2rem;">
+      <button class="modal-close-btn" onclick="window.closeAddCustomerModal()">&times;</button>
+      
+      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <i class="fa-solid fa-user-plus"></i> THÊM TÀI KHOẢN KHÁCH HÀNG MỚI
+      </div>
+
+      <form id="admin-add-customer-form" style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Họ và Tên Khách Hàng *</label>
+          <input type="text" id="add-cust-fullname" placeholder="Ví dụ: Hoàng Yến Nhi" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Email Đăng Nhập *</label>
+            <input type="email" id="add-cust-email" placeholder="khachhang@example.com" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          </div>
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Mật Khẩu Khởi Tạo *</label>
+            <input type="password" id="add-cust-password" placeholder="Tối thiểu 6 ký tự" required minlength="6" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Số Điện Thoại</label>
+            <input type="tel" id="add-cust-phone" placeholder="Ví dụ: 0912345678" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          </div>
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Hạng Thành Viên</label>
+            <select id="add-cust-tier" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              <option value="STANDARD">STANDARD (Thường)</option>
+              <option value="SILVER">SILVER (Bạc)</option>
+              <option value="GOLD">GOLD (Vàng)</option>
+              <option value="PLATINUM">PLATINUM (Bạch Kim)</option>
+              <option value="VIP">VIP (Thượng Khách)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Vai Trò Phân Quyền</label>
+            <select id="add-cust-role" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              <option value="CUSTOMER">Khách Hàng (CUSTOMER)</option>
+              <option value="ADMIN">Quản Trị Viên (ADMIN)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Địa Chỉ Thường Trú</label>
+            <input type="text" id="add-cust-address" placeholder="Quận/Huyện, Tỉnh/TP" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.75rem;">
+          <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.75rem;">
+            <i class="fa-solid fa-user-plus"></i> Tạo Khách Hàng Mới
+          </button>
+          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;" onclick="window.closeAddCustomerModal()">
+            Hủy
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CHỈNH SỬA THÔNG TIN KHÁCH HÀNG (EDIT CUSTOMER) -->
+  <div id="admin-edit-customer-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-container" style="max-width: 580px; padding: 2rem;">
+      <button class="modal-close-btn" onclick="window.closeEditCustomerModal()">&times;</button>
+      
+      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <i class="fa-solid fa-user-pen"></i> CHỈNH SỬA HỒ SƠ KHÁCH HÀNG (ID: #<span id="edit-cust-id-display">--</span>)
+      </div>
+
+      <form id="admin-edit-customer-form" style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
+        <input type="hidden" id="edit-cust-id">
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Họ và Tên Khách Hàng *</label>
+          <input type="text" id="edit-cust-fullname" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Email Đăng Nhập</label>
+            <input type="email" id="edit-cust-email" readonly style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; background: #f5f5f5; color: #777;">
+          </div>
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Số Điện Thoại</label>
+            <input type="tel" id="edit-cust-phone" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Hạng Thành Viên</label>
+            <select id="edit-cust-tier" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              <option value="STANDARD">STANDARD (Thường)</option>
+              <option value="SILVER">SILVER (Bạc)</option>
+              <option value="GOLD">GOLD (Vàng)</option>
+              <option value="PLATINUM">PLATINUM (Bạch Kim)</option>
+              <option value="VIP">VIP (Thượng Khách)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Vai Trò Phân Quyền</label>
+            <select id="edit-cust-role" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+              <option value="CUSTOMER">Khách Hàng (CUSTOMER)</option>
+              <option value="ADMIN">Quản Trị Viên (ADMIN)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Địa Chỉ Thường Trú</label>
+          <input type="text" id="edit-cust-address" placeholder="Quận/Huyện, Tỉnh/TP" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+        </div>
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Đặt Lại Mật Khẩu (Để trống nếu giữ nguyên)</label>
+          <input type="password" id="edit-cust-password" placeholder="Nhập mật khẩu mới nếu muốn đổi..." minlength="6" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.75rem;">
+          <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.75rem;">
+            <i class="fa-solid fa-save"></i> Cập Nhật Thông Tin
+          </button>
+          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;" onclick="window.closeEditCustomerModal()">
             Hủy
           </button>
         </div>
