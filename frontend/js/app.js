@@ -1169,6 +1169,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.activeModalProductCategory = category;
     window.activeModalProductImg = img;
 
+    // Cập nhật trạng thái biểu tượng trái tim (Đỏ nếu đã có trong Wishlist)
+    if (typeof window.updateModalWishlistButtonState === 'function') {
+      window.updateModalWishlistButtonState(productId);
+    }
+
     if (modalTitle) modalTitle.textContent = title;
     if (modalCategory) modalCategory.textContent = category;
     if (modalPrice) modalPrice.textContent = price;
@@ -1786,15 +1791,73 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const wishlistBadgeSelector = 'a[href="wishlist.html"] :is(.badge-count, .dropdown-badge)';
+  
+  // Khởi tạo danh sách ID sản phẩm yêu thích từ LocalStorage
+  const initialWishlistIds = JSON.parse(localStorage.getItem('auralie_wishlist_ids') || '[]');
+  window.userWishlistProductIds = new Set(initialWishlistIds.map(Number));
+
   window.setWishlistBadge = count => {
     document.querySelectorAll(wishlistBadgeSelector).forEach(badge => { badge.textContent = count; });
-    document.documentElement.classList.toggle('has-wishlist-count', Boolean(sessionStorage.getItem('auralie_token')));
+    document.documentElement.classList.toggle('has-wishlist-count', Boolean(sessionStorage.getItem('auralie_token')) || count > 0);
+  };
+
+  if (initialWishlistIds.length > 0) {
+    window.setWishlistBadge(initialWishlistIds.length);
+  }
+
+  // Kiểm tra sản phẩm đã nằm trong Wishlist chưa
+  window.isProductInWishlist = (productId) => {
+    const id = Number(productId);
+    if (window.userWishlistProductIds && window.userWishlistProductIds.has(id)) {
+      return true;
+    }
+    const cached = JSON.parse(localStorage.getItem('auralie_wishlist_ids') || '[]');
+    return cached.map(Number).includes(id);
+  };
+
+  // Cập nhật giao diện trái tim trong Modal chi tiết sản phẩm (Đỏ lên khi đã yêu thích)
+  window.updateModalWishlistButtonState = (productId) => {
+    const modalWishlistButton = document.getElementById('modal-btn-wishlist');
+    if (!modalWishlistButton) return;
+    const isFav = window.isProductInWishlist(productId);
+    const icon = modalWishlistButton.querySelector('i');
+
+    if (isFav) {
+      modalWishlistButton.classList.add('active', 'in-wishlist');
+      modalWishlistButton.setAttribute('title', 'Bỏ khỏi danh sách yêu thích');
+      if (icon) {
+        icon.className = 'fa-solid fa-heart';
+        icon.style.color = '#e53935';
+      }
+    } else {
+      modalWishlistButton.classList.remove('active', 'in-wishlist');
+      modalWishlistButton.setAttribute('title', 'Thêm vào danh sách yêu thích');
+      if (icon) {
+        icon.className = 'fa-regular fa-heart';
+        icon.style.color = '';
+      }
+    }
   };
 
   window.loadWishlist = async () => {
-    const items = await window.Commerce.request('/api/v1/wishlist');
-    window.setWishlistBadge(items.length);
-    return items;
+    try {
+      const items = await window.Commerce.request('/api/v1/wishlist');
+      const list = Array.isArray(items) ? items : (items?.data || []);
+      const ids = list.map(i => Number(i.id || i.product_id));
+      window.userWishlistProductIds = new Set(ids);
+      localStorage.setItem('auralie_wishlist_ids', JSON.stringify(ids));
+      window.setWishlistBadge(ids.length);
+
+      if (window.activeModalProductId) {
+        window.updateModalWishlistButtonState(window.activeModalProductId);
+      }
+      return list;
+    } catch (err) {
+      const cached = JSON.parse(localStorage.getItem('auralie_wishlist_ids') || '[]');
+      window.userWishlistProductIds = new Set(cached.map(Number));
+      window.setWishlistBadge(cached.length);
+      return [];
+    }
   };
 
   document.querySelectorAll('a[href="wishlist.html"]').forEach(link => {
@@ -1813,37 +1876,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const modalWishlistButton = document.getElementById('modal-btn-wishlist');
   modalWishlistButton?.addEventListener('click', async () => {
-    const productId = window.activeModalProductId;
+    const productId = Number(window.activeModalProductId);
     if (!productId) return;
-    if (!sessionStorage.getItem('auralie_token')) {
-      sessionStorage.setItem('commerce_return', 'index.html#catalog');
-      location.href = 'login.html';
-      return;
-    }
+
+    const token = sessionStorage.getItem('auralie_token');
+    const isFav = window.isProductInWishlist(productId);
 
     modalWishlistButton.disabled = true;
     try {
-      const response = await fetch('/api/v1/wishlist', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${sessionStorage.getItem('auralie_token')}`
-        },
-        body: JSON.stringify({ productId })
-      });
-      if (response.status === 401) {
-        sessionStorage.removeItem('auralie_token');
-        sessionStorage.removeItem('auralie_user');
-        sessionStorage.setItem('commerce_return', 'index.html#catalog');
-        location.href = 'login.html';
-        return;
+      if (isFav) {
+        // Toggle OFF: Xóa khỏi danh sách yêu thích -> Trái tim trở lại viền xám
+        if (token) {
+          await fetch(`/api/v1/wishlist/${productId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            }
+          });
+        }
+        if (window.userWishlistProductIds) {
+          window.userWishlistProductIds.delete(productId);
+        }
+        const cached = JSON.parse(localStorage.getItem('auralie_wishlist_ids') || '[]')
+          .map(Number)
+          .filter(id => id !== productId);
+        localStorage.setItem('auralie_wishlist_ids', JSON.stringify(cached));
+        window.setWishlistBadge(window.userWishlistProductIds ? window.userWishlistProductIds.size : cached.length);
+        window.updateModalWishlistButtonState(productId);
+        window.showLuxuryAlert({
+          title: 'Danh sách yêu thích',
+          message: 'Đã xóa sản phẩm khỏi danh sách yêu thích.',
+          autoCloseMs: 2000
+        });
+      } else {
+        // Toggle ON: Thêm vào danh sách yêu thích -> Trái tim ĐỎ LÊN
+        if (token) {
+          const response = await fetch('/api/v1/wishlist', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ productId })
+          });
+          if (response.status === 401) {
+            sessionStorage.removeItem('auralie_token');
+            sessionStorage.removeItem('auralie_user');
+            sessionStorage.setItem('commerce_return', 'index.html#catalog');
+            location.href = 'login.html';
+            return;
+          }
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.message);
+        }
+        if (!window.userWishlistProductIds) window.userWishlistProductIds = new Set();
+        window.userWishlistProductIds.add(productId);
+        const cached = [...new Set([...JSON.parse(localStorage.getItem('auralie_wishlist_ids') || '[]').map(Number), productId])];
+        localStorage.setItem('auralie_wishlist_ids', JSON.stringify(cached));
+        window.setWishlistBadge(window.userWishlistProductIds.size);
+        window.updateModalWishlistButtonState(productId);
+        window.showLuxuryAlert({
+          title: 'Danh sách yêu thích',
+          message: 'Đã thêm sản phẩm vào danh sách yêu thích thành công!',
+          autoCloseMs: 2000
+        });
       }
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message);
-      window.showLuxuryAlert({ title: 'Danh sách yêu thích', message: 'Sản phẩm đã có trong danh sách yêu thích của bạn.', autoCloseMs: 2000 });
-      window.loadWishlist().catch(() => {});
+
+      if (token) {
+        window.loadWishlist().catch(() => {});
+      }
     } catch (error) {
-      window.showLuxuryAlert({ title: 'Danh sách yêu thích', message: 'Không thể lưu sản phẩm. Vui lòng thử lại.', type: 'warning' });
+      console.error('Lỗi thao tác wishlist:', error);
+      window.showLuxuryAlert({
+        title: 'Danh sách yêu thích',
+        message: error.message || 'Không thể cập nhật danh sách yêu thích. Vui lòng thử lại.',
+        type: 'warning'
+      });
     } finally {
       modalWishlistButton.disabled = false;
     }

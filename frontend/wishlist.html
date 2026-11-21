@@ -1002,6 +1002,7 @@
         ));
         const removed = new Set(productIds.filter((_, index) => results[index].status === 'fulfilled'));
         wishlistData = wishlistData.filter(item => !removed.has(item.id));
+        localStorage.setItem('auralie_wishlist_ids', JSON.stringify(wishlistData.map(item => item.id)));
         updateBadges();
         renderWishlist();
         if (removed.size !== productIds.length) {
@@ -1173,6 +1174,7 @@
             return toWishlistItem(item, detail);
           }));
           updateBadges();
+          localStorage.setItem('auralie_wishlist_ids', JSON.stringify(wishlistData.map(item => item.id)));
           setWishlistViewMode(currentView);
         } catch (error) {
           document.getElementById('wishlist-items-container').textContent = 'Không thể tải danh sách yêu thích. Vui lòng đăng nhập lại hoặc thử lại.';
