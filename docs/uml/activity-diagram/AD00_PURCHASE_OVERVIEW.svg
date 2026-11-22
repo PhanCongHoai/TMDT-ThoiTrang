@@ -11,219 +11,192 @@
       .action-rect { fill: #FFFFFF; stroke: #000000; stroke-width: 1.6; rx: 10px; ry: 10px; }
       .decision-diamond { fill: #FFFFFF; stroke: #000000; stroke-width: 1.6; }
       .sync-bar { fill: #000000; stroke: #000000; }
+      .node-sub { font-family: 'Times New Roman', serif; font-size: 10.5px; font-style: italic; fill: #000000; text-anchor: middle; }
     </style>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
       <path d="M 0 1.5 L 9 5 L 0 8.5 Z" fill="#000000"/>
     </marker>
   </defs>
 
+  <!-- Trang A4 Nền Trắng -->
   <rect x="0" y="0" width="840" height="1188" fill="#FFFFFF"/>
   <rect x="25" y="25" width="790" height="1138" fill="none" stroke="#000000" stroke-width="1"/>
 
+  <!-- Tiêu Đề -->
   <text x="420.0" y="62" class="title">Sơ đồ tổng quan quy trình mua hàng</text>
   <text x="420.0" y="85" class="subtitle">Đặc tả quy trình hoạt động (UML 2.x Activity Diagram) | Mã sơ đồ: AD00_PURCHASE_OVERVIEW | Trang 1 / 7</text>
   <line x1="50" y1="98" x2="790" y2="98" class="line"/>
 
+  <!-- Khung Bao Swimlane -->
   <rect x="50" y="115" width="740" height="925" fill="none" stroke="#000000" stroke-width="1.8"/>
   
-        <rect x="50.0" y="115" width="246.66666666666666" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
-        <text x="173.33333333333331" y="136" font-family="'Times New Roman', serif" font-size="13px" font-weight="bold" fill="#000000" text-anchor="middle">Khách hàng (Customer)</text>
-        <line x1="50.0" y1="147" x2="50.0" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
-        
-        <rect x="296.66666666666663" y="115" width="246.66666666666666" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
-        <text x="419.99999999999994" y="136" font-family="'Times New Roman', serif" font-size="13px" font-weight="bold" fill="#000000" text-anchor="middle">Giao diện web (Storefront)</text>
-        <line x1="296.66666666666663" y1="147" x2="296.66666666666663" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
-        
-        <rect x="543.3333333333333" y="115" width="246.66666666666666" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
-        <text x="666.6666666666666" y="136" font-family="'Times New Roman', serif" font-size="13px" font-weight="bold" fill="#000000" text-anchor="middle">Hệ thống xử lý &amp; CSDL (Backend)</text>
-        <line x1="543.3333333333333" y1="147" x2="543.3333333333333" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
-        <line x1="790" y1="147" x2="790" y2="1040" stroke="#000000" stroke-width="1.2"/>
-
+  <rect x="50.0" y="115" width="246.67" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
+  <text x="173.33" y="136" font-family="'Times New Roman', serif" font-size="13px" font-weight="bold" fill="#000000" text-anchor="middle">Khách hàng (Customer)</text>
+  <line x1="50.0" y1="147" x2="50.0" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
   
-    <!-- Initial Node -->
-    <circle cx="173" cy="165" r="9" fill="#000000"/>
-    <line x1="173" y1="174" x2="173" y2="195" class="line" marker-end="url(#arrow)"/>
+  <rect x="296.67" y="115" width="246.67" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
+  <text x="420.0" y="136" font-family="'Times New Roman', serif" font-size="13px" font-weight="bold" fill="#000000" text-anchor="middle">Giao diện web (Storefront)</text>
+  <line x1="296.67" y1="147" x2="296.67" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
+  
+  <rect x="543.33" y="115" width="246.67" height="32" fill="#F4F4F4" stroke="#000000" stroke-width="1.5"/>
+  <text x="666.67" y="136" font-family="'Times New Roman', serif" font-size="13px" font-weight="bold" fill="#000000" text-anchor="middle">Hệ thống xử lý &amp; CSDL (Backend)</text>
+  <line x1="543.33" y1="147" x2="543.33" y2="1040" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4"/>
+  <line x1="790" y1="147" x2="790" y2="1040" stroke="#000000" stroke-width="1.2"/>
 
-    <!-- Bước 1: Khám phá sản phẩm -->
-    
-    <rect x="73" y="195" width="200" height="42" class="action-rect"/>
-    <text x="173.0" y="211.5" class="act-txt">1. Truy cập website và</text>
-<text x="173.0" y="228.5" class="act-txt">khám phá sản phẩm</text>
+  <!-- 1. Nút bắt đầu (Initial Node) -->
+  <circle cx="173" cy="165" r="8" fill="#000000"/>
+  <line x1="173" y1="173" x2="173" y2="192" class="line" marker-end="url(#arrow)"/>
 
-    
-    <line x1="173" y1="237" x2="173" y2="258" class="line" marker-end="url(#arrow)"/>
+  <!-- 2. Bước 1: Khám phá sản phẩm -->
+  <rect x="73" y="192" width="200" height="40" class="action-rect"/>
+  <text x="173.0" y="208" class="act-txt">1. Truy cập website và</text>
+  <text x="173.0" y="224" class="act-txt">khám phá sản phẩm</text>
+  <line x1="173" y1="232" x2="173" y2="252" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Bước 2: Chọn thêm sản phẩm -->
-    
-    <rect x="73" y="258" width="200" height="42" class="action-rect"/>
-    <text x="173.0" y="274.5" class="act-txt">2. Chọn thêm sản phẩm</text>
-<text x="173.0" y="291.5" class="act-txt">vào giỏ hàng</text>
+  <!-- 3. Bước 2: Chọn thêm sản phẩm vào giỏ -->
+  <rect x="73" y="252" width="200" height="40" class="action-rect"/>
+  <text x="173.0" y="268" class="act-txt">2. Chọn thêm sản phẩm</text>
+  <text x="173.0" y="284" class="act-txt">vào giỏ hàng</text>
 
-    
-    
-    <!-- Đường nối từ Bước 2: Đi sang ngang x=420, rồi cắm vuông góc xuống đỉnh hình thoi (420, 302) -->
-    <line x1="273" y1="279" x2="420" y2="279" class="line"/>
-    <line x1="420" y1="279" x2="420" y2="302" class="line" marker-end="url(#arrow)"/>
+  <!-- Nối từ Bước 2 sang Decision 1 -->
+  <line x1="273" y1="272" x2="420" y2="272" class="line"/>
+  <line x1="420" y1="272" x2="420" y2="296" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Decision 1: Khách đã đăng nhập? (cx=420, cy=330, rx=65, ry=28) -->
-    
-    <polygon points="420,302 485,330 420,358 355,330" class="decision-diamond"/>
-    <text x="420" y="326.5" class="dec-txt">Khách đã</text>
-<text x="420" y="341.5" class="dec-txt">đăng nhập?</text>
+  <!-- Decision 1: Khách đã đăng nhập? (cx=420, cy=322, rx=65, ry=26) -->
+  <polygon points="420,296 485,322 420,348 355,322" class="decision-diamond"/>
+  <text x="420" y="318" class="dec-txt">Khách đã</text>
+  <text x="420" y="333" class="dec-txt">đăng nhập?</text>
 
-    
+  <!-- Nhánh [Chưa]: Sang Action Đăng nhập -->
+  <line x1="355" y1="322" x2="173" y2="322" class="line"/>
+  <line x1="173" y1="322" x2="173" y2="362" class="line" marker-end="url(#arrow)"/>
+  <rect x="244.0" y="305" width="42.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+  <text x="265" y="317" class="guard-txt">[Chưa]</text>
 
-    <!-- Nhánh Chưa đăng nhập: Từ cạnh trái (355, 330) -> sang trái x=173 -> cắm xuống đỉnh Action Đăng nhập (173, 370) -->
-    <line x1="355" y1="330" x2="173" y2="330" class="line"/>
-    <line x1="173" y1="330" x2="173" y2="370" class="line" marker-end="url(#arrow)"/>
-    
-    <rect x="244.0" y="311" width="42.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
-    <text x="265" y="323" class="guard-txt">[Chưa]</text>
-    
+  <!-- Action: Đăng nhập / đăng ký -->
+  <rect x="73" y="362" width="200" height="40" class="action-rect"/>
+  <text x="173.0" y="378" class="act-txt">Đăng nhập / đăng ký</text>
+  <text x="173.0" y="394" class="act-txt">tài khoản hội viên</text>
 
-    
-    <rect x="73" y="370" width="200" height="42" class="action-rect"/>
-    <text x="173.0" y="386.5" class="act-txt">Đăng nhập / đăng ký</text>
-<text x="173.0" y="403.5" class="act-txt">tài khoản hội viên</text>
+  <!-- Từ Đăng nhập sang Bước 3 -->
+  <line x1="173" y1="402" x2="173" y2="424" class="line"/>
+  <line x1="173" y1="424" x2="320" y2="424" class="line" marker-end="url(#arrow)"/>
 
-    
-    
-    <!-- Đăng nhập xong: Đi từ đáy (173, 412) -> xuống y=436 -> sang phải cắm vào cạnh trái Bước 3 tại (320, 436) -->
-    <line x1="173" y1="412" x2="173" y2="436" class="line"/>
-    <line x1="173" y1="436" x2="320" y2="436" class="line" marker-end="url(#arrow)"/>
+  <!-- Nhánh [Đã]: Thẳng xuống Bước 3 -->
+  <line x1="420" y1="348" x2="420" y2="404" class="line" marker-end="url(#arrow)"/>
+  <rect x="430" y="366" width="28.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+  <text x="444" y="378" class="guard-txt">[Đã]</text>
 
-    <!-- Nhánh Đã đăng nhập: Từ đáy hình thoi (420, 358) -> cắm thẳng xuống đỉnh Bước 3 tại (420, 415) -->
-    <line x1="420" y1="358" x2="420" y2="415" class="line" marker-end="url(#arrow)"/>
-    
-    <rect x="431.5" y="376" width="27.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
-    <text x="445" y="388" class="guard-txt">[Đã]</text>
-    
+  <!-- 4. Bước 3: Lưu giỏ hàng thành viên -->
+  <rect x="320" y="404" width="200" height="40" class="action-rect"/>
+  <text x="420.0" y="420" class="act-txt">3. Lưu sản phẩm vào</text>
+  <text x="420.0" y="436" class="act-txt">giỏ hàng thành viên</text>
+  <line x1="420" y1="444" x2="420" y2="464" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Bước 3: Lưu giỏ hàng (y=415 to y=457, midpoint left=(320, 436)) -->
-    
-    <rect x="320" y="415" width="200" height="42" class="action-rect"/>
-    <text x="420.0" y="431.5" class="act-txt">3. Lưu sản phẩm vào</text>
-<text x="420.0" y="448.5" class="act-txt">giỏ hàng thành viên</text>
+  <!-- 5. Bước 4: Kiểm tra và cập nhật giỏ hàng -->
+  <rect x="320" y="464" width="200" height="40" class="action-rect"/>
+  <text x="420.0" y="480" class="act-txt">4. Giao diện kiểm tra và</text>
+  <text x="420.0" y="496" class="act-txt">cập nhật giỏ hàng</text>
+  <line x1="420" y1="504" x2="420" y2="524" class="line" marker-end="url(#arrow)"/>
 
-    
-    <line x1="420" y1="457" x2="420" y2="478" class="line" marker-end="url(#arrow)"/>
+  <!-- 6. Bước 5: Bấm tiến hành kiểm tra đơn hàng -->
+  <rect x="320" y="524" width="200" height="40" class="action-rect"/>
+  <text x="420.0" y="540" class="act-txt">5. Bấm tiến hành</text>
+  <text x="420.0" y="556" class="act-txt">kiểm tra đơn hàng</text>
+  <line x1="420" y1="564" x2="420" y2="584" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Bước 4: Kiểm tra giỏ hàng -->
-    
-    <rect x="320" y="478" width="200" height="42" class="action-rect"/>
-    <text x="420.0" y="494.5" class="act-txt">4. Giao diện kiểm tra và</text>
-<text x="420.0" y="511.5" class="act-txt">cập nhật giỏ hàng</text>
+  <!-- 7. Bước 6: Nhập thông tin nhận hàng -->
+  <rect x="320" y="584" width="200" height="40" class="action-rect"/>
+  <text x="420.0" y="600" class="act-txt">6. Nhập thông tin nhận hàng &amp;</text>
+  <text x="420.0" y="616" class="act-txt">chọn hình thức thanh toán</text>
 
-    
-    <line x1="420" y1="520" x2="420" y2="540" class="line" marker-end="url(#arrow)"/>
+  <!-- Nối sang Bước 7 (Backend) -->
+  <line x1="520" y1="604" x2="566" y2="604" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Bước 5: Bấm kiểm tra đơn hàng -->
-    
-    <rect x="320" y="540" width="200" height="42" class="action-rect"/>
-    <text x="420.0" y="556.5" class="act-txt">5. Bấm tiến hành</text>
-<text x="420.0" y="573.5" class="act-txt">kiểm tra đơn hàng</text>
+  <!-- 8. Bước 7: Backend tạo đơn hàng & khóa tồn kho 15 phút -->
+  <rect x="566" y="584" width="200" height="40" class="action-rect"/>
+  <text x="666.0" y="600" class="act-txt">7. Backend tạo đơn hàng &amp;</text>
+  <text x="666.0" y="616" class="act-txt">khóa tồn kho 15 phút</text>
+  <line x1="666" y1="624" x2="666" y2="646" class="line" marker-end="url(#arrow)"/>
 
-    
-    <line x1="420" y1="582" x2="420" y2="602" class="line" marker-end="url(#arrow)"/>
+  <!-- Decision 2: Phương thức thanh toán? (cx=666, cy=670, rx=70, ry=24) -->
+  <polygon points="666,646 736,670 666,694 596,670" class="decision-diamond"/>
+  <text x="666" y="666" class="dec-txt">Phương thức</text>
+  <text x="666" y="681" class="dec-txt">thanh toán?</text>
 
-    <!-- Bước 6: Nhập thông tin nhận hàng -->
-    
-    <rect x="320" y="602" width="200" height="42" class="action-rect"/>
-    <text x="420.0" y="618.5" class="act-txt">6. Nhập thông tin nhận hàng &amp;</text>
-<text x="420.0" y="635.5" class="act-txt">chọn hình thức thanh toán</text>
+  <!-- Nhánh [COD]: Sang Action COD -->
+  <line x1="596" y1="670" x2="420" y2="670" class="line"/>
+  <line x1="420" y1="670" x2="420" y2="710" class="line" marker-end="url(#arrow)"/>
+  <rect x="493" y="654" width="34.5" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+  <text x="510" y="666" class="guard-txt">[COD]</text>
 
-    
-    <line x1="520" y1="623" x2="566" y2="623" class="line" marker-end="url(#arrow)"/>
+  <!-- Action: Xác nhận đặt hàng COD -->
+  <rect x="320" y="710" width="200" height="40" class="action-rect"/>
+  <text x="420.0" y="726" class="act-txt">Xác nhận đặt hàng COD</text>
+  <text x="420.0" y="742" class="act-txt">(Trạng thái: CONFIRMED)</text>
 
-    <!-- Bước 7: Backend tạo đơn hàng & khóa tồn kho -->
-    
-    <rect x="566" y="602" width="200" height="42" class="action-rect"/>
-    <text x="666.0" y="618.5" class="act-txt">7. Backend tạo đơn hàng &amp;</text>
-<text x="666.0" y="635.5" class="act-txt">khóa tồn kho 15 phút</text>
+  <!-- Kết thúc luồng COD (Chuyển sang giao hàng) -->
+  <line x1="420" y1="750" x2="420" y2="768" class="line" marker-end="url(#arrow)"/>
+  <circle cx="420" cy="776" r="8" fill="none" stroke="#000000" stroke-width="1.8"/>
+  <circle cx="420" cy="776" r="5" fill="#000000"/>
+  <text x="420" y="794" class="node-sub">(Chuyển sang giao hàng COD)</text>
 
-    
-    <line x1="666" y1="644" x2="666" y2="668" class="line" marker-end="url(#arrow)"/>
+  <!-- Nhánh [VietQR]: Xuống Action Quét mã VietQR -->
+  <line x1="666" y1="694" x2="666" y2="710" class="line" marker-end="url(#arrow)"/>
+  <rect x="677" y="694" width="57.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+  <text x="705" y="706" class="guard-txt">[VietQR]</text>
 
-    <!-- Decision 2: Phương thức thanh toán? (cx=666, cy=696, rx=70, ry=28) -->
-    
-    <polygon points="666,668 736,696 666,724 596,696" class="decision-diamond"/>
-    <text x="666" y="692.5" class="dec-txt">Phương thức</text>
-<text x="666" y="707.5" class="dec-txt">thanh toán?</text>
+  <!-- Action: Khách quét mã VietQR & chờ SePay -->
+  <rect x="566" y="710" width="200" height="40" class="action-rect"/>
+  <text x="666.0" y="726" class="act-txt">Khách quét mã VietQR &amp;</text>
+  <text x="666.0" y="742" class="act-txt">chờ SePay webhook</text>
+  <line x1="666" y1="750" x2="666" y2="770" class="line" marker-end="url(#arrow)"/>
 
-    
+  <!-- Decision 3: Trạng thái chuyển khoản? (cx=666, cy=794, rx=75, ry=24) -->
+  <polygon points="666,770 741,794 666,818 591,794" class="decision-diamond"/>
+  <text x="666" y="790" class="dec-txt">Trạng thái</text>
+  <text x="666" y="805" class="dec-txt">chuyển khoản?</text>
 
-    <!-- Nhánh COD (Trái) sang Action COD -->
-    <line x1="596" y1="696" x2="420" y2="696" class="line"/>
-    <line x1="420" y1="696" x2="420" y2="738" class="line" marker-end="url(#arrow)"/>
-    
-    <rect x="492.75" y="677" width="34.5" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
-    <text x="510" y="689" class="guard-txt">[COD]</text>
-    
+  <!-- Nhánh 1: [Đủ tiền trong 15p] (Thẳng xuống Lane 3) -->
+  <line x1="666" y1="818" x2="666" y2="846" class="line" marker-end="url(#arrow)"/>
+  <rect x="670" y="821" width="110" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+  <text x="725" y="833" class="guard-txt">[Đủ tiền trong 15p]</text>
 
-    
-    <rect x="320" y="738" width="200" height="42" class="action-rect"/>
-    <text x="420.0" y="754.5" class="act-txt">Xác nhận đặt hàng COD</text>
-<text x="420.0" y="771.5" class="act-txt">(Trạng thái: CONFIRMED)</text>
+  <!-- Action: Xác nhận đã thanh toán -->
+  <rect x="566" y="846" width="200" height="40" class="action-rect"/>
+  <text x="666.0" y="862" class="act-txt">Xác nhận đã thanh toán &amp;</text>
+  <text x="666.0" y="878" class="act-txt">chuẩn bị giao hàng</text>
+  <line x1="666" y1="886" x2="666" y2="908" class="line" marker-end="url(#arrow)"/>
 
-    
+  <!-- Action: Bàn giao thành công -->
+  <rect x="566" y="908" width="200" height="38" class="action-rect"/>
+  <text x="666.0" y="923" class="act-txt">Bàn giao và giao hàng</text>
+  <text x="666.0" y="938" class="act-txt">thành công cho khách</text>
+  <line x1="666" y1="946" x2="666" y2="966" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Nhánh VietQR (Dưới) sang Quét mã VietQR -->
-    <line x1="666" y1="724" x2="666" y2="748" class="line" marker-end="url(#arrow)"/>
-    
-    <rect x="676.5" y="727" width="57.0" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
-    <text x="705" y="739" class="guard-txt">[VietQR]</text>
-    
+  <!-- Final Node Thành Công -->
+  <circle cx="666" cy="974" r="8" fill="none" stroke="#000000" stroke-width="1.8"/>
+  <circle cx="666" cy="974" r="5" fill="#000000"/>
+  <text x="666" y="993" class="node-sub">(Hoàn tất đơn hàng)</text>
 
-    
-    <rect x="566" y="748" width="200" height="42" class="action-rect"/>
-    <text x="666.0" y="764.5" class="act-txt">Khách quét mã VietQR và</text>
-<text x="666.0" y="781.5" class="act-txt">chờ SePay webhook</text>
+  <!-- Nhánh 2: [Quá 15p chưa chuyển đủ] (Sang Trái Lane 2) -->
+  <line x1="591" y1="794" x2="420" y2="794" class="line"/>
+  <line x1="420" y1="794" x2="420" y2="846" class="line" marker-end="url(#arrow)"/>
+  <rect x="445" y="781" width="136" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
+  <text x="513" y="793" class="guard-txt">[Quá 15p chưa chuyển đủ]</text>
 
-    
-    <line x1="666" y1="790" x2="666" y2="812" class="line" marker-end="url(#arrow)"/>
+  <!-- Action: Tự động hủy đơn hàng và hoàn lại tồn kho -->
+  <rect x="320" y="846" width="200" height="40" class="action-rect"/>
+  <text x="420.0" y="862" class="act-txt">Tự động hủy đơn hàng &amp;</text>
+  <text x="420.0" y="878" class="act-txt">hoàn lại tồn kho trong CSDL</text>
+  <line x1="420" y1="886" x2="420" y2="915" class="line" marker-end="url(#arrow)"/>
 
-    <!-- Decision 3: Trạng thái chuyển khoản? (cx=666, cy=840, rx=70, ry=28) -->
-    
-    <polygon points="666,812 736,840 666,868 596,840" class="decision-diamond"/>
-    <text x="666" y="836.5" class="dec-txt">Trạng thái</text>
-<text x="666" y="851.5" class="dec-txt">chuyển khoản?</text>
+  <!-- Final Node Hủy Đơn -->
+  <circle cx="420" cy="923" r="8" fill="none" stroke="#000000" stroke-width="1.8"/>
+  <circle cx="420" cy="923" r="5" fill="#000000"/>
+  <text x="420" y="942" class="node-sub">(Hủy đơn do quá hạn 15 phút)</text>
 
-    
-
-    <!-- VietQR [Đủ tiền] (Dưới) cắm thẳng vào đỉnh Action Chuẩn bị giao hàng tại (666, 890) -->
-    <line x1="666" y1="868" x2="666" y2="890" class="line" marker-end="url(#arrow)"/>
-    
-    <rect x="672.75" y="869" width="64.5" height="17" fill="#FFFFFF" stroke="#000000" stroke-width="0.7"/>
-    <text x="705" y="881" class="guard-txt">[Đủ tiền]</text>
-    
-
-    <!-- Action Chuẩn bị giao hàng (x=566, y=890, w=200, h=42) -> midpoint left=(566, 911) -->
-    
-    <rect x="566" y="890" width="200" height="42" class="action-rect"/>
-    <text x="666.0" y="906.5" class="act-txt">Xác nhận đã thanh toán và</text>
-<text x="666.0" y="923.5" class="act-txt">chuẩn bị giao hàng</text>
-
-    
-
-    <!-- NHÁNH COD: TỪ ĐÁY COD (420, 780) ĐI XUỐNG y=911 VÀ CẮM CHÍNH XÁC VÀO CẠNH TRÁI TẠI (566, 911) -->
-    <line x1="420" y1="780" x2="420" y2="911" class="line"/>
-    <line x1="420" y1="911" x2="566" y2="911" class="line" marker-end="url(#arrow)"/>
-
-    <!-- Sau chuẩn bị giao hàng -> Bàn giao thành công (y=952 to y=990) -->
-    <line x1="666" y1="932" x2="666" y2="952" class="line" marker-end="url(#arrow)"/>
-    
-    <rect x="566" y="952" width="200" height="38" class="action-rect"/>
-    <text x="666.0" y="966.5" class="act-txt">Bàn giao và giao hàng</text>
-<text x="666.0" y="983.5" class="act-txt">thành công cho khách</text>
-
-    
-
-    <!-- NÚT KẾT THÚC (FINAL NODE) ĐẶT TẠI y=1012 (CÁCH ĐÁY KHUNG y=1040 TẬN 28px, KHÔNG BỊ TRÀN HAY ĐÈ VIỀN) -->
-    <line x1="666" y1="990" x2="666" y2="1006" class="line" marker-end="url(#arrow)"/>
-    <circle cx="666" cy="1014" r="8" fill="none" stroke="#000000" stroke-width="1.8"/>
-    <circle cx="666" cy="1014" r="5" fill="#000000"/>
-    
-
+  <!-- Footer Ký Hiệu Chuẩn -->
   <line x1="50" y1="1055" x2="790" y2="1055" class="line"/>
   <rect x="50" y="1062" width="740" height="80" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
   <text x="65" y="1079" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000">Ký hiệu chuẩn UML 2.x Activity Diagram:</text>

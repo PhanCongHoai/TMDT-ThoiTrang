@@ -325,13 +325,14 @@ class OrderRepository {
 
   /**
    * Quét và hủy các đơn hàng chờ SePay hết hạn 15 phút (TTL)
+   * Bao gồm cả đơn hàng chưa thanh toán (UNPAID) và chưa thanh toán đủ (PARTIALLY_PAID)
    */
   static async releaseExpiredOrders(ttlMinutes = 15) {
     const expiredOrders = await query(`
       SELECT id, order_code, created_at
       FROM orders WITH (UPDLOCK, READPAST)
       WHERE payment_method = 'SEPAY_QR'
-        AND payment_status = 'UNPAID'
+        AND payment_status IN ('UNPAID', 'PARTIALLY_PAID')
         AND status = 'PENDING'
         AND created_at < DATEADD(minute, -@ttlMinutes, SYSDATETIME())
     `, { ttlMinutes });
