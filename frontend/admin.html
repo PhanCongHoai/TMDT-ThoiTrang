@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -114,7 +115,8 @@
       transition: var(--transition);
     }
 
-    .admin-nav a:hover, .admin-nav a.active {
+    .admin-nav a:hover,
+    .admin-nav a.active {
       background: var(--accent-gold);
       color: #ffffff;
       box-shadow: 0 4px 15px rgba(201, 162, 77, 0.3);
@@ -144,7 +146,7 @@
       top: 0;
       z-index: 990;
       border-bottom: 1px solid rgba(201, 162, 77, 0.3);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     .admin-mobile-toggle-btn {
@@ -173,7 +175,7 @@
       z-index: 990;
       padding: 0.5rem 0.25rem;
       justify-content: space-around;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
     }
 
     .admin-mobile-bottom-nav a {
@@ -321,7 +323,8 @@
       min-width: 680px;
     }
 
-    .admin-table th, .admin-table td {
+    .admin-table th,
+    .admin-table td {
       padding: 0.95rem 1rem;
       text-align: left;
       border-bottom: 1px solid var(--border-light);
@@ -330,7 +333,9 @@
       font-feature-settings: 'lnum' 1, 'tnum' 1;
     }
 
-    #cj-kpi-grid div, #behavior-kpi-grid div, #ai-kpi-grid div {
+    #cj-kpi-grid div,
+    #behavior-kpi-grid div,
+    #ai-kpi-grid div {
       font-variant-numeric: tabular-nums lining-nums;
       font-feature-settings: 'lnum' 1, 'tnum' 1;
     }
@@ -340,7 +345,7 @@
       top: 0;
       z-index: 10;
       background: #faf8f5;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
       font-weight: 700;
       color: var(--primary-dark);
       text-transform: uppercase;
@@ -408,10 +413,11 @@
     }
 
     .table-actions-cell {
-      display: flex;
-      gap: 0.4rem;
+      display: inline-flex;
+      gap: 0.5rem;
       align-items: center;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      white-space: nowrap;
     }
 
     .status-badge {
@@ -422,10 +428,27 @@
       display: inline-block;
       white-space: nowrap;
     }
-    .status-badge.active { background: #e8f5e9; color: #2e7d32; }
-    .status-badge.pending { background: #fff3e0; color: #e65100; }
-    .status-badge.shipped { background: #e3f2fd; color: #1565c0; }
-    .status-badge.gold { background: #fff8e1; color: #b78103; border: 1px solid var(--accent-gold); }
+
+    .status-badge.active {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-badge.pending {
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    .status-badge.shipped {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .status-badge.gold {
+      background: #fff8e1;
+      color: #b78103;
+      border: 1px solid var(--accent-gold);
+    }
 
     .admin-action-btn {
       border: none;
@@ -440,12 +463,36 @@
       gap: 0.35rem;
       white-space: nowrap;
     }
-    .btn-edit { background: #f0f0f0; color: #333; }
-    .btn-edit:hover { background: var(--primary-dark); color: #fff; }
-    .btn-delete { background: #ffebee; color: #c62828; }
-    .btn-delete:hover { background: #c62828; color: #fff; }
-    .btn-approve { background: #e8f5e9; color: #2e7d32; }
-    .btn-approve:hover { background: #2e7d32; color: #fff; }
+
+    .btn-edit {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-edit:hover {
+      background: var(--primary-dark);
+      color: #fff;
+    }
+
+    .btn-delete {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .btn-delete:hover {
+      background: #c62828;
+      color: #fff;
+    }
+
+    .btn-approve {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .btn-approve:hover {
+      background: #2e7d32;
+      color: #fff;
+    }
 
     .reviews-filter-pills-scroll {
       display: flex;
@@ -486,7 +533,7 @@
         width: 280px;
         height: 100vh;
         z-index: 1100;
-        box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+        box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
         padding: 1.5rem 1.25rem;
       }
 
@@ -505,7 +552,8 @@
 
       .admin-main {
         padding: 1.25rem;
-        padding-bottom: 5.5rem; /* Clearance for bottom nav */
+        padding-bottom: 5.5rem;
+        /* Clearance for bottom nav */
         gap: 1.25rem;
       }
 
@@ -515,7 +563,7 @@
         align-items: stretch;
       }
 
-      .admin-header > div {
+      .admin-header>div {
         width: 100%;
       }
 
@@ -615,6 +663,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- MOBILE TOP BAR -->
@@ -628,7 +677,9 @@
       </div>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem;">
-      <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-gold); color: #121212; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">AD</div>
+      <div
+        style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent-gold); color: #121212; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+        AD</div>
     </div>
   </header>
 
@@ -650,21 +701,33 @@
       </div>
 
       <ul class="admin-nav">
-        <li><a href="#dashboard" class="admin-tab-link active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> <span>Tổng Quan Báo Cáo</span></a></li>
-        <li><a href="#products" class="admin-tab-link" data-tab="products"><i class="fa-solid fa-shirt"></i> <span>Quản Lý Sản Phẩm</span></a></li>
-        <li><a href="#orders" class="admin-tab-link" data-tab="orders"><i class="fa-solid fa-cart-shopping"></i> <span>Quản Lý Đơn Hàng</span></a></li>
-        <li><a href="admin-dispatch.html" target="_blank" style="color: #38bdf8;"><i class="fa-solid fa-boxes-packing"></i> <span>Thủ Tục Nhận & Bàn Giao Đơn</span> <span style="background: #38bdf8; color: #000; font-size: 0.65rem; padding: 1px 6px; border-radius: 10px; font-weight: 700;">HUB</span></a></li>
-        <li><a href="#reviews" class="admin-tab-link" data-tab="reviews"><i class="fa-solid fa-star"></i> <span>Duyệt Đánh Giá (Reviews)</span></a></li>
-        <li><a href="#customers" class="admin-tab-link" data-tab="customers"><i class="fa-solid fa-users"></i> <span>Quản Lý Khách Hàng</span></a></li>
-        <li><a href="#behavior" class="admin-tab-link" data-tab="behavior"><i class="fa-solid fa-eye"></i> <span>Phân Tích Hành Vi</span></a></li>
-        <li><a href="#ai-forecast" class="admin-tab-link" data-tab="ai-forecast"><i class="fa-solid fa-wand-magic-sparkles"></i> <span>AI Dự Báo Nhu Cầu</span></a></li>
+        <li><a href="#dashboard" class="admin-tab-link active" data-tab="dashboard"><i
+              class="fa-solid fa-chart-line"></i> <span>Tổng Quan Báo Cáo</span></a></li>
+        <li><a href="#products" class="admin-tab-link" data-tab="products"><i class="fa-solid fa-shirt"></i> <span>Quản
+              Lý Sản Phẩm</span></a></li>
+        <li><a href="#categories" class="admin-tab-link" data-tab="categories"><i class="fa-solid fa-tags"></i>
+            <span>Quản Lý Danh Mục</span></a></li>
+        <li><a href="#orders" class="admin-tab-link" data-tab="orders"><i class="fa-solid fa-cart-shopping"></i>
+            <span>Quản Lý Đơn Hàng</span></a></li>
+        <li><a href="#reviews" class="admin-tab-link" data-tab="reviews"><i class="fa-solid fa-star"></i> <span>Duyệt
+              Đánh Giá (Reviews)</span></a></li>
+        <li><a href="#customers" class="admin-tab-link" data-tab="customers"><i class="fa-solid fa-users"></i>
+            <span>Quản Lý Khách Hàng</span></a></li>
+        <li><a href="#behavior" class="admin-tab-link" data-tab="behavior"><i class="fa-solid fa-eye"></i> <span>Phân
+              Tích Hành Vi</span></a></li>
+        <li><a href="#ai-forecast" class="admin-tab-link" data-tab="ai-forecast"><i
+              class="fa-solid fa-wand-magic-sparkles"></i> <span>AI Dự Báo Nhu Cầu</span></a></li>
       </ul>
 
-      <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 0.75rem;">
-        <a href="index.html" style="color: var(--accent-gold); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+      <div
+        style="margin-top: auto; padding-top: 1rem; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 0.75rem;">
+        <a href="index.html"
+          style="color: var(--accent-gold); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
           <i class="fa-solid fa-globe"></i> Xem Trang Web Chính
         </a>
-        <a href="javascript:void(0)" id="admin-logout-btn" class="logout-link" onclick="if(typeof window.logout==='function'){window.logout();}else{sessionStorage.removeItem('auralie_token');sessionStorage.removeItem('auralie_user');sessionStorage.removeItem('cartReminderShownAfterLogin');localStorage.removeItem('userRole');localStorage.removeItem('userName');localStorage.removeItem('userEmail');localStorage.removeItem('userId');window.location.href='login.html';}return false;" style="color: #ff6b6b; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+        <a href="javascript:void(0)" id="admin-logout-btn" class="logout-link"
+          onclick="if(typeof window.logout==='function'){window.logout();}else{sessionStorage.removeItem('auralie_token');sessionStorage.removeItem('auralie_user');sessionStorage.removeItem('cartReminderShownAfterLogin');localStorage.removeItem('userRole');localStorage.removeItem('userName');localStorage.removeItem('userEmail');localStorage.removeItem('userId');window.location.href='login.html';}return false;"
+          style="color: #ff6b6b; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
           <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất Admin
         </a>
       </div>
@@ -676,17 +739,24 @@
       <!-- HEADER TOP BAR -->
       <div class="admin-header">
         <div>
-          <h2 id="admin-view-title" style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--primary-dark); margin: 0;">Bảng Quản Trị Hệ Thống AURALIÈ</h2>
-          <span id="admin-view-desc" style="font-size: 0.8rem; color: var(--text-muted);">Phiên bản Executive 2026 - Quản lý thương mại điện tử xa xỉ</span>
+          <h2 id="admin-view-title"
+            style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--primary-dark); margin: 0;">Bảng Quản
+            Trị Hệ Thống AURALIÈ</h2>
+          <span id="admin-view-desc" style="font-size: 0.8rem; color: var(--text-muted);">Phiên bản Executive 2026 -
+            Quản lý thương mại điện tử xa xỉ</span>
         </div>
 
         <div class="admin-header-actions">
-          <button class="btn-primary-luxury" id="btn-add-new-product-top" style="padding: 0.6rem 1.2rem; font-size: 0.8rem; flex: 1;">
+          <button class="btn-primary-luxury" id="btn-add-new-product-top"
+            style="padding: 0.6rem 1.2rem; font-size: 0.8rem; flex: 1;">
             <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm Mới
           </button>
-          
-          <div style="display: flex; align-items: center; gap: 0.6rem; background: #faf7f2; padding: 0.4rem 0.8rem; border-radius: 30px; border: 1px solid var(--border-light); flex-shrink: 0;">
-            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-dark); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">AD</div>
+
+          <div
+            style="display: flex; align-items: center; gap: 0.6rem; background: #faf7f2; padding: 0.4rem 0.8rem; border-radius: 30px; border: 1px solid var(--border-light); flex-shrink: 0;">
+            <div
+              style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-dark); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+              AD</div>
             <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">Quản Trị Viên</span>
           </div>
         </div>
@@ -723,8 +793,11 @@
       <div class="admin-table-card" style="margin-top: 0.5rem;">
         <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;"><i class="fa-solid fa-chart-area" style="color: var(--accent-gold);"></i> Báo Cáo Phân Tích Doanh Thu & Danh Mục 2026</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Biểu đồ tương tác xu hướng tăng trưởng doanh thu 12 tháng và tỷ lệ bán theo nhóm sản phẩm</span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;"><i
+                class="fa-solid fa-chart-area" style="color: var(--accent-gold);"></i> Báo Cáo Phân Tích Doanh Thu &
+              Danh Mục 2026</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Biểu đồ tương tác xu hướng tăng trưởng doanh thu
+              12 tháng và tỷ lệ bán theo nhóm sản phẩm</span>
           </div>
           <div style="display: flex; gap: 0.5rem;">
             <button class="review-pill active" id="btn-chart-year">Năm 2026</button>
@@ -733,16 +806,22 @@
         </div>
 
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;" class="responsive-grid">
-          <div style="background: #faf8f5; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-light);">
-            <h4 style="font-size: 0.85rem; color: var(--primary-dark); margin-bottom: 0.75rem;"><i class="fa-solid fa-arrow-trend-up" style="color: #2e7d32;"></i> Tăng Trưởng Doanh Thu 12 Tháng (Triệu ₫)</h4>
+          <div
+            style="background: #faf8f5; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-light);">
+            <h4 style="font-size: 0.85rem; color: var(--primary-dark); margin-bottom: 0.75rem;"><i
+                class="fa-solid fa-arrow-trend-up" style="color: #2e7d32;"></i> Tăng Trưởng Doanh Thu 12 Tháng (Triệu ₫)
+            </h4>
             <div style="position: relative; height: 260px;">
               <canvas id="revenueChart"></canvas>
             </div>
           </div>
 
-          <div style="background: #faf8f5; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-light);">
-            <h4 style="font-size: 0.85rem; color: var(--primary-dark); margin-bottom: 0.75rem;"><i class="fa-solid fa-chart-pie" style="color: var(--accent-gold);"></i> Tỷ Lệ Theo Danh Mục</h4>
-            <div style="position: relative; height: 260px; display: flex; align-items: center; justify-content: center;">
+          <div
+            style="background: #faf8f5; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-light);">
+            <h4 style="font-size: 0.85rem; color: var(--primary-dark); margin-bottom: 0.75rem;"><i
+                class="fa-solid fa-chart-pie" style="color: var(--accent-gold);"></i> Tỷ Lệ Theo Danh Mục</h4>
+            <div
+              style="position: relative; height: 260px; display: flex; align-items: center; justify-content: center;">
               <canvas id="categoryPieChart"></canvas>
             </div>
           </div>
@@ -757,20 +836,28 @@
       <div class="admin-table-card admin-section-tab" id="tab-sec-products">
         <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">1. Quản Lý Danh Sách Sản Phẩm</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Quản lý phom dáng, giá bán và tình trạng kho hàng</span>
-            <p class="admin-inventory-note">Tổng = còn trong kho + đã đi đơn. Đã đi đơn bao gồm hàng đang giữ cho đơn chưa hủy; số tồn không bị trừ thêm lần nữa.</p>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">1. Quản Lý Danh Sách
+              Sản Phẩm</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Quản lý phom dáng, giá bán và tình trạng kho
+              hàng</span>
+            <p class="admin-inventory-note">Tổng = còn trong kho + đã đi đơn. Đã đi đơn bao gồm hàng đang giữ cho đơn
+              chưa hủy; số tồn không bị trừ thêm lần nữa.</p>
           </div>
           <div class="admin-card-header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <button type="button" class="btn-primary-luxury" onclick="loadAdminProducts()" style="padding:0.5rem 0.9rem;font-size:0.78rem">Tải lại dữ liệu</button>
-            <input type="text" placeholder="Tìm kiếm sản phẩm..." style="padding: 0.5rem 0.9rem; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.82rem; outline: none; width: 200px;">
-            <button class="btn-primary-luxury" id="btn-open-batch-import-modal" onclick="openBatchImportModal()" style="background:#1e1e1e; padding: 0.5rem 0.9rem; font-size: 0.78rem;">
+            <button type="button" class="btn-primary-luxury" onclick="loadAdminProducts()"
+              style="padding:0.5rem 0.9rem;font-size:0.78rem">Tải lại dữ liệu</button>
+            <input type="text" placeholder="Tìm kiếm sản phẩm..."
+              style="padding: 0.5rem 0.9rem; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.82rem; outline: none; width: 200px;">
+            <button class="btn-primary-luxury" id="btn-open-batch-import-modal" onclick="openBatchImportModal()"
+              style="background:#1e1e1e; padding: 0.5rem 0.9rem; font-size: 0.78rem;">
               <i class="fa-solid fa-boxes-packing"></i> Nhập Hàng Theo Lô
             </button>
-            <button class="btn-primary-luxury" id="btn-open-add-product-modal" style="padding: 0.5rem 0.9rem; font-size: 0.78rem;">
+            <button class="btn-primary-luxury" id="btn-open-add-product-modal"
+              style="padding: 0.5rem 0.9rem; font-size: 0.78rem;">
               <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm
             </button>
-            <button type="button" class="btn-primary-luxury" id="btn-open-stock-modal" onclick="AdminUI.adjustStock()" style="padding:0.5rem 0.9rem;font-size:0.78rem">
+            <button type="button" class="btn-primary-luxury" id="btn-open-stock-modal" onclick="AdminUI.adjustStock()"
+              style="padding:0.5rem 0.9rem;font-size:0.78rem">
               <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i> Tồn Kho
             </button>
           </div>
@@ -808,7 +895,8 @@
             <button class="pagination-btn">4</button>
             <button class="pagination-btn">Sau <i class="fa-solid fa-chevron-right"></i></button>
 
-            <select class="pagination-size-select" onchange="alert('Đã đổi hiển thị sản phẩm sang: ' + this.value + ' mẫu/trang')">
+            <select class="pagination-size-select"
+              onchange="alert('Đã đổi hiển thị sản phẩm sang: ' + this.value + ' mẫu/trang')">
               <option value="10">10 dòng/trang</option>
               <option value="25">25 dòng/trang</option>
               <option value="50">50 dòng/trang</option>
@@ -820,22 +908,115 @@
 
 
       <!-- ===================================================================
+           QUẢN LÝ DANH MỤC THỜI TRANG (CATEGORY MANAGEMENT PAGE)
+           =================================================================== -->
+      <div class="admin-table-card admin-section-tab" id="tab-sec-categories" style="display: none;">
+        <div class="admin-card-header-flex">
+          <div>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">
+              <i class="fa-solid fa-tags" style="color: var(--accent-gold);"></i> Quản Lý Danh Mục Thời Trang
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);" id="admin-categories-count-subtitle">
+              Thêm mới danh mục, cập nhật mã định danh (slug) và quản lý phân loại thiết kế
+            </span>
+          </div>
+          <div class="admin-card-header-actions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button type="button" class="btn-primary-luxury" onclick="window.loadAdminCategories()"
+              style="padding:0.5rem 0.9rem; font-size:0.78rem;">
+              <i class="fa-solid fa-rotate"></i> Tải lại
+            </button>
+            <button class="btn-primary-luxury" id="btn-open-add-category-modal" onclick="window.openAddCategoryModal()"
+              style="padding: 0.5rem 0.9rem; font-size: 0.78rem;">
+              <i class="fa-solid fa-plus"></i> Thêm Danh Mục Mới
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive-wrapper" style="margin-top: 1.25rem;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Mã DM</th>
+                <th style="width: 200px;">Tên Danh Mục</th>
+                <th style="width: 180px;">Mã Định Danh (Slug)</th>
+                <th>Mô Tả Danh Mục</th>
+                <th style="width: 150px; text-align: center; white-space: nowrap;">Số Lượng SP</th>
+                <th style="width: 180px; text-align: center; white-space: nowrap;">Thao Tác</th>
+              </tr>
+            </thead>
+            <tbody id="admin-categories-tbody">
+              <tr>
+                <td colspan="6" style="text-align:center; padding: 2rem;">Đang tải danh sách danh mục...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- ===================================================================
            2. TRANG QUẢN LÝ ĐƠN HÀNG (ORDER MANAGEMENT PAGE)
            =================================================================== -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-orders">
-        <div class="admin-card-header-flex">
-          <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">2. Quản Lý Đơn Hàng</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Theo dõi đơn đặt hàng và trạng thái vận chuyển</span>
+        <div class="admin-card-header-flex" style="flex-direction: column; align-items: stretch; gap: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">2. Quản Lý Đơn Hàng</h3>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Theo dõi đơn đặt hàng, trạng thái thanh toán và vận chuyển thời gian thực</span>
+            </div>
+            
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+              <!-- Ô tìm kiếm đơn hàng -->
+              <div style="position: relative;">
+                <input type="text" id="admin-orders-search" placeholder="Tìm mã đơn, tên KH, SĐT..." 
+                  style="padding: 0.45rem 0.85rem 0.45rem 2rem; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.8rem; outline: none; width: 220px; background: #faf8f5;"
+                  oninput="window.filterAdminOrders()">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--text-muted);"></i>
+              </div>
+
+              <!-- Lọc hình thức & trạng thái thanh toán -->
+              <select id="admin-orders-pay-filter" onchange="window.filterAdminOrders()"
+                style="padding: 0.45rem 0.8rem; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.78rem; outline: none; background: #faf8f5; cursor: pointer;">
+                <option value="ALL">Tất cả thanh toán</option>
+                <option value="PAID">Đã thanh toán (PAID)</option>
+                <option value="UNPAID">Chưa thanh toán (UNPAID)</option>
+                <option value="COD">Hình thức COD</option>
+                <option value="SEPAY_QR">Hình thức SePay VietQR</option>
+              </select>
+
+              <!-- Nút tải lại -->
+              <button class="review-pill" onclick="window.loadAdminOrders()" style="display: inline-flex; align-items: center; gap: 4px; padding: 0.45rem 0.85rem;" title="Tải lại đơn hàng từ CSDL">
+                <i class="fa-solid fa-rotate"></i> Tải lại
+              </button>
+
+              <!-- Xuất Excel -->
+              <button class="btn-primary-luxury" onclick="exportToExcel('orders')" 
+                style="background:#2e7d32; padding:0.45rem 0.85rem; font-size:0.75rem; border-radius:20px; white-space:nowrap; border:none; display: inline-flex; align-items: center; gap: 5px;">
+                <i class="fa-solid fa-file-excel"></i> Xuất File Excel
+              </button>
+            </div>
           </div>
-          
-          <div class="reviews-filter-pills-scroll">
-            <button class="review-pill active">Tất Cả (142)</button>
-            <button class="review-pill">Cần Duyệt (24)</button>
-            <button class="review-pill">Đang Vận Chuyển (18)</button>
-            <button class="review-pill">Hoàn Thành (98)</button>
-            <a href="admin-dispatch.html" target="_blank" class="btn-primary-luxury" style="background:#0f172a; border: 1px solid #38bdf8; color:#38bdf8; padding:0.4rem 0.8rem; font-size:0.75rem; border-radius:20px; white-space:nowrap; text-decoration:none; display:inline-flex; align-items:center; gap:5px;"><i class="fa-solid fa-boxes-packing"></i> Mở Trung Tâm Nhận & Bàn Giao Đơn</a>
-            <button class="btn-primary-luxury" onclick="exportToExcel('orders')" style="background:#2e7d32; padding:0.4rem 0.8rem; font-size:0.75rem; border-radius:20px; white-space:nowrap; border:none;"><i class="fa-solid fa-file-excel"></i> Xuất File Excel</button>
+
+          <!-- Các Pill Lọc Trạng Thái Đơn Hàng Thực Tế -->
+          <div class="reviews-filter-pills-scroll" id="admin-orders-status-pills">
+            <button class="review-pill active" data-status="ALL" onclick="window.setOrderFilterStatus('ALL')">
+              Tất Cả <span id="count-order-all" style="font-weight: 700; opacity: 0.85;">(0)</span>
+            </button>
+            <button class="review-pill" data-status="PENDING" onclick="window.setOrderFilterStatus('PENDING')">
+              Chờ Duyệt Kho <span id="count-order-pending" style="font-weight: 700; opacity: 0.85;">(0)</span>
+            </button>
+            <button class="review-pill" data-status="CONFIRMED" onclick="window.setOrderFilterStatus('CONFIRMED')">
+              Đã Xác Nhận <span id="count-order-confirmed" style="font-weight: 700; opacity: 0.85;">(0)</span>
+            </button>
+            <button class="review-pill" data-status="SHIPPED" onclick="window.setOrderFilterStatus('SHIPPED')">
+              Đang Giao Hàng <span id="count-order-shipped" style="font-weight: 700; opacity: 0.85;">(0)</span>
+            </button>
+            <button class="review-pill" data-status="COMPLETED" onclick="window.setOrderFilterStatus('COMPLETED')">
+              Đã Hoàn Thành <span id="count-order-completed" style="font-weight: 700; opacity: 0.85;">(0)</span>
+            </button>
+            <button class="review-pill" data-status="CANCELLED" onclick="window.setOrderFilterStatus('CANCELLED')">
+              Đã Hủy <span id="count-order-cancelled" style="font-weight: 700; opacity: 0.85;">(0)</span>
+            </button>
           </div>
         </div>
 
@@ -868,7 +1049,8 @@
             <button class="pagination-btn">2</button>
             <button class="pagination-btn">Sau <i class="fa-solid fa-chevron-right"></i></button>
 
-            <select class="pagination-size-select" onchange="alert('Đã đổi hiển thị danh sách sang: ' + this.value + ' dòng/trang')">
+            <select class="pagination-size-select"
+              onchange="alert('Đã đổi hiển thị danh sách sang: ' + this.value + ' dòng/trang')">
               <option value="10">10 dòng/trang</option>
               <option value="25">25 dòng/trang</option>
               <option value="50">50 dòng/trang</option>
@@ -885,10 +1067,11 @@
       <div class="admin-table-card admin-section-tab" id="tab-sec-reviews">
         <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">3. Kiểm Duyệt Đánh Giá Khách Hàng</h3>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">3. Kiểm Duyệt Đánh Giá
+              Khách Hàng</h3>
             <span style="font-size: 0.8rem; color: var(--text-muted);">Quản lý nhận xét và đánh giá thực tế</span>
           </div>
-          
+
           <div style="font-size: 0.85rem; color: var(--accent-gold); font-weight: bold;">
             <i class="fa-solid fa-star"></i> Trung bình: 4.9/5.0
           </div>
@@ -909,18 +1092,21 @@
             </thead>
             <tbody id="admin-reviews-tbody">
               <tr>
-                <td><strong>Nguyễn Thành Trung</strong><br><span style="font-size:0.7rem; color:#2e7d32;">✓ Đã Mua Hàng</span></td>
+                <td><strong>Nguyễn Thành Trung</strong><br><span style="font-size:0.7rem; color:#2e7d32;">✓ Đã Mua
+                    Hàng</span></td>
                 <td>Double-Breasted Suit</td>
                 <td><span style="color:var(--accent-gold);">★★★★★ 5.0</span></td>
                 <td>"Áo vest may phom rất chuẩn, mặc lên đứng dáng và cực kỳ tôn vai."</td>
                 <td>02/10/2026</td>
                 <td><span class="status-badge active">Đã Hiển Thị</span></td>
                 <td>
-                  <button class="admin-action-btn btn-delete" onclick="alert('Đã ẩn đánh giá khỏi trang web sản phẩm')">Ẩn Đánh Giá</button>
+                  <button class="admin-action-btn btn-delete"
+                    onclick="alert('Đã ẩn đánh giá khỏi trang web sản phẩm')">Ẩn Đánh Giá</button>
                 </td>
               </tr>
               <tr>
-                <td><strong>Lê Phương Anh</strong><br><span style="font-size:0.7rem; color:#2e7d32;">✓ Đã Mua Hàng</span></td>
+                <td><strong>Lê Phương Anh</strong><br><span style="font-size:0.7rem; color:#2e7d32;">✓ Đã Mua
+                    Hàng</span></td>
                 <td>Minimalist Silk Trench</td>
                 <td><span style="color:var(--accent-gold);">★★★★★ 5.0</span></td>
                 <td>"Mua làm quà tặng sinh nhật cho sếp. Sếp rất khen chất liệu."</td>
@@ -939,7 +1125,9 @@
                 <td><span class="status-badge pending">Chờ Duyệt</span></td>
                 <td>
                   <div class="table-actions-cell">
-                    <button class="admin-action-btn btn-approve" onclick="alert('Đã duyệt đăng bài đánh giá công khai!')"><i class="fa-solid fa-check"></i> Duyệt</button>
+                    <button class="admin-action-btn btn-approve"
+                      onclick="alert('Đã duyệt đăng bài đánh giá công khai!')"><i class="fa-solid fa-check"></i>
+                      Duyệt</button>
                     <button class="admin-action-btn btn-delete"><i class="fa-solid fa-xmark"></i> Từ Chối</button>
                   </div>
                 </td>
@@ -956,31 +1144,40 @@
       <div class="admin-table-card admin-section-tab" id="tab-sec-customers">
         <div class="admin-card-header-flex">
           <div>
-            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">4. Quản Lý Khách Hàng</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);" id="admin-customers-count-subtitle">Quản lý danh sách khách hàng, cập nhật thông tin và phân quyền hội viên</span>
+            <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">4. Quản Lý Khách Hàng
+            </h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);" id="admin-customers-count-subtitle">Quản lý danh
+              sách khách hàng, cập nhật thông tin và phân quyền hội viên</span>
           </div>
-          
+
           <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" id="btn-open-add-customer-modal">
+            <button class="btn-primary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;"
+              id="btn-open-add-customer-modal">
               <i class="fa-solid fa-user-plus"></i> Thêm Khách Hàng
             </button>
-            <button class="btn-secondary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" onclick="window.exportCustomersCSV()">
+            <button class="btn-secondary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;"
+              onclick="window.exportCustomersCSV()">
               <i class="fa-solid fa-file-excel"></i> Xuất Excel
             </button>
-            <button class="btn-secondary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;" onclick="alert('Đã gửi thông báo ưu đãi chăm sóc tới khách hàng!')">
+            <button class="btn-secondary-luxury" style="padding: 0.5rem 1rem; font-size: 0.78rem;"
+              onclick="alert('Đã gửi thông báo ưu đãi chăm sóc tới khách hàng!')">
               <i class="fa-solid fa-envelope"></i> Gửi Ưu Đãi
             </button>
           </div>
         </div>
 
         <!-- BỘ LỌC & TÌM KIẾM KHÁCH HÀNG -->
-        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; background: #faf8f5; padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border-light);">
+        <div
+          style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; background: #faf8f5; padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border-light);">
           <div style="flex: 1; min-width: 220px; position: relative;">
-            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
-            <input type="text" id="admin-customer-search-input" placeholder="Tìm kiếm theo tên, email, số điện thoại..." style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.2rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff;">
+            <i class="fa-solid fa-magnifying-glass"
+              style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+            <input type="text" id="admin-customer-search-input" placeholder="Tìm kiếm theo tên, email, số điện thoại..."
+              style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.2rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff;">
           </div>
           <div style="min-width: 170px;">
-            <select id="admin-customer-filter-tier" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff; cursor: pointer;">
+            <select id="admin-customer-filter-tier"
+              style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff; cursor: pointer;">
               <option value="">Tất cả phân hạng</option>
               <option value="DIAMOND">Diamond VIP</option>
               <option value="PLATINUM">Platinum VIP</option>
@@ -990,7 +1187,8 @@
             </select>
           </div>
           <div style="min-width: 150px;">
-            <select id="admin-customer-filter-role" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff; cursor: pointer;">
+            <select id="admin-customer-filter-role"
+              style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.82rem; outline: none; background: #fff; cursor: pointer;">
               <option value="">Tất cả vai trò</option>
               <option value="CUSTOMER">Khách Hàng</option>
               <option value="ADMIN">Quản Trị Viên</option>
@@ -1017,20 +1215,29 @@
       </div>
 
       <!-- CUSTOMER JOURNEY MODAL -->
-      <div id="admin-customer-journey-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,15,20,0.65); z-index:2000; align-items:center; justify-content:center; padding:1.5rem;">
-        <div style="background:#fff; border-radius:14px; max-width:1050px; width:100%; max-height:90vh; overflow-y:auto; padding:1.75rem; box-shadow:0 24px 60px rgba(0,0,0,0.28);">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; border-bottom:1px solid #eee; padding-bottom:1rem; margin-bottom:1rem;">
+      <div id="admin-customer-journey-modal" class="modal-overlay"
+        style="display:none; position:fixed; inset:0; background:rgba(15,15,20,0.65); z-index:2000; align-items:center; justify-content:center; padding:1.5rem;">
+        <div
+          style="background:#fff; border-radius:14px; max-width:1050px; width:100%; max-height:90vh; overflow-y:auto; padding:1.75rem; box-shadow:0 24px 60px rgba(0,0,0,0.28);">
+          <div
+            style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; border-bottom:1px solid #eee; padding-bottom:1rem; margin-bottom:1rem;">
             <div>
-              <h3 id="cj-modal-title" style="font-family:var(--font-serif); font-size:1.35rem; margin:0 0 0.25rem 0;">Hành Trình Khách Hàng</h3>
+              <h3 id="cj-modal-title" style="font-family:var(--font-serif); font-size:1.35rem; margin:0 0 0.25rem 0;">
+                Hành Trình Khách Hàng</h3>
               <div id="cj-modal-subtitle" style="font-size:0.85rem; color:var(--text-muted);">Đang tải...</div>
             </div>
-            <button type="button" onclick="window.closeCustomerJourney()" style="background:#f5f5f5; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:1rem;">&times;</button>
+            <button type="button" onclick="window.closeCustomerJourney()"
+              style="background:#f5f5f5; border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:1rem;">&times;</button>
           </div>
 
-          <div id="cj-kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:0.75rem; margin-bottom:1.1rem;"></div>
+          <div id="cj-kpi-grid"
+            style="display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:0.75rem; margin-bottom:1.1rem;">
+          </div>
 
-          <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; background:#faf8f5; padding:0.75rem 1rem; border-radius:10px; margin-bottom:1rem;">
-            <select id="cj-filter-event" style="padding:0.45rem 0.65rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;">
+          <div
+            style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; background:#faf8f5; padding:0.75rem 1rem; border-radius:10px; margin-bottom:1rem;">
+            <select id="cj-filter-event"
+              style="padding:0.45rem 0.65rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;">
               <option value="">Tất cả sự kiện</option>
               <option value="page_view">page_view</option>
               <option value="product_view">product_view</option>
@@ -1042,17 +1249,24 @@
               <option value="coupon_apply">coupon_apply</option>
               <option value="purchase">purchase</option>
             </select>
-            <select id="cj-filter-session" style="padding:0.45rem 0.65rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem; max-width:220px;">
+            <select id="cj-filter-session"
+              style="padding:0.45rem 0.65rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem; max-width:220px;">
               <option value="">Tất cả phiên (Sessions)</option>
             </select>
-            <input type="date" id="cj-filter-from" style="padding:0.4rem 0.6rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;" title="Từ ngày">
-            <input type="date" id="cj-filter-to" style="padding:0.4rem 0.6rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;" title="Đến ngày">
-            <button type="button" class="btn-primary-luxury" style="padding:0.45rem 0.9rem; font-size:0.8rem;" onclick="window.loadCustomerJourneyPage(1)">
+            <input type="date" id="cj-filter-from"
+              style="padding:0.4rem 0.6rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;"
+              title="Từ ngày">
+            <input type="date" id="cj-filter-to"
+              style="padding:0.4rem 0.6rem; border:1px solid #ddd; border-radius:6px; font-size:0.82rem;"
+              title="Đến ngày">
+            <button type="button" class="btn-primary-luxury" style="padding:0.45rem 0.9rem; font-size:0.8rem;"
+              onclick="window.loadCustomerJourneyPage(1)">
               <i class="fa-solid fa-filter"></i> Lọc Timeline
             </button>
           </div>
 
-          <div class="table-responsive-wrapper" style="max-height:320px; overflow-y:auto; border:1px solid #eee; border-radius:8px;">
+          <div class="table-responsive-wrapper"
+            style="max-height:320px; overflow-y:auto; border:1px solid #eee; border-radius:8px;">
             <table class="admin-table" style="font-size:0.82rem;">
               <thead>
                 <tr>
@@ -1068,9 +1282,12 @@
             </table>
           </div>
 
-          <div id="cj-pagination" style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem; font-size:0.82rem;"></div>
+          <div id="cj-pagination"
+            style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem; font-size:0.82rem;">
+          </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1.1rem;" class="responsive-grid">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1.1rem;"
+            class="responsive-grid">
             <div style="border:1px solid #eee; border-radius:8px; padding:0.85rem;">
               <h4 style="margin:0 0 0.5rem 0; font-size:0.9rem;">Đơn Hàng Gần Nhất</h4>
               <div id="cj-orders-list" style="font-size:0.8rem; color:#444;"></div>
@@ -1085,17 +1302,21 @@
 
       <!-- CUSTOMER BEHAVIOR ANALYTICS SECTION -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-behavior" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:1.25rem;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:1.25rem;">
           <div>
             <h3 style="margin:0; font-family:var(--font-serif);">Phân Tích Hành Vi Khách Hàng (30 Ngày Gần Nhất)</h3>
-            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Theo dõi phiên truy cập, phễu chuyển đổi, tương tác sản phẩm và từ khóa tìm kiếm</p>
+            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Theo dõi phiên truy cập, phễu chuyển
+              đổi, tương tác sản phẩm và từ khóa tìm kiếm</p>
           </div>
-          <button onclick="window.loadBehaviorAnalytics()" class="admin-action-btn" style="background:var(--primary-dark); color:#d4af37; padding:8px 14px; border-radius:6px; border:1px solid #d4af37;">
+          <button onclick="window.loadBehaviorAnalytics()" class="admin-action-btn"
+            style="background:var(--primary-dark); color:#d4af37; padding:8px 14px; border-radius:6px; border:1px solid #d4af37;">
             <i class="fa-solid fa-rotate"></i> Làm Mới Số Liệu
           </button>
         </div>
 
-        <div id="behavior-kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:1.5rem;">
+        <div id="behavior-kpi-grid"
+          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:1.5rem;">
           <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
             <div style="font-size:12px; color:#666;">Tổng Lượt Xem Trang</div>
             <div id="beh-pageviews" style="font-size:22px; font-weight:700; margin-top:4px;">0</div>
@@ -1118,7 +1339,8 @@
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:1.5rem;">
+        <div
+          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:1.5rem;">
           <div style="padding:16px; border:1px solid #eee; border-radius:8px; background:#fff;">
             <h4 style="margin:0 0 10px;">Phễu Chuyển Đổi (Conversion Funnel)</h4>
             <canvas id="behavior-funnel-chart" height="190"></canvas>
@@ -1143,7 +1365,9 @@
               </tr>
             </thead>
             <tbody id="beh-top-products-tbody">
-              <tr><td colspan="6" style="text-align:center;">Đang tải dữ liệu hành vi...</td></tr>
+              <tr>
+                <td colspan="6" style="text-align:center;">Đang tải dữ liệu hành vi...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1151,30 +1375,37 @@
 
       <!-- AI PRODUCT DEMAND FORECASTING & MODEL LIFECYCLE SECTION -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-ai-forecast" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:1.25rem;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:1.25rem;">
           <div>
             <h3 style="margin:0; font-family:var(--font-serif);">AI Product Demand Forecasting & Model Lifecycle</h3>
-            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Dự báo nhu cầu 7 / 14 / 30 ngày, gợi ý nhập kho và giám sát độ chính xác mô hình LightGBM</p>
+            <p style="margin:4px 0 0; font-size:0.85rem; color:var(--text-muted);">Dự báo nhu cầu 7 / 14 / 30 ngày, gợi
+              ý nhập kho và giám sát độ chính xác mô hình LightGBM</p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <select id="ai-horizon-select" onchange="window.loadAIForecasting(this.value)" style="padding:7px 12px; border-radius:6px; border:1px solid #ccc; font-weight:600;">
+            <select id="ai-horizon-select" onchange="window.loadAIForecasting(this.value)"
+              style="padding:7px 12px; border-radius:6px; border:1px solid #ccc; font-weight:600;">
               <option value="7">Dự báo 7 ngày tới</option>
               <option value="14">Dự báo 14 ngày tới</option>
               <option value="30">Dự báo 30 ngày tới</option>
             </select>
-            <button onclick="window.triggerAIAction('predict')" class="admin-action-btn" style="background:var(--primary-dark); color:#d4af37; padding:7px 12px; border-radius:6px;">
+            <button onclick="window.triggerAIAction('predict')" class="admin-action-btn"
+              style="background:var(--primary-dark); color:#d4af37; padding:7px 12px; border-radius:6px;">
               <i class="fa-solid fa-bolt"></i> Chạy Dự Báo
             </button>
-            <button onclick="window.triggerAIAction('evaluate')" class="admin-action-btn" style="background:#2c5282; color:#fff; padding:7px 12px; border-radius:6px;">
+            <button onclick="window.triggerAIAction('evaluate')" class="admin-action-btn"
+              style="background:#2c5282; color:#fff; padding:7px 12px; border-radius:6px;">
               <i class="fa-solid fa-scale-balanced"></i> Đánh Giá Tuần
             </button>
-            <button onclick="window.triggerAIAction('train')" class="admin-action-btn" style="background:#744210; color:#fff; padding:7px 12px; border-radius:6px;">
+            <button onclick="window.triggerAIAction('train')" class="admin-action-btn"
+              style="background:#744210; color:#fff; padding:7px 12px; border-radius:6px;">
               <i class="fa-solid fa-brain"></i> Huấn Luyện Mô Hình
             </button>
           </div>
         </div>
 
-        <div id="ai-kpi-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:1.5rem;">
+        <div id="ai-kpi-grid"
+          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:12px; margin-bottom:1.5rem;">
           <div style="padding:14px; background:#faf8f5; border:1px solid #e5dfd5; border-radius:8px;">
             <div style="font-size:12px; color:#666;">Sản Phẩm Được Dự Báo</div>
             <div id="ai-total-products" style="font-size:22px; font-weight:700; margin-top:4px;">0</div>
@@ -1222,7 +1453,9 @@
               </tr>
             </thead>
             <tbody id="ai-forecast-tbody">
-              <tr><td colspan="9" style="text-align:center;">Đang tải dự báo AI...</td></tr>
+              <tr>
+                <td colspan="9" style="text-align:center;">Đang tải dự báo AI...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -1328,6 +1561,7 @@
       const tabs = {
         'dashboard': { title: 'Bảng Quản Trị Hệ Thống AURALIÈ', desc: 'Phiên bản Executive 2026 - Quản lý thương mại điện tử xa xỉ' },
         'products': { title: 'Quản Lý Danh Sách Sản Phẩm', desc: 'Quản lý 8 mẫu thiết kế phom dáng, tồn kho & giá bán sản phẩm' },
+        'categories': { title: 'Quản Lý Danh Mục Thời Trang', desc: 'Thêm mới, chỉnh sửa thông tin và quản lý phân loại danh mục sản phẩm' },
         'orders': { title: 'Quản Lý Đơn Hàng & Vận Chuyển', desc: 'Theo dõi 142 đơn hàng, trạng thái thanh toán VNPAY & giao hỏa tốc' },
         'reviews': { title: 'Duyệt & Kiểm Duyệt Đánh Giá', desc: 'Kiểm duyệt nhận xét thực tế từ khách hàng mua trang phục Haute Couture' },
         'customers': { title: 'Quản Lý Khách Hàng', desc: 'Quản lý tài khoản khách hàng, cập nhật thông tin và phân quyền thành viên' },
@@ -1337,6 +1571,7 @@
 
       const tabSections = {
         'products': document.getElementById('tab-sec-products'),
+        'categories': document.getElementById('tab-sec-categories'),
         'orders': document.getElementById('tab-sec-orders'),
         'reviews': document.getElementById('tab-sec-reviews'),
         'customers': document.getElementById('tab-sec-customers'),
@@ -1372,6 +1607,9 @@
           }
         }
 
+        if (tabKey === 'categories' && typeof window.loadAdminCategories === 'function') {
+          window.loadAdminCategories();
+        }
         if (tabKey === 'behavior' && typeof window.loadBehaviorAnalytics === 'function') {
           window.loadBehaviorAnalytics();
         }
@@ -1436,7 +1674,7 @@
         const notice = document.getElementById('admin-products-notice');
         if (notice) notice.textContent = '';
         return AdminUI.loadProductsData()
-          .then(({result, inventoryResult}) => {
+          .then(({ result, inventoryResult }) => {
             if (version !== productLoadVersion) return;
             if (notice) notice.textContent = inventoryResult.status === 'success' ? '' : 'Chưa tải được số lượng tồn kho: ' + inventoryResult.message;
             if (result.status !== 'success') throw new Error(result.message);
@@ -1491,50 +1729,145 @@
       // Xóa sản phẩm trực tiếp từ CSDL
       window.deleteProduct = AdminUI.deleteProduct;
 
+      // ===================================================================
+      // 2. PHÂN HỆ QUẢN LÝ ĐƠN HÀNG (BỘ LỌC ĐA TIÊU CHÍ & REAL-TIME STATUS)
+      // ===================================================================
+      window.currentOrderStatusFilter = 'ALL';
+
+      window.setOrderFilterStatus = (status) => {
+        window.currentOrderStatusFilter = status;
+        const container = document.getElementById('admin-orders-status-pills');
+        if (container) {
+          container.querySelectorAll('.review-pill').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-status') === status);
+          });
+        }
+        window.filterAdminOrders();
+      };
+
+      window.updateOrderPillCounts = (orders) => {
+        const total = orders.length;
+        const pending = orders.filter(o => (o.status || '').toUpperCase() === 'PENDING').length;
+        const confirmed = orders.filter(o => (o.status || '').toUpperCase() === 'CONFIRMED').length;
+        const shipped = orders.filter(o => (o.status || '').toUpperCase() === 'SHIPPED').length;
+        const completed = orders.filter(o => (o.status || '').toUpperCase() === 'COMPLETED').length;
+        const cancelled = orders.filter(o => (o.status || '').toUpperCase() === 'CANCELLED').length;
+
+        const elAll = document.getElementById('count-order-all');
+        const elPending = document.getElementById('count-order-pending');
+        const elConfirmed = document.getElementById('count-order-confirmed');
+        const elShipped = document.getElementById('count-order-shipped');
+        const elCompleted = document.getElementById('count-order-completed');
+        const elCancelled = document.getElementById('count-order-cancelled');
+
+        if (elAll) elAll.textContent = `(${total})`;
+        if (elPending) elPending.textContent = `(${pending})`;
+        if (elConfirmed) elConfirmed.textContent = `(${confirmed})`;
+        if (elShipped) elShipped.textContent = `(${shipped})`;
+        if (elCompleted) elCompleted.textContent = `(${completed})`;
+        if (elCancelled) elCancelled.textContent = `(${cancelled})`;
+      };
+
+      window.filterAdminOrders = () => {
+        const tbody = document.getElementById('admin-orders-tbody');
+        if (!tbody) return;
+
+        const allOrders = window.adminOrdersData || [];
+        const statusFilter = window.currentOrderStatusFilter || 'ALL';
+        const searchVal = (document.getElementById('admin-orders-search')?.value || '').trim().toLowerCase();
+        const payVal = document.getElementById('admin-orders-pay-filter')?.value || 'ALL';
+
+        let filtered = allOrders;
+
+        // 1. Lọc theo trạng thái đơn hàng (Pill)
+        if (statusFilter !== 'ALL') {
+          filtered = filtered.filter(o => (o.status || '').toUpperCase() === statusFilter);
+        }
+
+        // 2. Lọc theo ô tìm kiếm (Mã đơn, Tên khách hàng, SĐT, Địa chỉ)
+        if (searchVal) {
+          filtered = filtered.filter(o => {
+            const code = (o.order_code || '').toLowerCase();
+            const name = (o.customer_name || '').toLowerCase();
+            const phone = (o.phone_number || o.customer_phone || '').toLowerCase();
+            const addr = (o.shipping_address || '').toLowerCase();
+            return code.includes(searchVal) || name.includes(searchVal) || phone.includes(searchVal) || addr.includes(searchVal);
+          });
+        }
+
+        // 3. Lọc theo hình thức / trạng thái thanh toán
+        if (payVal !== 'ALL') {
+          if (payVal === 'PAID') {
+            filtered = filtered.filter(o => (o.payment_status || '').toUpperCase() === 'PAID');
+          } else if (payVal === 'UNPAID') {
+            filtered = filtered.filter(o => (o.payment_status || '').toUpperCase() !== 'PAID');
+          } else if (payVal === 'COD') {
+            filtered = filtered.filter(o => (o.payment_method || '').toUpperCase() === 'COD');
+          } else if (payVal === 'SEPAY_QR') {
+            filtered = filtered.filter(o => (o.payment_method || '').toUpperCase() === 'SEPAY_QR');
+          }
+        }
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2.5rem; color: var(--text-muted);"><i class="fa-solid fa-inbox" style="font-size: 1.8rem; display:block; margin-bottom: 0.5rem; opacity: 0.4;"></i>Không tìm thấy đơn hàng nào khớp với bộ lọc hiện tại.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = filtered.map(o => {
+          const statusUpper = (o.status || '').toUpperCase();
+          const statusClass = statusUpper === 'COMPLETED' ? 'active' : (statusUpper === 'SHIPPED' ? 'shipped' : (statusUpper === 'CONFIRMED' ? 'gold' : (statusUpper === 'CANCELLED' ? 'delete' : 'pending')));
+          const statusLabel = statusUpper === 'COMPLETED' ? 'Đã Hoàn Thành' : (statusUpper === 'SHIPPED' ? 'Đang Giao Hàng' : (statusUpper === 'CONFIRMED' ? 'Đã Xác Nhận' : (statusUpper === 'PENDING' ? 'Chờ Duyệt' : (statusUpper === 'CANCELLED' ? 'Đã Hủy' : o.status))));
+
+          const isPaid = (o.payment_status || '').toUpperCase() === 'PAID';
+          const payBadge = isPaid 
+            ? '<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;">Đã TT</span>'
+            : '<span style="background: #ffebee; color: #c62828; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;">Chưa TT</span>';
+
+          const isFinal = ['COMPLETED', 'CANCELLED'].includes(statusUpper);
+
+          return `
+            <tr>
+              <td><strong style="color: var(--primary-dark);">${o.order_code}</strong></td>
+              <td>${AdminUI.escape(o.customer_name || 'Khách Hàng')} <span class="status-badge gold">VIP</span></td>
+              <td>${AdminUI.escape(o.phone_number || o.customer_phone || 'Chưa cung cấp')}</td>
+              <td style="max-width: 200px; font-size: 0.82rem; color: var(--text-muted);" title="${AdminUI.escape(o.shipping_address || '')}">${AdminUI.escape(o.shipping_address || 'Chưa cung cấp')}</td>
+              <td><strong>${Number(o.total_amount).toLocaleString('vi-VN')} ₫</strong></td>
+              <td>${o.payment_method} ${payBadge}</td>
+              <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+              <td>
+                <div class="table-actions-cell" style="flex-wrap: nowrap; gap: 6px;">
+                  <select onchange="updateOrderStatus(${o.id}, this.value)" ${isFinal ? 'disabled title="Đơn hàng đã kết thúc"' : ''} 
+                    style="padding: 0.35rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light); background: ${isFinal ? '#f5f5f5' : '#fff'}; cursor: ${isFinal ? 'not-allowed' : 'pointer'};">
+                    <option value="PENDING" ${statusUpper === 'PENDING' ? 'selected' : ''}>Chờ Duyệt Kho</option>
+                    <option value="CONFIRMED" ${statusUpper === 'CONFIRMED' ? 'selected' : ''}>Đã Xác Nhận</option>
+                    <option value="SHIPPED" ${statusUpper === 'SHIPPED' ? 'selected' : ''}>Đang Giao Hàng</option>
+                    <option value="COMPLETED" ${statusUpper === 'COMPLETED' ? 'selected' : ''}>Đã Hoàn Thành</option>
+                    <option value="CANCELLED" ${statusUpper === 'CANCELLED' ? 'selected' : ''}>Hủy Đơn</option>
+                  </select>
+                  <button class="admin-action-btn btn-edit" onclick="generatePDFInvoice(${Number(o.id)})" title="In Hóa Đơn PDF">
+                    <i class="fa-solid fa-file-pdf" style="color:#c62828;"></i> PDF
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      };
+
       window.loadAdminOrders = () => {
         const tbody = document.getElementById('admin-orders-tbody');
         if (!tbody) return;
         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem; color: var(--accent-gold);"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách đơn hàng từ CSDL...</td></tr>`;
 
-        window.ApiClient.get('/api/v1/orders')
+        window.ApiClient.get('/api/v1/orders?limit=200')
           .then(result => {
             if (result.status === 'success' && result.data) {
               const orders = Array.isArray(result.data) ? result.data : (result.data.items || []);
               window.adminOrdersData = orders;
-              if (orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem;">Chưa có đơn hàng nào trong CSDL.</td></tr>`;
-                return;
-              }
-
-              tbody.innerHTML = orders.map(o => {
-                const statusClass = o.status === 'COMPLETED' ? 'active' : (o.status === 'SHIPPED' ? 'shipped' : 'pending');
-                const statusLabel = o.status === 'COMPLETED' ? 'Đã Hoàn Thành' : (o.status === 'SHIPPED' ? 'Đang Giao Hàng' : (o.status === 'PENDING' ? 'Chờ Duyệt' : o.status));
-
-                return `
-                  <tr>
-                    <td><strong>${o.order_code}</strong></td>
-                    <td>${AdminUI.escape(o.customer_name || 'Chưa cung cấp')} <span class="status-badge gold">VIP</span></td>
-                    <td>${AdminUI.escape(o.phone_number || o.customer_phone || 'Chưa cung cấp')}</td>
-                    <td>${AdminUI.escape(o.shipping_address || 'Chưa cung cấp')}</td>
-                    <td><strong>${Number(o.total_amount).toLocaleString('vi-VN')} ₫</strong></td>
-                    <td>${o.payment_method} (${o.payment_status === 'PAID' ? 'Đã TT' : 'Chưa TT'})</td>
-                    <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
-                    <td>
-                      <div class="table-actions-cell">
-                        <select onchange="updateOrderStatus(${o.id}, this.value)" style="padding: 0.35rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light);">
-                          <option value="PENDING" ${o.status === 'PENDING' ? 'selected' : ''}>Chờ Duyệt Kho</option>
-                          <option value="SHIPPED" ${o.status === 'SHIPPED' ? 'selected' : ''}>Đang Giao Hàng</option>
-                          <option value="COMPLETED" ${o.status === 'COMPLETED' ? 'selected' : ''}>Đã Hoàn Thành</option>
-                          <option value="CANCELLED" ${o.status === 'CANCELLED' ? 'selected' : ''}>Hủy Đơn</option>
-                        </select>
-                        <button class="admin-action-btn btn-edit" onclick="generatePDFInvoice(${Number(o.id)})">
-                          <i class="fa-solid fa-file-pdf" style="color:#c62828;"></i> PDF
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                `;
-              }).join('');
+              window.updateOrderPillCounts(orders);
+              window.filterAdminOrders();
+            } else {
+              tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2rem;">Chưa có đơn hàng nào trong CSDL.</td></tr>`;
             }
           })
           .catch(err => {
@@ -1827,7 +2160,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Danh_Sach_Khach_Hang_AURALIE_${new Date().toISOString().slice(0,10)}.csv`;
+        a.download = `Danh_Sach_Khach_Hang_AURALIE_${new Date().toISOString().slice(0, 10)}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -1946,6 +2279,10 @@
         if (modal) {
           modal.classList.add('active');
           document.body.style.overflow = 'hidden';
+          const catSelect = document.getElementById('add-prod-category');
+          if (catSelect && window.renderCategoryAttributes) {
+            window.renderCategoryAttributes(catSelect.value || 1);
+          }
         }
       };
 
@@ -2040,6 +2377,7 @@
 
       loadAdminStats();
       window.loadAdminProducts();
+      window.loadAdminCategories();
       window.loadAdminOrders();
       window.loadAdminReviews();
       window.loadAdminCustomers();
@@ -2237,14 +2575,14 @@
           const qty = document.getElementById('batch-qty').value;
 
           window.ApiClient.post('/api/v1/inventory/batch-import', { batchCode: code, quantity: qty })
-          .then(data => {
-            alert('📦 ' + data.message);
-            modal.remove();
-          })
-          .catch(() => {
-            alert(`📦 Đã nhập thành công lô hàng ${code} (${qty} items) vào hệ thống quản lý kho!`);
-            modal.remove();
-          });
+            .then(data => {
+              alert('📦 ' + data.message);
+              modal.remove();
+            })
+            .catch(() => {
+              alert(`📦 Đã nhập thành công lô hàng ${code} (${qty} items) vào hệ thống quản lý kho!`);
+              modal.remove();
+            });
         });
       };
     });
@@ -2258,12 +2596,17 @@
     <div class="modal-container" style="max-width: 780px;">
       <button id="close-admin-preview-modal" class="modal-close-btn" aria-label="Đóng preview">&times;</button>
 
-      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; flex-wrap: wrap; gap: 0.5rem;">
-        <span style="font-size: 0.82rem; font-weight: 700; letter-spacing: 1px;"><i class="fa-solid fa-eye"></i> XEM TRƯỚC GIAO DIỆN SẢN PHẨM KHI ĐĂNG</span>
-        <span style="font-size: 0.72rem; background: rgba(255,255,255,0.15); padding: 0.2rem 0.6rem; border-radius: 4px; color: #fff;">Admin Live Preview</span>
+      <div
+        style="background: var(--primary-dark); color: var(--accent-gold); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; flex-wrap: wrap; gap: 0.5rem;">
+        <span style="font-size: 0.82rem; font-weight: 700; letter-spacing: 1px;"><i class="fa-solid fa-eye"></i> XEM
+          TRƯỚC GIAO DIỆN SẢN PHẨM KHI ĐĂNG</span>
+        <span
+          style="font-size: 0.72rem; background: rgba(255,255,255,0.15); padding: 0.2rem 0.6rem; border-radius: 4px; color: #fff;">Admin
+          Live Preview</span>
       </div>
 
-      <div style="padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem;" class="responsive-grid">
+      <div style="padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem;"
+        class="responsive-grid">
         <!-- Live Card Preview -->
         <div>
           <div class="modal-main-img-wrap" style="height: 300px;">
@@ -2275,18 +2618,21 @@
         <!-- Product Preview Info -->
         <div style="display: flex; flex-direction: column; gap: 0.85rem;">
           <span class="modal-category-text" id="admin-preview-cat">Áo Vest & Blazer</span>
-          <h2 class="modal-product-title" id="admin-preview-title" style="font-size: 1.4rem; margin: 0;">Double-Breasted Tailored Suit</h2>
+          <h2 class="modal-product-title" id="admin-preview-title" style="font-size: 1.4rem; margin: 0;">Double-Breasted
+            Tailored Suit</h2>
 
           <div class="modal-rating-header" style="flex-wrap: wrap; gap: 0.4rem;">
             <div class="stars-stars" style="color: var(--accent-gold);">
-              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
             </div>
             <span class="rating-num" style="font-weight: bold;">4.9</span>
             <span class="review-count-badge" style="font-size: 0.78rem; color: var(--text-muted);">(128 Đánh giá)</span>
           </div>
 
           <div class="modal-price-wrap">
-            <span class="modal-current-price" id="admin-preview-price" style="font-size: 1.3rem; font-weight: bold; color: var(--primary-dark);">12.500.000 ₫</span>
+            <span class="modal-current-price" id="admin-preview-price"
+              style="font-size: 1.3rem; font-weight: bold; color: var(--primary-dark);">12.500.000 ₫</span>
           </div>
 
           <p class="modal-description" id="admin-preview-desc" style="font-size: 0.85rem; color: #555; margin: 0;">
@@ -2294,10 +2640,14 @@
           </p>
 
           <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap;">
-            <button class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.7rem; font-size: 0.8rem; min-width: 160px;" onclick="closeAdminPreviewModal(); alert('Đã xác nhận trạng thái sản phẩm hiển thị công khai trên website AURALIÈ!');">
+            <button class="btn-primary-luxury"
+              style="flex: 1; justify-content: center; padding: 0.7rem; font-size: 0.8rem; min-width: 160px;"
+              onclick="closeAdminPreviewModal(); alert('Đã xác nhận trạng thái sản phẩm hiển thị công khai trên website AURALIÈ!');">
               <i class="fa-solid fa-check"></i> Xác Nhận Đăng
             </button>
-            <button class="btn-primary-luxury" style="background: var(--secondary-dark); padding: 0.7rem 1rem; font-size: 0.8rem;" onclick="closeAdminPreviewModal(); openAddProductModal();">
+            <button class="btn-primary-luxury"
+              style="background: var(--secondary-dark); padding: 0.7rem 1rem; font-size: 0.8rem;"
+              onclick="closeAdminPreviewModal(); openAddProductModal();">
               <i class="fa-solid fa-pen"></i> Chỉnh Sửa / Thêm Mới
             </button>
           </div>
@@ -2309,10 +2659,11 @@
 
   <!-- MODAL THÊM SẢN PHẨM MỚI (LƯU TRỰC TIẾP VÀO SQL SERVER) -->
   <div id="admin-add-product-modal" class="modal-overlay" aria-hidden="true">
-    <div class="modal-container" style="max-width: 600px; padding: 2rem;">
+    <div class="modal-container" style="max-width: 680px; padding: 2rem; max-height: 90vh; overflow-y: auto;">
       <button class="modal-close-btn" onclick="closeAddProductModal()">&times;</button>
-      
-      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
+
+      <div
+        style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
         <i class="fa-solid fa-plus-circle"></i> THÊM THIẾT KẾ MỚI VÀO CƠ SỞ DỮ LIỆU
       </div>
 
@@ -2321,18 +2672,22 @@
           <label for="add-prod-image" style="font-weight:bold;display:block;margin-bottom:0.3rem">Ảnh sản phẩm</label>
           <input id="add-prod-image" type="file" accept="image/png,image/jpeg,image/webp">
           <p style="font-size:0.8rem;color:#777;margin-top:6px">Chọn ảnh PNG, JPEG hoặc WebP, tối đa 2 MB.</p>
-          <img id="add-prod-image-preview" alt="Ảnh sản phẩm xem trước" hidden>
+          <img id="add-prod-image-preview" alt="Ảnh sản phẩm xem trước" hidden
+            style="max-height: 120px; border-radius: 6px; margin-top: 6px; object-fit: cover;">
           <p id="add-prod-image-status" role="status"></p>
         </div>
+
         <div>
           <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Tên Sản Phẩm Haute Couture *</label>
-          <input type="text" id="add-prod-name" placeholder="Ví dụ: Royal Velvet Tailored Suit" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          <input type="text" id="add-prod-name" placeholder="Ví dụ: Royal Velvet Tailored Suit" required
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Danh Mục Sản Phẩm *</label>
-            <select id="add-prod-category" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <select id="add-prod-category"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; font-weight: 600;">
               <option value="1">Áo Vest & Blazer</option>
               <option value="2">Váy & Đầm Dạ Hội</option>
               <option value="3">Áo Khoác Thu Đông</option>
@@ -2342,14 +2697,16 @@
           </div>
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Giá Bán Niêm Yết (VNĐ) *</label>
-            <input type="number" id="add-prod-price" placeholder="15000000" min="100000" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <input type="number" id="add-prod-price" placeholder="15000000" min="100000" required
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Huy Hiệu (Tag)</label>
-            <select id="add-prod-tag" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <select id="add-prod-tag"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
               <option value="NEW ARRIVAL">NEW ARRIVAL</option>
               <option value="BESTSELLER">BESTSELLER</option>
               <option value="EXCLUSIVE">EXCLUSIVE</option>
@@ -2358,26 +2715,30 @@
             </select>
           </div>
           <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Phom Dáng (Fit)</label>
-            <input type="text" id="add-prod-fit" value="European Tailored Fit" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Xuất Xứ Chế Tác</label>
+            <input type="text" id="add-prod-origin" value="Atelier AURALIÈ Đồng Khởi"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
           </div>
         </div>
 
-        <div>
-          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Chất Liệu Cao Cấp</label>
-          <input type="text" id="add-prod-material" value="100% Cashmere & Lụa Tơ Tằm Ý" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+        <!-- KHU VỰC THUỘC TÍNH ĐỘNG THEO TỪNG DANH MỤC THỜI TRANG -->
+        <div id="dynamic-category-fields"
+          style="background: #fbfbfd; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; gap: 0.85rem;">
+          <!-- Tự động kết xuất linh hoạt theo Danh Mục: Phom dáng, Ve áo/Khóa túi, Dòng da, Kích cỡ & Tồn kho -->
         </div>
 
         <div>
           <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Mô Tả Sản Phẩm</label>
-          <textarea id="add-prod-desc" rows="3" placeholder="Mô tả nghệ thuật cắt may, xuất xứ..." style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; resize: vertical;">Thiết kế Haute Couture may đo độc bản tại Atelier AURALIÈ.</textarea>
+          <textarea id="add-prod-desc" rows="3" placeholder="Mô tả nghệ thuật cắt may, xuất xứ..."
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; resize: vertical;">Thiết kế Haute Couture may đo độc bản tại Atelier AURALIÈ.</textarea>
         </div>
 
         <div style="display: flex; gap: 0.75rem; margin-top: 0.75rem;">
           <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.75rem;">
             <i class="fa-solid fa-cloud-arrow-up"></i> Lưu Vào Cơ Sở Dữ Liệu
           </button>
-          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;" onclick="closeAddProductModal()">
+          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;"
+            onclick="closeAddProductModal()">
             Hủy
           </button>
         </div>
@@ -2389,36 +2750,43 @@
   <div id="admin-add-customer-modal" class="modal-overlay" aria-hidden="true">
     <div class="modal-container" style="max-width: 580px; padding: 2rem;">
       <button class="modal-close-btn" onclick="window.closeAddCustomerModal()">&times;</button>
-      
-      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
+
+      <div
+        style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
         <i class="fa-solid fa-user-plus"></i> THÊM TÀI KHOẢN KHÁCH HÀNG MỚI
       </div>
 
-      <form id="admin-add-customer-form" style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
+      <form id="admin-add-customer-form"
+        style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
         <div>
           <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Họ và Tên Khách Hàng *</label>
-          <input type="text" id="add-cust-fullname" placeholder="Ví dụ: Hoàng Yến Nhi" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          <input type="text" id="add-cust-fullname" placeholder="Ví dụ: Hoàng Yến Nhi" required
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Email Đăng Nhập *</label>
-            <input type="email" id="add-cust-email" placeholder="khachhang@example.com" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <input type="email" id="add-cust-email" placeholder="khachhang@example.com" required
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
           </div>
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Mật Khẩu Khởi Tạo *</label>
-            <input type="password" id="add-cust-password" placeholder="Tối thiểu 6 ký tự" required minlength="6" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <input type="password" id="add-cust-password" placeholder="Tối thiểu 6 ký tự" required minlength="6"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Số Điện Thoại</label>
-            <input type="tel" id="add-cust-phone" placeholder="Ví dụ: 0912345678" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <input type="tel" id="add-cust-phone" placeholder="Ví dụ: 0912345678"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
           </div>
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Hạng Thành Viên</label>
-            <select id="add-cust-tier" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <select id="add-cust-tier"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
               <option value="STANDARD">STANDARD (Thường)</option>
               <option value="SILVER">SILVER (Bạc)</option>
               <option value="GOLD">GOLD (Vàng)</option>
@@ -2431,14 +2799,16 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Vai Trò Phân Quyền</label>
-            <select id="add-cust-role" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <select id="add-cust-role"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
               <option value="CUSTOMER">Khách Hàng (CUSTOMER)</option>
               <option value="ADMIN">Quản Trị Viên (ADMIN)</option>
             </select>
           </div>
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Địa Chỉ Thường Trú</label>
-            <input type="text" id="add-cust-address" placeholder="Quận/Huyện, Tỉnh/TP" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <input type="text" id="add-cust-address" placeholder="Quận/Huyện, Tỉnh/TP"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
           </div>
         </div>
 
@@ -2446,7 +2816,8 @@
           <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.75rem;">
             <i class="fa-solid fa-user-plus"></i> Tạo Khách Hàng Mới
           </button>
-          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;" onclick="window.closeAddCustomerModal()">
+          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;"
+            onclick="window.closeAddCustomerModal()">
             Hủy
           </button>
         </div>
@@ -2458,34 +2829,40 @@
   <div id="admin-edit-customer-modal" class="modal-overlay" aria-hidden="true">
     <div class="modal-container" style="max-width: 580px; padding: 2rem;">
       <button class="modal-close-btn" onclick="window.closeEditCustomerModal()">&times;</button>
-      
-      <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
+
+      <div
+        style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
         <i class="fa-solid fa-user-pen"></i> CHỈNH SỬA HỒ SƠ KHÁCH HÀNG (ID: #<span id="edit-cust-id-display">--</span>)
       </div>
 
-      <form id="admin-edit-customer-form" style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
+      <form id="admin-edit-customer-form"
+        style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
         <input type="hidden" id="edit-cust-id">
 
         <div>
           <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Họ và Tên Khách Hàng *</label>
-          <input type="text" id="edit-cust-fullname" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          <input type="text" id="edit-cust-fullname" required
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Email Đăng Nhập</label>
-            <input type="email" id="edit-cust-email" readonly style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; background: #f5f5f5; color: #777;">
+            <input type="email" id="edit-cust-email" readonly
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; background: #f5f5f5; color: #777;">
           </div>
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Số Điện Thoại</label>
-            <input type="tel" id="edit-cust-phone" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <input type="tel" id="edit-cust-phone"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
           </div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Hạng Thành Viên</label>
-            <select id="edit-cust-tier" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <select id="edit-cust-tier"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
               <option value="STANDARD">STANDARD (Thường)</option>
               <option value="SILVER">SILVER (Bạc)</option>
               <option value="GOLD">GOLD (Vàng)</option>
@@ -2495,7 +2872,8 @@
           </div>
           <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Vai Trò Phân Quyền</label>
-            <select id="edit-cust-role" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+            <select id="edit-cust-role"
+              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
               <option value="CUSTOMER">Khách Hàng (CUSTOMER)</option>
               <option value="ADMIN">Quản Trị Viên (ADMIN)</option>
             </select>
@@ -2504,19 +2882,72 @@
 
         <div>
           <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Địa Chỉ Thường Trú</label>
-          <input type="text" id="edit-cust-address" placeholder="Quận/Huyện, Tỉnh/TP" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          <input type="text" id="edit-cust-address" placeholder="Quận/Huyện, Tỉnh/TP"
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
         </div>
 
         <div>
-          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Đặt Lại Mật Khẩu (Để trống nếu giữ nguyên)</label>
-          <input type="password" id="edit-cust-password" placeholder="Nhập mật khẩu mới nếu muốn đổi..." minlength="6" style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Đặt Lại Mật Khẩu (Để trống nếu giữ
+            nguyên)</label>
+          <input type="password" id="edit-cust-password" placeholder="Nhập mật khẩu mới nếu muốn đổi..." minlength="6"
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
         </div>
 
         <div style="display: flex; gap: 0.75rem; margin-top: 0.75rem;">
           <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.75rem;">
             <i class="fa-solid fa-save"></i> Cập Nhật Thông Tin
           </button>
-          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;" onclick="window.closeEditCustomerModal()">
+          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;"
+            onclick="window.closeEditCustomerModal()">
+            Hủy
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL THÊM / CHỈNH SỬA DANH MỤC THỜI TRANG -->
+  <div id="admin-category-modal" class="modal-overlay" aria-hidden="true" style="display: none;">
+    <div class="modal-container" style="max-width: 520px; padding: 2rem;">
+      <button class="modal-close-btn" onclick="window.closeCategoryModal()">&times;</button>
+
+      <div
+        style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem 1.2rem; border-radius: 8px; margin-bottom: 1.25rem;">
+        <i class="fa-solid fa-tags"></i> <span id="category-modal-title">THÊM DANH MỤC THỜI TRANG MỚI</span>
+      </div>
+
+      <form id="admin-category-form" onsubmit="window.saveCategory(event)"
+        style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
+        <input type="hidden" id="cat-id" value="">
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Tên Danh Mục *</label>
+          <input type="text" id="cat-name" placeholder="Ví dụ: Trang Phục Dạ Hội Độc Bản" required maxlength="100"
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;"
+            oninput="window.autoFillSlug(this.value)">
+        </div>
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Mã Định Danh (Slug URL)</label>
+          <input type="text" id="cat-slug" placeholder="Ví dụ: trang-phuc-da-hoi (tự động tạo nếu để trống)"
+            maxlength="100"
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
+          <small style="color: var(--text-muted); font-size: 0.75rem;">Được dùng trong đường dẫn URL và bộ lọc sản
+            phẩm.</small>
+        </div>
+
+        <div>
+          <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Mô Tả Danh Mục</label>
+          <textarea id="cat-desc" rows="3" placeholder="Mô tả ngắn về phân loại thiết kế thời trang này..."
+            style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; font-family: inherit; font-size: 0.85rem;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.75rem;">
+          <button type="submit" class="btn-primary-luxury" style="flex: 1; justify-content: center; padding: 0.75rem;">
+            <i class="fa-solid fa-check"></i> Lưu Danh Mục
+          </button>
+          <button type="button" class="btn-primary-luxury" style="background: #555; padding: 0.75rem 1rem;"
+            onclick="window.closeCategoryModal()">
             Hủy
           </button>
         </div>
@@ -2732,6 +3163,166 @@
       alert(res.message || 'Đã rollback thành công!');
       window.loadAIForecasting();
     };
+
+    // ==========================================================
+    // PHÂN HỆ QUẢN LÝ DANH MỤC THỜI TRANG (CATEGORY MANAGEMENT)
+    // ==========================================================
+    window.adminCategoriesData = [];
+
+    window.autoFillSlug = function (name) {
+      const slugInput = document.getElementById('cat-slug');
+      if (document.getElementById('cat-id').value === '') {
+        const slug = String(name || '')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/đ/g, 'd')
+          .replace(/Đ/g, 'D')
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/[\s_-]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        slugInput.value = slug;
+      }
+    };
+
+    window.loadAdminCategories = async function () {
+      try {
+        const res = await window.ApiClient.get('/api/v1/categories');
+        const categories = res.data || [];
+        window.adminCategoriesData = categories;
+
+        const subtitle = document.getElementById('admin-categories-count-subtitle');
+        if (subtitle) {
+          subtitle.textContent = `Hiện có tổng cộng ${categories.length} phân loại danh mục sản phẩm thời trang trong CSDL`;
+        }
+
+        const tbody = document.getElementById('admin-categories-tbody');
+        if (!tbody) return;
+
+        if (categories.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem;">Chưa có danh mục nào trong hệ thống.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = categories.map(c => `
+          <tr>
+            <td><strong>#${c.id}</strong></td>
+            <td><strong style="color: var(--primary-dark); font-size: 0.95rem;">${AdminUI.escape(c.name)}</strong></td>
+            <td><code style="background: #f4efe9; color: #8a6d3b; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${AdminUI.escape(c.slug)}</code></td>
+            <td style="color: var(--text-muted); font-size: 0.82rem; max-width: 300px;">${AdminUI.escape(c.description || 'Chưa có mô tả chi tiết')}</td>
+            <td style="text-align: center; white-space: nowrap;">
+              <span style="background: #eef2ff; color: #3730a3; padding: 5px 14px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; white-space: nowrap; display: inline-block;">
+                ${c.product_count || 0} sản phẩm
+              </span>
+            </td>
+            <td style="text-align: center; white-space: nowrap;">
+              <div class="table-actions-cell" style="justify-content: center; gap: 8px; white-space: nowrap; flex-wrap: nowrap;">
+                <button onclick="window.openEditCategoryModal(${c.id})" class="admin-action-btn" style="background: linear-gradient(135deg, #c5a059, #9e7d3b); color: #ffffff; padding: 0.4rem 0.75rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(197, 160, 89, 0.35);" title="Chỉnh sửa danh mục">
+                  <i class="fa-solid fa-pen-to-square"></i> Sửa
+                </button>
+                <button onclick="window.deleteCategory(${c.id}, '${AdminUI.escape(c.name)}', ${c.product_count || 0})" class="admin-action-btn btn-delete" style="padding: 0.4rem 0.75rem; font-size: 0.75rem; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);" title="Xóa danh mục">
+                  <i class="fa-solid fa-trash"></i> Xóa
+                </button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+
+        // Tự động đồng bộ sang ô chọn Danh Mục ở modal Thêm Sản Phẩm Mới
+        const prodCatSelect = document.getElementById('add-prod-category');
+        if (prodCatSelect) {
+          prodCatSelect.innerHTML = categories.map(c => `<option value="${c.id}">${AdminUI.escape(c.name)}</option>`).join('');
+        }
+      } catch (err) {
+        console.error('Lỗi khi tải danh sách danh mục:', err);
+      }
+    };
+
+    window.openAddCategoryModal = function () {
+      document.getElementById('cat-id').value = '';
+      document.getElementById('cat-name').value = '';
+      document.getElementById('cat-slug').value = '';
+      document.getElementById('cat-desc').value = '';
+      document.getElementById('category-modal-title').textContent = 'THÊM DANH MỤC THỜI TRANG MỚI';
+      const modal = document.getElementById('admin-category-modal');
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+    };
+
+    window.openEditCategoryModal = function (id) {
+      const category = window.adminCategoriesData.find(c => c.id === id);
+      if (!category) return;
+      document.getElementById('cat-id').value = category.id;
+      document.getElementById('cat-name').value = category.name;
+      document.getElementById('cat-slug').value = category.slug;
+      document.getElementById('cat-desc').value = category.description || '';
+      document.getElementById('category-modal-title').textContent = `CHỈNH SỬA DANH MỤC (#${category.id})`;
+      const modal = document.getElementById('admin-category-modal');
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+    };
+
+    window.closeCategoryModal = function () {
+      const modal = document.getElementById('admin-category-modal');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    };
+
+    window.saveCategory = async function (e) {
+      e.preventDefault();
+      const id = document.getElementById('cat-id').value;
+      const name = document.getElementById('cat-name').value.trim();
+      const slug = document.getElementById('cat-slug').value.trim();
+      const description = document.getElementById('cat-desc').value.trim();
+
+      if (!name) {
+        alert('Vui lòng nhập tên danh mục.');
+        return;
+      }
+
+      try {
+        let res;
+        if (id) {
+          res = await window.ApiClient.put(`/api/v1/categories/${id}`, { name, slug, description });
+        } else {
+          res = await window.ApiClient.post('/api/v1/categories', { name, slug, description });
+        }
+
+        if (res.status === 'success') {
+          alert(res.message || 'Thao tác thành công!');
+          window.closeCategoryModal();
+          window.loadAdminCategories();
+        } else {
+          alert(res.message || 'Đã có lỗi xảy ra.');
+        }
+      } catch (err) {
+        alert(err.message || 'Lỗi kết nối máy chủ.');
+      }
+    };
+
+    window.deleteCategory = async function (id, name, count) {
+      if (count > 0) {
+        alert(`Không thể xóa danh mục "${name}" vì đang có ${count} sản phẩm thuộc danh mục này! Vui lòng chuyển hoặc xóa các sản phẩm liên kết trước.`);
+        return;
+      }
+      if (!confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn danh mục "${name}" không?`)) {
+        return;
+      }
+
+      try {
+        const res = await window.ApiClient.delete(`/api/v1/categories/${id}`);
+        if (res.status === 'success') {
+          alert(res.message || 'Đã xóa danh mục thành công!');
+          window.loadAdminCategories();
+        } else {
+          alert(res.message || 'Xóa danh mục thất bại.');
+        }
+      } catch (err) {
+        alert(err.message || 'Lỗi khi xóa danh mục.');
+      }
+    };
   </script>
 </body>
+
 </html>

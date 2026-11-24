@@ -22,7 +22,7 @@ const adminRoutes = require('./modules/admin/admin.routes');
 const aiRoutes = require('./modules/ai/ai.routes');
 const trackingRoutes = require('./modules/tracking/tracking.routes');
 const analyticsRoutes = require('./modules/analytics/analytics.routes');
-const shipperRoutes = require('./modules/shipper/shipper.routes');
+const recommendationRoutes = require('./modules/recommendations/recommendations.routes');
 
 const app = express();
 
@@ -94,7 +94,7 @@ app.use('/api/v1/ai', aiRoutes);
 app.use('/api/tracking', trackingRoutes);
 app.use('/api/admin', analyticsRoutes);
 app.use('/api/v1/admin', analyticsRoutes);
-app.use('/api/v1/shipper', shipperRoutes);
+app.use('/api/v1/recommendations', recommendationRoutes);
 
 // ====================================================================
 // 404 CATCH-ALL ROUTE

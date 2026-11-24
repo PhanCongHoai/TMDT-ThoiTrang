@@ -195,28 +195,4 @@
   <circle cx="420" cy="923" r="8" fill="none" stroke="#000000" stroke-width="1.8"/>
   <circle cx="420" cy="923" r="5" fill="#000000"/>
   <text x="420" y="942" class="node-sub">(Hủy đơn do quá hạn 15 phút)</text>
-
-  <!-- Footer Ký Hiệu Chuẩn -->
-  <line x1="50" y1="1055" x2="790" y2="1055" class="line"/>
-  <rect x="50" y="1062" width="740" height="80" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
-  <text x="65" y="1079" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000">Ký hiệu chuẩn UML 2.x Activity Diagram:</text>
-  
-  <circle cx="80" cy="1103" r="8" fill="#000000"/>
-  <text x="96" y="1107" class="leg-lbl">Nút bắt đầu (Initial)</text>
-
-  <circle cx="80" cy="1127" r="9" fill="none" stroke="#000000" stroke-width="1.5"/>
-  <circle cx="80" cy="1127" r="5" fill="#000000"/>
-  <text x="96" y="1131" class="leg-lbl">Nút kết thúc (Final)</text>
-
-  <rect x="250" y="1095" width="28" height="16" class="action-rect"/>
-  <text x="286" y="1107" class="leg-lbl">Hành động (Action)</text>
-
-  <polygon points="264,1120 274,1127 264,1134 254,1127" class="decision-diamond"/>
-  <text x="286" y="1131" class="leg-lbl">Điểm quyết định (Chữ đặt bên trong)</text>
-
-  <rect x="490" y="1102" width="30" height="5" class="sync-bar"/>
-  <text x="528" y="1107" class="leg-lbl">Thanh phân nhánh / kết hợp (Fork/Join)</text>
-
-  <line x1="490" y1="1127" x2="520" y2="1127" class="line" marker-end="url(#arrow)"/>
-  <text x="528" y="1131" class="leg-lbl">Luồng điều khiển (Control Flow)</text>
 </svg>

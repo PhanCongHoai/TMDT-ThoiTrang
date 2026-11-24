@@ -51,7 +51,7 @@ async function main() {
     testUserId = user?.id;
     assert.equal(user?.email, email);
     assert.equal(user?.role, 'CUSTOMER');
-    assert.equal(registration.alerts.at(-1).redirectUrl, 'profile.html');
+    assert.equal(registration.alerts.at(-1).redirectUrl, 'index.html');
     console.log('PASS: registration stores API user and shows success');
 
     const login = await page();
@@ -59,7 +59,7 @@ async function main() {
     login.element('login-password-input').value = password;
     await login.submit('form-login');
     assert.equal(JSON.parse(login.context.sessionStorage.getItem('auralie_user')).id, user.id);
-    assert.equal(login.alerts.at(-1).redirectUrl, 'profile.html');
+    assert.equal(login.alerts.at(-1).redirectUrl, 'index.html');
     console.log('PASS: login stores API user and shows success');
 
     await registration.submit('form-register');
@@ -71,7 +71,7 @@ async function main() {
     brokenSession.setItem('auralie_user', 'undefined');
     const restored = await page(brokenSession);
     assert.equal(JSON.parse(brokenSession.getItem('auralie_user')).id, user.id);
-    assert.equal(restored.context.window.location.href, 'profile.html');
+    assert.equal(restored.context.window.location.href, 'index.html');
     console.log('PASS: interrupted session restores user from API');
 
     const expired = storage();

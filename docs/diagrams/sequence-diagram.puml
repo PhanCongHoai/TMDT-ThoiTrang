@@ -1,0 +1,124 @@
+@startuml
+!theme plain
+skinparam monochrome true
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 14
+skinparam sequenceMessageAlign center
+skinparam roundcorner 5
+skinparam BoxPadding 10
+skinparam ParticipantPadding 15
+skinparam LifeLineBorderColor #000000
+skinparam LifeLineBackgroundColor #FFFFFF
+skinparam ArrowColor #000000
+skinparam SequenceLifeLineBorderThickness 1.5
+skinparam NoteBackgroundColor #FFFFFF
+skinparam NoteBorderColor #000000
+
+autonumber "<b>[00]</b>"
+
+actor "Khách hàng\n(Customer)" as Customer
+actor "Quản trị viên\n(Admin)" as Admin
+participant "Hệ thống\n(System)" as System
+database "Cơ sở dữ liệu\n(Database)" as DB
+
+== GIAI ĐOẠN 1: KHÁCH HÀNG TẠO ĐƠN HÀNG & KHÓA TỒN KHO ==
+
+Customer -> System : 1. POST /api/v1/orders (JWT Token, Items, Địa chỉ, PTTT)
+activate Customer
+activate System
+
+System -> System : 2. verifyToken() & validateCreateOrder()
+alt Token không hợp lệ hoặc dữ liệu thiếu
+    System --> Customer : 3. 401 Unauthorized / 400 Bad Request
+else Dữ liệu hợp lệ & Đã đăng nhập
+    System -> DB : 4. BEGIN TRANSACTION (Khởi tạo phiên nguyên tử)
+    activate DB
+    
+    opt Có áp dụng mã giảm giá (Coupon Code)
+        System -> DB : 5. SELECT * FROM coupons WHERE code = @code AND is_active = 1
+        DB --> System : 6. Trả về thông tin chiết khấu (% hoặc tiền)
+        System -> System : 7. Tính discount_amount & cập nhật tổng tiền
+    end
+
+    loop Duyệt từng sản phẩm trong giỏ hàng (order_items)
+        System -> DB : 8. SELECT stock_quantity FROM product_variants WITH (UPDLOCK) WHERE id = @variantId
+        DB --> System : 9. Trả về số lượng tồn kho hiện tại
+        
+        alt Hết hàng (stock_quantity < quantity)
+            System -> DB : 10. ROLLBACK TRANSACTION
+            System --> Customer : 11. 400 Bad Request: "Sản phẩm đã hết hàng"
+        else Còn đủ tồn kho
+            System -> DB : 12. UPDATE product_variants SET stock_quantity = stock_quantity - @quantity
+        end
+    end
+
+    System -> DB : 13. INSERT INTO orders (order_code, total_amount, status='PENDING', tracking_code)
+    System -> DB : 14. INSERT INTO order_items (order_id, variant_id, quantity, price)
+    System -> DB : 15. COMMIT TRANSACTION (Khóa giữ tồn kho 15 phút)
+    DB --> System : 16. Xác nhận lưu đơn thành công (orderId, orderCode)
+    deactivate DB
+
+    System --> Customer : 17. 201 Created: Trả về mã đơn, mã vận đơn & QR SePay (nếu VietQR)
+end
+deactivate System
+deactivate Customer
+
+== GIAI ĐOẠN 2: XỬ LÝ THANH TOÁN (COD HOẶC SEPAY VIETQR) ==
+
+alt Khách chọn hình thức COD
+    activate System
+    System -> DB : 18. UPDATE orders SET status = 'CONFIRMED', payment_status = 'UNPAID'
+    activate DB
+    DB --> System : 19. Rows affected = 1
+    deactivate DB
+    System --> Customer : 20. Thông báo: "Đặt hàng COD thành công, chuẩn bị giao hàng"
+    deactivate System
+else Khách chọn hình thức VietQR SePay
+    alt Trong vòng 15 phút: Chuyển khoản đủ tiền
+        activate System
+        System -> DB : 21. Webhook SePay: UPDATE orders SET status='CONFIRMED', payment_status='PAID'
+        activate DB
+        DB --> System : 22. Cập nhật thành công
+        deactivate DB
+        System --> Customer : 23. Hiển thị: "Đã thanh toán thành công qua SePay"
+        deactivate System
+    else Quá 15 phút: Không chuyển tiền hoặc chuyển thiếu (UNPAID / PARTIALLY_PAID)
+        activate System
+        System -> DB : 24. Background Worker: releaseExpiredOrders(15) -> UPDATE orders SET status='CANCELLED'
+        activate DB
+        System -> DB : 25. Hoàn trả tồn kho: UPDATE product_variants SET stock_quantity = stock_quantity + @quantity
+        DB --> System : 26. Hoàn tất hủy đơn & trả tồn kho
+        deactivate DB
+        System --> Customer : 27. Thông báo: "Đơn hàng đã bị hủy do quá hạn 15 phút"
+        deactivate System
+    end
+end
+
+== GIAI ĐOẠN 3: QUẢN TRỊ VIÊN (ADMIN) DUYỆT ĐƠN & VẬN HÀNH ==
+
+Admin -> System : 28. GET /api/v1/orders?status=CONFIRMED (Xem đơn cần xử lý)
+activate Admin
+activate System
+
+System -> System : 29. verifyToken() & requireAdmin() (Kiểm tra role == 'ADMIN')
+alt Không phải Admin (role != 'ADMIN')
+    System --> Admin : 30. 403 Forbidden: "Bạn không có quyền truy cập"
+else Xác thực quyền Admin thành công
+    System -> DB : 31. SELECT * FROM orders WHERE status = 'CONFIRMED' ORDER BY created_at DESC
+    activate DB
+    DB --> System : 32. Trả về danh sách đơn hàng đã thanh toán / xác nhận COD
+    deactivate DB
+    System --> Admin : 33. 200 OK: Hiển thị bảng đơn hàng trên Admin Dashboard
+
+    Admin -> System : 34. PUT /api/v1/orders/:id/status (Body: { status: "PROCESSING" / "SHIPPED" })
+    System -> System : 35. Kiểm tra tính hợp lệ của luồng chuyển trạng thái
+    System -> DB : 36. UPDATE orders SET status = @status, updated_at = GETDATE() WHERE id = @id
+    activate DB
+    DB --> System : 37. Xác nhận cập nhật trạng thái đơn (Rows affected = 1)
+    deactivate DB
+    System --> Admin : 38. 200 OK: "Đã cập nhật trạng thái đơn hàng thành công"
+end
+deactivate System
+deactivate Admin
+
+@enduml

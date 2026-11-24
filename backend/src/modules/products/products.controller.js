@@ -4,7 +4,8 @@ const ApiResponse = require('../../utils/response');
 class ProductController {
   static async getFilters(req, res, next) {
     try {
-      return ApiResponse.success(res, await ProductService.getFilters(), 'Đã tải bộ lọc');
+      const { category } = req.query;
+      return ApiResponse.success(res, await ProductService.getFilters(category), 'Đã tải bộ lọc');
     } catch (error) {
       next(error);
     }
@@ -12,12 +13,24 @@ class ProductController {
 
   static async getProducts(req, res, next) {
     try {
-      const { category, search, tag, limit, size, color } = req.query;
-      if ([size, color].some(value => value !== undefined && typeof value !== 'string')
-          || size?.length > 20 || color?.length > 100) {
-        return ApiResponse.error(res, 'Kích cỡ hoặc màu sắc không hợp lệ.', 400);
+      const { category, search, tag, limit, size, color, material, fit, minPrice, maxPrice, sort } = req.query;
+      if ([size, color, material, fit].some(value => value !== undefined && typeof value !== 'string')
+          || size?.length > 50 || color?.length > 100 || material?.length > 100 || fit?.length > 100) {
+        return ApiResponse.error(res, 'Thông số bộ lọc không hợp lệ.', 400);
       }
-      const products = await ProductService.getProducts({ category, search, tag, limit, size: size?.trim(), color: color?.trim() });
+      const products = await ProductService.getProducts({
+        category,
+        search,
+        tag,
+        limit,
+        size: size?.trim(),
+        color: color?.trim(),
+        material: material?.trim(),
+        fit: fit?.trim(),
+        minPrice,
+        maxPrice,
+        sort
+      });
       return ApiResponse.success(res, products, 'Lấy danh sách sản phẩm thành công', 200, {
         total: products.length
       });
@@ -38,13 +51,20 @@ class ProductController {
 
   static async createProduct(req, res, next) {
     try {
-      const { name, categoryId, basePrice, description, tag, material, fit, imageData } = req.body;
-      if (!name || !basePrice) {
+      const {
+        name, categoryId, basePrice, price, description, tag,
+        material, fit, lining, hardware, origin,
+        variants, color, size, stockQuantity, imageData, imageUrl
+      } = req.body;
+      const resolvedPrice = basePrice !== undefined ? basePrice : price;
+      if (!name || resolvedPrice === undefined) {
         return ApiResponse.error(res, 'Tên và giá sản phẩm là bắt buộc', 400);
       }
 
       const result = await ProductService.createProduct({
-        name, categoryId, basePrice, description, tag, material, fit, imageData
+        name, categoryId, basePrice: resolvedPrice, description, tag,
+        material, fit, lining, hardware, origin,
+        variants, color, size, stockQuantity, imageData, imageUrl
       });
 
       return ApiResponse.success(res, result, `Đã thêm sản phẩm "${name}" thành công vào Cơ Sở Dữ Liệu!`, 201);

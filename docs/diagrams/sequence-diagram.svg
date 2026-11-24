@@ -1,0 +1,261 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 1188" width="840" height="1188">
+  <defs>
+    <style>
+      .title { font-family: 'Times New Roman', serif; font-size: 19px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .subtitle { font-family: 'Times New Roman', serif; font-size: 12px; font-style: italic; fill: #000000; text-anchor: middle; }
+      .actor-lbl { font-family: 'Times New Roman', serif; font-size: 13px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .msg-txt { font-family: 'Times New Roman', serif; font-size: 10.5px; font-weight: bold; fill: #000000; }
+      .guard-txt { font-family: 'Times New Roman', serif; font-size: 10.5px; font-weight: bold; fill: #000000; }
+      .frame-lbl { font-family: 'Times New Roman', serif; font-size: 11px; font-weight: bold; fill: #000000; }
+      .section-hdr { font-family: 'Times New Roman', serif; font-size: 11.5px; font-weight: bold; fill: #000000; }
+      .line { stroke: #000000; stroke-width: 1.5; fill: none; }
+      .lifeline { stroke: #000000; stroke-width: 1.2; stroke-dasharray: 4,4; fill: none; }
+      .activation { fill: #FFFFFF; stroke: #000000; stroke-width: 1.5; }
+      .frame-box { fill: none; stroke: #000000; stroke-width: 1.2; }
+      .divider { stroke: #000000; stroke-width: 1; stroke-dasharray: 3,3; fill: none; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 Z" fill="#000000"/>
+    </marker>
+    <marker id="arrow-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 1.5 L 9 5 L 0 8.5" fill="none" stroke="#000000" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <!-- Trang A4 Nền Trắng & Khung Viền -->
+  <rect x="0" y="0" width="840" height="1188" fill="#FFFFFF"/>
+  <rect x="25" y="25" width="790" height="1138" fill="none" stroke="#000000" stroke-width="1"/>
+
+  <!-- Tiêu Đề -->
+  <text x="420.0" y="56" class="title">SƠ ĐỒ TUẦN TỰ: ĐẶT HÀNG, THANH TOÁN &amp; QUẢN TRỊ ĐƠN HÀNG</text>
+  <text x="420.0" y="77" class="subtitle">Đặc Tả Quy Trình Tương Tác UML 2.x Sequence Diagram | Khổ A4 Dọc Đen Trắng | Dự Án AURALIÈ</text>
+  <line x1="45" y1="90" x2="795" y2="90" class="line"/>
+
+  <!-- LIFELINE HEADERS -->
+  <!-- 1. Customer Actor -->
+  <circle cx="110" cy="108" r="9" fill="none" stroke="#000000" stroke-width="1.5"/>
+  <line x1="110" y1="117" x2="110" y2="135" stroke="#000000" stroke-width="1.5"/>
+  <line x1="98" y1="123" x2="122" y2="123" stroke="#000000" stroke-width="1.5"/>
+  <line x1="110" y1="135" x2="100" y2="150" stroke="#000000" stroke-width="1.5"/>
+  <line x1="110" y1="135" x2="120" y2="150" stroke="#000000" stroke-width="1.5"/>
+  <text x="110" y="166" class="actor-lbl">Khách hàng (Customer)</text>
+
+  <!-- 2. Admin Actor -->
+  <circle cx="290" cy="108" r="9" fill="none" stroke="#000000" stroke-width="1.5"/>
+  <line x1="290" y1="117" x2="290" y2="135" stroke="#000000" stroke-width="1.5"/>
+  <line x1="278" y1="123" x2="302" y2="123" stroke="#000000" stroke-width="1.5"/>
+  <line x1="290" y1="135" x2="280" y2="150" stroke="#000000" stroke-width="1.5"/>
+  <line x1="290" y1="135" x2="300" y2="150" stroke="#000000" stroke-width="1.5"/>
+  <text x="290" y="166" class="actor-lbl">Quản trị viên (Admin)</text>
+
+  <!-- 3. System Box -->
+  <rect x="445" y="115" width="130" height="35" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <text x="510" y="137" class="actor-lbl">Hệ thống (System)</text>
+
+  <!-- 4. Database Cylinder -->
+  <path d="M 685 120 A 45 10 0 0 0 775 120 L 775 145 A 45 10 0 0 1 685 145 Z" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <ellipse cx="730" cy="120" rx="45" ry="10" fill="#FFFFFF" stroke="#000000" stroke-width="1.5"/>
+  <text x="730" y="138" class="actor-lbl">CSDL (Database)</text>
+
+  <!-- LIFELINES (Vertical Dashed Lines) -->
+  <line x1="110" y1="175" x2="110" y2="1110" class="lifeline"/>
+  <line x1="290" y1="175" x2="290" y2="1110" class="lifeline"/>
+  <line x1="510" y1="175" x2="510" y2="1110" class="lifeline"/>
+  <line x1="730" y1="175" x2="730" y2="1110" class="lifeline"/>
+
+  <!-- ========================================================================= -->
+  <!-- GIAI ĐOẠN 1: KHÁCH HÀNG TẠO ĐƠN HÀNG & KHÓA TỒN KHO NGUYÊN TỬ -->
+  <!-- ========================================================================= -->
+  <rect x="45" y="180" width="750" height="20" fill="#F4F4F4" stroke="#000000" stroke-width="1"/>
+  <text x="55" y="194" class="section-hdr">GIAI ĐOẠN 1: KHÁCH HÀNG TẠO ĐƠN HÀNG &amp; KHÓA GIỮ TỒN KHO NGUYÊN TỬ (TTL 15 PHÚT)</text>
+
+  <!-- Activation Bars GĐ 1 -->
+  <rect x="104" y="205" width="12" height="315" class="activation"/>
+  <rect x="504" y="205" width="12" height="315" class="activation"/>
+
+  <!-- 1. POST /orders -->
+  <line x1="116" y1="210" x2="504" y2="210" class="line" marker-end="url(#arrow)"/>
+  <text x="130" y="205" class="msg-txt">[01] POST /api/v1/orders (kèm JWT Token, items, thông tin nhận hàng, coupon)</text>
+
+  <!-- 2. Validate & Verify -->
+  <path d="M 516 220 L 540 220 L 540 238 L 516 238" class="line" marker-end="url(#arrow)"/>
+  <text x="545" y="232" class="msg-txt">[02] verifyToken() &amp; validateCreateOrder()</text>
+
+  <!-- Frame ALT 1: Token & Validation -->
+  <rect x="55" y="246" width="730" height="270" class="frame-box"/>
+  <polygon points="55,246 110,246 110,260 95,260 95,246" fill="#F4F4F4" stroke="#000000" stroke-width="0.8"/>
+  <text x="65" y="258" class="frame-lbl">alt</text>
+  <text x="120" y="258" class="guard-txt">[Token hết hạn hoặc dữ liệu không hợp lệ]</text>
+
+  <!-- Fail response -->
+  <line x1="504" y1="270" x2="116" y2="270" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="130" y="266" class="msg-txt">[03] 401 Unauthorized / 400 Bad Request (Thông báo lỗi)</text>
+
+  <!-- Alt Divider -->
+  <line x1="55" y1="282" x2="785" y2="282" class="divider"/>
+  <text x="120" y="295" class="guard-txt">[Hợp lệ &amp; Đã đăng nhập]</text>
+
+  <!-- DB Activation GĐ 1 -->
+  <rect x="724" y="300" width="12" height="195" class="activation"/>
+
+  <!-- 4. BEGIN TRANSACTION -->
+  <line x1="516" y1="305" x2="724" y2="305" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="301" class="msg-txt">[04] BEGIN TRANSACTION (Mở phiên giao dịch an toàn)</text>
+
+  <!-- Frame OPT: Coupon -->
+  <rect x="420" y="315" width="355" height="42" class="frame-box"/>
+  <polygon points="420,315 455,315 455,327 445,327 445,315" fill="#F4F4F4" stroke="#000000" stroke-width="0.8"/>
+  <text x="425" y="325" class="frame-lbl">opt</text>
+  <text x="465" y="325" class="guard-txt">[Khách có nhập mã Coupon]</text>
+  <line x1="516" y1="334" x2="724" y2="334" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="331" class="msg-txt">[05] SELECT * FROM coupons WHERE code=@code AND is_active=1</text>
+  <line x1="724" y1="348" x2="516" y2="348" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="525" y="345" class="msg-txt">[06] Trả thông tin chiết khấu (% / tiền mặt) -> Tính discount_amount</text>
+
+  <!-- Frame LOOP: Check stock & Lock -->
+  <rect x="420" y="364" width="355" height="75" class="frame-box"/>
+  <polygon points="420,364 460,364 460,376 450,376 450,364" fill="#F4F4F4" stroke="#000000" stroke-width="0.8"/>
+  <text x="425" y="374" class="frame-lbl">loop</text>
+  <text x="470" y="374" class="guard-txt">[Duyệt từng biến thể sản phẩm trong giỏ hàng]</text>
+
+  <line x1="516" y1="385" x2="724" y2="385" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="382" class="msg-txt">[07] SELECT stock_quantity FROM product_variants WITH (UPDLOCK) WHERE id=@id</text>
+
+  <line x1="724" y1="400" x2="516" y2="400" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="525" y="397" class="msg-txt">[08] Trả về stock_quantity hiện thời</text>
+
+  <!-- Nested Alt Stock -->
+  <line x1="516" y1="422" x2="724" y2="422" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="418" class="msg-txt">[09] Còn hàng: UPDATE product_variants SET stock = stock - qty (Ngược lại ROLLBACK)</text>
+
+  <!-- INSERT Orders & Commit -->
+  <line x1="516" y1="452" x2="724" y2="452" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="448" class="msg-txt">[10] INSERT INTO orders &amp; order_items, gán tracking_code GHN-VN-xxxxxxxx</text>
+
+  <line x1="516" y1="468" x2="724" y2="468" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="465" class="msg-txt">[11] COMMIT TRANSACTION (Khóa giữ tồn kho nguyên tử 15 phút)</text>
+
+  <line x1="724" y1="485" x2="516" y2="485" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="525" y="481" class="msg-txt">[12] Xác nhận lưu đơn thành công (orderId, orderCode, trackingCode)</text>
+
+  <!-- Response to Customer -->
+  <line x1="504" y1="505" x2="116" y2="505" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="130" y="501" class="msg-txt">[13] 201 Created: Trả về mã đơn, mã vận đơn GHN &amp; URL VietQR SePay</text>
+
+  <!-- ========================================================================= -->
+  <!-- GIAI ĐOẠN 2: XỬ LÝ THANH TOÁN (COD HOẶC SEPAY VIETQR 15 PHÚT) -->
+  <!-- ========================================================================= -->
+  <rect x="45" y="528" width="750" height="20" fill="#F4F4F4" stroke="#000000" stroke-width="1"/>
+  <text x="55" y="542" class="section-hdr">GIAI ĐOẠN 2: XỬ LÝ THANH TOÁN (COD HOẶC TỰ ĐỘNG HỦY HOÀN TỒN KHO NẾU QUÁ 15 PHÚT)</text>
+
+  <!-- Frame ALT 2: Payment Branches -->
+  <rect x="55" y="555" width="730" height="205" class="frame-box"/>
+  <polygon points="55,555 110,555 110,569 95,569 95,555" fill="#F4F4F4" stroke="#000000" stroke-width="0.8"/>
+  <text x="65" y="567" class="frame-lbl">alt</text>
+  <text x="120" y="567" class="guard-txt">[Phương thức COD - Thanh toán khi nhận hàng]</text>
+
+  <!-- Nhánh COD -->
+  <line x1="516" y1="582" x2="724" y2="582" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="578" class="msg-txt">[14] UPDATE orders SET status='CONFIRMED', payment_status='UNPAID' WHERE id=@id</text>
+  <line x1="504" y1="598" x2="116" y2="598" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="130" y="594" class="msg-txt">[15] Thông báo đặt hàng COD thành công, chuẩn bị giao hàng</text>
+
+  <!-- Nhánh VietQR Đủ tiền -->
+  <line x1="55" y1="608" x2="785" y2="608" class="divider"/>
+  <text x="120" y="620" class="guard-txt">[Phương thức VietQR SePay: Khách chuyển khoản đủ tiền trong 15 phút]</text>
+
+  <line x1="516" y1="634" x2="724" y2="634" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="630" class="msg-txt">[16] Webhook SePay: Ghi nhận payments &amp; UPDATE orders: status='CONFIRMED', payment_status='PAID'</text>
+  <line x1="504" y1="650" x2="116" y2="650" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="130" y="646" class="msg-txt">[17] Thông báo: "Đã thanh toán thành công qua SePay, đơn hàng đã được xác nhận"</text>
+
+  <!-- Nhánh VietQR Quá 15p chưa chuyển đủ -->
+  <line x1="55" y1="662" x2="785" y2="662" class="divider"/>
+  <text x="120" y="674" class="guard-txt">[Phương thức VietQR SePay: Quá 15 phút chưa thanh toán hoặc chuyển thiếu tiền (UNPAID / PARTIALLY_PAID)]</text>
+
+  <line x1="516" y1="690" x2="724" y2="690" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="686" class="msg-txt">[18] Background Worker (expiredOrders.job): Quét đơn hết hạn &amp; UPDATE orders: status='CANCELLED'</text>
+
+  <line x1="516" y1="712" x2="724" y2="712" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="708" class="msg-txt">[19] Hoàn trả tồn kho nguyên tử: UPDATE product_variants SET stock = stock + qty</text>
+
+  <line x1="724" y1="730" x2="516" y2="730" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="525" y="726" class="msg-txt">[20] CSDL hoàn tất hủy đơn &amp; giải phóng tồn kho</text>
+
+  <line x1="504" y1="748" x2="116" y2="748" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="130" y="744" class="msg-txt">[21] Thông báo: "Đơn hàng đã tự động bị hủy do quá hạn thanh toán 15 phút"</text>
+
+  <!-- ========================================================================= -->
+  <!-- GIAI ĐOẠN 3: QUẢN TRỊ VIÊN (ADMIN) DUYỆT ĐƠN & VẬN HÀNH HỆ THỐNG -->
+  <!-- ========================================================================= -->
+  <rect x="45" y="775" width="750" height="20" fill="#F4F4F4" stroke="#000000" stroke-width="1"/>
+  <text x="55" y="789" class="section-hdr">GIAI ĐOẠN 3: QUẢN TRỊ VIÊN (ADMIN) XÁC THỰC QUYỀN, DUYỆT ĐƠN &amp; CẬP NHẬT TRẠNG THÁI</text>
+
+  <!-- Activation Bars GĐ 3 -->
+  <rect x="284" y="802" width="12" height="275" class="activation"/>
+  <rect x="504" y="802" width="12" height="275" class="activation"/>
+
+  <!-- 22. Admin GET orders -->
+  <line x1="296" y1="810" x2="504" y2="810" class="line" marker-end="url(#arrow)"/>
+  <text x="310" y="805" class="msg-txt">[22] GET /api/v1/orders?status=CONFIRMED (Kèm JWT Token Admin)</text>
+
+  <!-- 23. Check requireAdmin -->
+  <path d="M 516 818 L 540 818 L 540 836 L 516 836" class="line" marker-end="url(#arrow)"/>
+  <text x="545" y="830" class="msg-txt">[23] verifyToken() &amp; requireAdmin() (role == 'ADMIN')</text>
+
+  <!-- Frame ALT 3: Admin Auth -->
+  <rect x="55" y="844" width="730" height="225" class="frame-box"/>
+  <polygon points="55,844 110,844 110,858 95,858 95,844" fill="#F4F4F4" stroke="#000000" stroke-width="0.8"/>
+  <text x="65" y="856" class="frame-lbl">alt</text>
+  <text x="120" y="856" class="guard-txt">[Không phải Admin (role != 'ADMIN')]</text>
+
+  <line x1="504" y1="870" x2="296" y2="870" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="310" y="866" class="msg-txt">[24] 403 Forbidden: "Bạn không có quyền truy cập tính năng quản trị"</text>
+
+  <line x1="55" y1="880" x2="785" y2="880" class="divider"/>
+  <text x="120" y="893" class="guard-txt">[Hợp lệ - Là Quản trị viên (role == 'ADMIN')]</text>
+
+  <!-- DB Activation GĐ 3 -->
+  <rect x="724" y="900" width="12" height="165" class="activation"/>
+
+  <line x1="516" y1="905" x2="724" y2="905" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="901" class="msg-txt">[25] SELECT * FROM orders WHERE status='CONFIRMED' ORDER BY created_at DESC</text>
+
+  <line x1="724" y1="925" x2="516" y2="925" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="525" y="921" class="msg-txt">[26] Trả về danh sách đơn hàng đã thanh toán / xác nhận COD</text>
+
+  <line x1="504" y1="945" x2="296" y2="945" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="310" y="941" class="msg-txt">[27] 200 OK: Trả về danh sách đơn hàng, hiển thị lên Admin Dashboard</text>
+
+  <!-- Admin update status -->
+  <line x1="296" y1="975" x2="504" y2="975" class="line" marker-end="url(#arrow)"/>
+  <text x="310" y="970" class="msg-txt">[28] PUT /api/v1/orders/:id/status (Body: { status: "PROCESSING" / "SHIPPED" })</text>
+
+  <path d="M 516 985 L 540 985 L 540 1003 L 516 1003" class="line" marker-end="url(#arrow)"/>
+  <text x="545" y="997" class="msg-txt">[29] OrderService.updateOrderStatus(): Kiểm tra chuyển trạng thái hợp lệ</text>
+
+  <line x1="516" y1="1025" x2="724" y2="1025" class="line" marker-end="url(#arrow)"/>
+  <text x="525" y="1021" class="msg-txt">[30] UPDATE orders SET status=@status, updated_at=GETDATE() WHERE id=@id</text>
+
+  <line x1="724" y1="1045" x2="516" y2="1045" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="525" y="1041" class="msg-txt">[31] Xác nhận cập nhật trạng thái đơn hàng (Rows affected = 1)</text>
+
+  <line x1="504" y1="1062" x2="296" y2="1062" stroke="#000000" stroke-width="1.2" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+  <text x="310" y="1058" class="msg-txt">[32] 200 OK: Đã cập nhật trạng thái đơn hàng thành công!</text>
+
+  <!-- FOOTER -->
+  <line x1="45" y1="1100" x2="795" y2="1100" class="line"/>
+  <rect x="70" y="1105" width="80" height="26" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <text x="110" y="1122" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000" text-anchor="middle">Customer</text>
+
+  <rect x="250" y="1105" width="80" height="26" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <text x="290" y="1122" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000" text-anchor="middle">Admin</text>
+
+  <rect x="465" y="1105" width="90" height="26" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <text x="510" y="1122" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000" text-anchor="middle">System</text>
+
+  <rect x="685" y="1105" width="90" height="26" fill="#FFFFFF" stroke="#000000" stroke-width="1"/>
+  <text x="730" y="1122" font-family="'Times New Roman', serif" font-size="11.5px" font-weight="bold" fill="#000000" text-anchor="middle">Database</text>
+
+  <text x="420.0" y="1145" class="subtitle">Đồ Án Tốt Nghiệp: Hệ Thống E-Commerce Thời Trang Cao Cấp AURALIÈ | Chuẩn UML 2.x Sequence Diagram</text>
+</svg>

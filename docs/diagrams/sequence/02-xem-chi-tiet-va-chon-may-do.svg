@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 1188" width="840" height="1188">
+  <defs>
+    <style>
+      .title { font-family: 'Times New Roman', serif; font-size: 19.5px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .subtitle { font-family: 'Times New Roman', serif; font-size: 12.5px; font-style: italic; fill: #000000; text-anchor: middle; }
+      .actor-lbl { font-family: 'Times New Roman', serif; font-size: 14.5px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .msg-txt { font-family: 'Times New Roman', serif; font-size: 12px; font-weight: bold; fill: #000000; }
+      .guard-txt { font-family: 'Times New Roman', serif; font-size: 11.5px; font-weight: bold; fill: #000000; }
+      .frame-lbl { font-family: 'Times New Roman', serif; font-size: 12px; font-weight: bold; fill: #000000; }
+      .footer-txt { font-family: 'Times New Roman', serif; font-size: 11.5px; font-style: italic; fill: #000000; text-anchor: middle; }
+      .line { stroke: #000000; stroke-width: 1.6; fill: none; }
+      .lifeline { stroke: #000000; stroke-width: 1.3; stroke-dasharray: 4,4; fill: none; }
+      .activation { fill: #FFFFFF; stroke: #000000; stroke-width: 1.6; }
+      .frame-box { fill: none; stroke: #000000; stroke-width: 1.3; }
+      .divider { stroke: #000000; stroke-width: 1.1; stroke-dasharray: 4,4; fill: none; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 Z" fill="#000000"/>
+    </marker>
+    <marker id="arrow-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 9 5 L 0 8.5" fill="none" stroke="#000000" stroke-width="1.6"/>
+    </marker>
+  </defs>
+
+  <!-- Trang A4 Nền Trắng & Khung Viền -->
+  <rect x="0" y="0" width="840" height="1188" fill="#FFFFFF"/>
+  <rect x="25" y="25" width="790" height="1138" fill="none" stroke="#000000" stroke-width="1"/>
+
+  <!-- Tiêu Đề -->
+  <text x="420.0" y="58" class="title">SƠ ĐỒ TUẦN TỰ: XEM CHI TIẾT VÀ CHỌN THÔNG SỐ MAY ĐO</text>
+  <text x="420.0" y="80" class="subtitle">Đặc tả quy trình nghiệp vụ 02 | Chuẩn UML 2.x | Hệ thống AURALIÈ | Hình 2 / 8</text>
+  <line x1="45" y1="94" x2="795" y2="94" class="line"/>
+
+  <!-- LIFELINE HEADERS -->
+  
+            <circle cx="160" cy="112" r="10" fill="none" stroke="#000000" stroke-width="1.8"/>
+            <line x1="160" y1="122" x2="160" y2="142" stroke="#000000" stroke-width="1.8"/>
+            <line x1="146" y1="130" x2="174" y2="130" stroke="#000000" stroke-width="1.8"/>
+            <line x1="160" y1="142" x2="148" y2="158" stroke="#000000" stroke-width="1.8"/>
+            <line x1="160" y1="142" x2="172" y2="158" stroke="#000000" stroke-width="1.8"/>
+            <text x="160" y="176" class="actor-lbl">Khách hàng</text>
+            
+  
+            <rect x="345" y="118" width="150" height="40" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+            <text x="420" y="143" class="actor-lbl">Hệ thống</text>
+            
+  
+            <path d="M 620 122 A 60 12 0 0 0 740 122 L 740 148 A 60 12 0 0 1 620 148 Z" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+            <ellipse cx="680" cy="122" rx="60" ry="12" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+            <text x="680" y="145" class="actor-lbl">Cơ sở dữ liệu</text>
+            
+
+  <!-- LIFELINES (Vertical Dashed Lines) -->
+  <line x1="160" y1="185" x2="160" y2="1080" class="lifeline"/>
+  <line x1="420" y1="185" x2="420" y2="1080" class="lifeline"/>
+  <line x1="680" y1="185" x2="680" y2="1080" class="lifeline"/>
+
+  <!-- NỘI DUNG TƯƠNG TÁC NGHIỆP VỤ -->
+  
+    <rect x="154" y="210" width="12" height="740" class="activation"/>
+    <rect x="414" y="210" width="12" height="740" class="activation"/>
+
+    <line x1="166" y1="230" x2="414" y2="230" class="line" marker-end="url(#arrow)"/>
+    <text x="175" y="224" class="msg-txt">[01] Gửi yêu cầu xem chi tiết: GET /api/v1/products/:slug</text>
+
+    <rect x="674" y="240" width="12" height="490" class="activation"/>
+
+    <line x1="426" y1="260" x2="674" y2="260" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="254" class="msg-txt">[02] Truy vấn dữ liệu: SELECT * FROM products WHERE slug = @slug AND is_active = 1</text>
+
+    <line x1="674" y1="300" x2="426" y2="300" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="435" y="294" class="msg-txt">[03] Trả kết quả: Thông tin sản phẩm cơ bản (tên, mô tả vải may đo, giá gốc)</text>
+
+    <!-- Alt: Check found -->
+    <rect x="55" y="325" width="730" height="530" class="frame-box"/>
+    <polygon points="55,325 115,325 115,340 95,340 95,325" fill="#F4F4F4" stroke="#000000" stroke-width="0.8"/>
+    <text x="65" y="337" class="frame-lbl">alt</text>
+    <text x="125" y="337" class="guard-txt">[Không tìm thấy sản phẩm trong cơ sở dữ liệu]</text>
+
+    <line x1="414" y1="370" x2="166" y2="370" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="175" y="364" class="msg-txt">[04] Phản hồi thất bại: 404 Not Found ("Sản phẩm không tồn tại")</text>
+
+    <line x1="55" y1="395" x2="785" y2="395" class="divider"/>
+    <text x="125" y="410" class="guard-txt">[Tìm thấy sản phẩm hợp lệ]</text>
+
+    <line x1="426" y1="440" x2="674" y2="440" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="434" class="msg-txt">[05] Truy vấn dữ liệu biến thể: SELECT * FROM product_variants WHERE product_id = @id</text>
+
+    <line x1="674" y1="480" x2="426" y2="480" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="435" y="474" class="msg-txt">[06] Trả kết quả: Mảng biến thể (Kích cỡ S/M/L/May đo, màu sắc, tồn kho, SKU)</text>
+
+    <line x1="426" y1="520" x2="674" y2="520" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="514" class="msg-txt">[07] Truy vấn dữ liệu hình ảnh: SELECT image_url FROM product_images WHERE product_id = @id</text>
+
+    <line x1="674" y1="560" x2="426" y2="560" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="435" y="554" class="msg-txt">[08] Trả kết quả: Bộ sưu tập hình ảnh phom dáng cao cấp</text>
+
+    <line x1="426" y1="600" x2="674" y2="600" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="594" class="msg-txt">[09] Truy vấn dữ liệu đánh giá: SELECT * FROM product_reviews WHERE product_id = @id</text>
+
+    <line x1="674" y1="640" x2="426" y2="640" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="435" y="634" class="msg-txt">[10] Trả kết quả: Điểm đánh giá trung bình và nhận xét thực tế</text>
+
+    <line x1="414" y1="710" x2="166" y2="710" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="175" y="704" class="msg-txt">[11] Phản hồi thành công: 200 OK (Chi tiết sản phẩm, danh sách biến thể &amp; hình ảnh)</text>
+
+    <path d="M 154 790 L 125 790 L 125 812 L 154 812" class="line" marker-end="url(#arrow)"/>
+    <text x="65" y="805" class="msg-txt" text-anchor="end">[12] Tra cứu bảng kích thước Size Guide và chọn số đo may</text>
+    
+
+  <!-- FOOTER CHUẨN A4 -->
+  <line x1="45" y1="1085" x2="795" y2="1085" class="line"/>
+  <rect x="105" y="1092" width="110" height="28" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>
+  <text x="160" y="1111" class="actor-lbl">Khách hàng</text>
+
+  <rect x="360" y="1092" width="120" height="28" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>
+  <text x="420" y="1111" class="actor-lbl">Hệ thống</text>
+
+  <rect x="615" y="1092" width="130" height="28" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>
+  <text x="680" y="1111" class="actor-lbl">Cơ sở dữ liệu</text>
+
+  <text x="420.0" y="1145" class="footer-txt">Báo Cáo Đồ Án Tốt Nghiệp: Hệ Thống Thương Mại Điện Tử May Đo AURALIÈ | Chuẩn UML 2.x Sequence Diagram</text>
+</svg>

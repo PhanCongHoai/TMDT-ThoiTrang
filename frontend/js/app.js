@@ -461,11 +461,604 @@ document.addEventListener('DOMContentLoaded', () => {
   // ====================================================================
   // 4. DYNAMIC DATABASE PRODUCTS CATALOG LOADER (TRUY VẤN TRỰC TIẾP TỪ SQL SERVER)
   // ====================================================================
-  const catalogFilters = { size: '', color: '' };
+  // ====================================================================
+  // 4. DYNAMIC DATABASE PRODUCTS CATALOG LOADER & CATEGORY-SPECIFIC FILTERS
+  // ====================================================================
+  const defaultCatalogFilters = {
+    size: '',
+    color: '',
+    fit: '',
+    material: '',
+    minPrice: '',
+    maxPrice: ''
+  };
+  let catalogFilters = { ...defaultCatalogFilters };
   let appliedCatalogFilters = { ...catalogFilters };
   let catalogCategory = 'all';
   let catalogSearch = '';
+  let catalogSort = 'newest';
   let catalogRequest;
+
+  // CẤU HÌNH BỘ LỌC CHUYÊN BIỆT TỪNG DANH MỤC THỜI TRANG (CATEGORY-SPECIFIC FILTER CONFIG)
+  const CATEGORY_FILTER_CONFIG = {
+    'all': {
+      title: 'Bộ Lọc Tổng Hợp',
+      icon: 'fa-sliders',
+      facets: [
+        {
+          key: 'color',
+          label: 'Tông Màu Sắc',
+          icon: 'fa-palette',
+          type: 'color',
+          options: [
+            { label: 'Tất cả', value: '' },
+            { label: 'Đen Tuyền', value: 'Đen' },
+            { label: 'Trắng Sữa', value: 'Trắng' },
+            { label: 'Đỏ Quý Tộc', value: 'Đỏ' },
+            { label: 'Xanh Navy / Đêm', value: 'Xanh' },
+            { label: 'Vàng Hoàng Gia', value: 'Vàng' },
+            { label: 'Nâu Da / Camel', value: 'Nâu' },
+            { label: 'Xám Khói / Than', value: 'Xám' },
+            { label: 'Kem Yến Mạch', value: 'Kem' }
+          ]
+        },
+        {
+          key: 'size',
+          label: 'Kích Cỡ / Phân Loại',
+          icon: 'fa-ruler-combined',
+          type: 'size',
+          options: [
+            { label: 'Tất cả', value: '' },
+            { label: 'S', value: 'S' },
+            { label: 'M', value: 'M' },
+            { label: 'L', value: 'L' },
+            { label: 'XL', value: 'XL' },
+            { label: 'FreeSize', value: 'FreeSize' },
+            { label: 'Giày 36', value: '36' },
+            { label: 'Giày 37', value: '37' },
+            { label: 'Giày 38', value: '38' },
+            { label: 'Giày 39-42', value: '40' }
+          ]
+        },
+        {
+          key: 'price',
+          label: 'Khoảng Giá',
+          icon: 'fa-tag',
+          type: 'price',
+          options: [
+            { label: 'Tất cả mức giá', min: '', max: '' },
+            { label: 'Dưới 15 Triệu', min: '0', max: '15000000' },
+            { label: '15 - 25 Triệu', min: '15000000', max: '25000000' },
+            { label: 'Trên 25 Triệu', min: '25000000', max: '999000000' }
+          ]
+        }
+      ]
+    },
+    'vest-blazer': {
+      title: 'Bộ Lọc Âu Phục & May Đo',
+      icon: 'fa-user-tie',
+      facets: [
+        {
+          key: 'size',
+          label: 'Kích Cỡ Âu Phục',
+          icon: 'fa-ruler-combined',
+          type: 'size',
+          options: [
+            { label: 'Tất cả size', value: '' },
+            { label: 'S (Ngực 88-92)', value: 'S' },
+            { label: 'M (Ngực 92-96)', value: 'M' },
+            { label: 'L (Ngực 96-102)', value: 'L' },
+            { label: 'XL (Ngực 102+)', value: 'XL' }
+          ]
+        },
+        {
+          key: 'fit',
+          label: 'Phom Dáng May Đo',
+          icon: 'fa-scissors',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả phom', value: '' },
+            { label: 'European Tailored', value: 'European' },
+            { label: 'Slim Structured', value: 'Slim' },
+            { label: 'Savile Row / Regular', value: 'Regular' },
+            { label: 'Double-Breasted', value: 'Double-Breasted' },
+            { label: 'Black Tie Tuxedo', value: 'Black Tie' }
+          ]
+        },
+        {
+          key: 'material',
+          label: 'Chất Liệu Thượng Hạng',
+          icon: 'fa-gem',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả chất liệu', value: '' },
+            { label: 'Cashmere Lụa Ý', value: 'Cashmere' },
+            { label: 'Len Cừu Merinos', value: 'Merino' },
+            { label: 'Virgin Wool Ý', value: 'Virgin Wool' },
+            { label: 'Nhung Velvet', value: 'Velvet' },
+            { label: 'Lụa Tơ Tằm Jacquard', value: 'Jacquard' }
+          ]
+        },
+        {
+          key: 'color',
+          label: 'Tông Màu Sắc',
+          icon: 'fa-palette',
+          type: 'color',
+          options: [
+            { label: 'Tất cả màu', value: '' },
+            { label: 'Đen Tuyền (Jet Black)', value: 'Đen' },
+            { label: 'Xanh Navy Ý', value: 'Navy' },
+            { label: 'Đỏ Đô Burgundy', value: 'Đỏ' },
+            { label: 'Vàng Hoàng Gia', value: 'Vàng' },
+            { label: 'Xám Than Lịch Lãm', value: 'Xám' },
+            { label: 'Nanh Sói (Houndstooth)', value: 'Nanh Sói' }
+          ]
+        }
+      ]
+    },
+    'vay-dam': {
+      title: 'Bộ Lọc Váy & Đầm Dạ Hội',
+      icon: 'fa-person-dress',
+      facets: [
+        {
+          key: 'size',
+          label: 'Kích Cỡ Đầm',
+          icon: 'fa-ruler-combined',
+          type: 'size',
+          options: [
+            { label: 'Tất cả size', value: '' },
+            { label: 'S (Eo 64-68)', value: 'S' },
+            { label: 'M (Eo 68-72)', value: 'M' },
+            { label: 'L (Eo 72-76)', value: 'L' }
+          ]
+        },
+        {
+          key: 'fit',
+          label: 'Kiểu Dáng Dạ Tiệc',
+          icon: 'fa-wand-magic-sparkles',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả kiểu dáng', value: '' },
+            { label: 'Đầm Dài Quét Sàn', value: 'Floor-Length' },
+            { label: 'Đầm Đuôi Cá (Mermaid)', value: 'Mermaid' },
+            { label: 'Đầm Xòe Chữ A (A-Line)', value: 'A-Line' },
+            { label: 'Đầm Xẻ Tà Quyến Rũ', value: 'Slit' },
+            { label: 'Cocktail Sang Trọng', value: 'Cocktail' }
+          ]
+        },
+        {
+          key: 'material',
+          label: 'Chất Liệu Lụa & Gấm',
+          icon: 'fa-gem',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả chất liệu', value: '' },
+            { label: '100% Lụa Tơ Tằm', value: 'Lụa Tơ Tằm' },
+            { label: 'Nhung Lụa Pháp', value: 'Nhung Lụa' },
+            { label: 'Satin Duchesse', value: 'Satin' },
+            { label: 'Chiffon Dập Ly', value: 'Chiffon' },
+            { label: 'Lụa Mikado Ý', value: 'Mikado' }
+          ]
+        },
+        {
+          key: 'color',
+          label: 'Tông Màu Dạ Tiệc',
+          icon: 'fa-palette',
+          type: 'color',
+          options: [
+            { label: 'Tất cả màu', value: '' },
+            { label: 'Ngọc Lục Bảo', value: 'Lục Bảo' },
+            { label: 'Đỏ Ruby Quý Phái', value: 'Ruby' },
+            { label: 'Xanh Đêm Midnight', value: 'Xanh Đêm' },
+            { label: 'Trắng Lụa / Ngọc Trai', value: 'Trắng' },
+            { label: 'Hồng Phấn Nữ Tính', value: 'Hồng' }
+          ]
+        }
+      ]
+    },
+    'ao-khoac': {
+      title: 'Bộ Lọc Áo Khoác Thu Đông',
+      icon: 'fa-snowflake',
+      facets: [
+        {
+          key: 'size',
+          label: 'Kích Cỡ Áo Khoác',
+          icon: 'fa-ruler-combined',
+          type: 'size',
+          options: [
+            { label: 'Tất cả size', value: '' },
+            { label: 'S', value: 'S' },
+            { label: 'M', value: 'M' },
+            { label: 'L', value: 'L' },
+            { label: 'FreeSize', value: 'FreeSize' }
+          ]
+        },
+        {
+          key: 'fit',
+          label: 'Kiểu Dáng Áo Khoác',
+          icon: 'fa-vest',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả kiểu dáng', value: '' },
+            { label: 'Dáng Dài Trench Coat', value: 'Trench' },
+            { label: 'Áo Khoác Dạ Ép Dài', value: 'Long' },
+            { label: 'Áo Lửng Cropped', value: 'Cropped' },
+            { label: 'Form Rộng Oversized', value: 'Oversized' },
+            { label: 'Áo Phao Lông Vũ', value: 'Puffer' }
+          ]
+        },
+        {
+          key: 'material',
+          label: 'Chất Liệu Giữ Ấm',
+          icon: 'fa-feather',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả chất liệu', value: '' },
+            { label: '100% Cashmere Sợi Đôi', value: 'Cashmere' },
+            { label: 'Dạ Len Lông Cừu', value: 'Lông Cừu' },
+            { label: 'Len Hai Mặt Double-Faced', value: 'Hai Mặt' },
+            { label: 'Lông Vũ Ngỗng 90/10', value: 'Lông Vũ' },
+            { label: 'Da Cừu Nappa Tự Nhiên', value: 'Da Cừu' }
+          ]
+        },
+        {
+          key: 'color',
+          label: 'Tông Màu Thu Đông',
+          icon: 'fa-palette',
+          type: 'color',
+          options: [
+            { label: 'Tất cả màu', value: '' },
+            { label: 'Nâu Lạc Đà (Camel)', value: 'Camel' },
+            { label: 'Kem Yến Mạch (Oatmeal)', value: 'Yến Mạch' },
+            { label: 'Xám Khói / Heather Grey', value: 'Xám Khói' },
+            { label: 'Xanh Navy Cổ Điển', value: 'Navy' },
+            { label: 'Xám Than Charcoal', value: 'Xám Than' }
+          ]
+        }
+      ]
+    },
+    'tui-xach': {
+      title: 'Bộ Lọc Túi Xách Cao Cấp',
+      icon: 'fa-bag-shopping',
+      facets: [
+        {
+          key: 'fit',
+          label: 'Dáng Túi & Công Năng',
+          icon: 'fa-bag-shopping',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả dáng túi', value: '' },
+            { label: 'Túi Xách Tay (Handbag / Kelly)', value: 'Handbag' },
+            { label: 'Túi Đeo Chéo (Crossbody)', value: 'Crossbody' },
+            { label: 'Túi Tote Cỡ Lớn', value: 'Tote' },
+            { label: 'Ví / Clutch Dạ Tiệc', value: 'Clutch' },
+            { label: 'Túi Yên Ngựa (Saddle)', value: 'Saddle' },
+            { label: 'Túi Kẹp Nách (Baguette)', value: 'Baguette' }
+          ]
+        },
+        {
+          key: 'material',
+          label: 'Dòng Da Thuộc Xa Xỉ',
+          icon: 'fa-gem',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả dòng da', value: '' },
+            { label: 'Da Bê Hạt Caviar', value: 'Caviar' },
+            { label: 'Da Bò Nappa Ý', value: 'Nappa' },
+            { label: 'Da Đà Điểu Nam Phi', value: 'Đà Điểu' },
+            { label: 'Da Cừu Non Lambskin', value: 'Lambskin' },
+            { label: 'Da Dập Vân Cá Sấu', value: 'Cá Sấu' },
+            { label: 'Da Box Calf Thuộc Thảo Mộc', value: 'Box Calf' },
+            { label: 'Da Dập Vân Thằn Lằn', value: 'Thằn Lằn' }
+          ]
+        },
+        {
+          key: 'color',
+          label: 'Tông Màu Da Thuộc',
+          icon: 'fa-palette',
+          type: 'color',
+          options: [
+            { label: 'Tất cả màu da', value: '' },
+            { label: 'Nâu Di Sản & Cognac', value: 'Nâu' },
+            { label: 'Đen Tuyền & Caviar', value: 'Đen' },
+            { label: 'Trắng Ngà Ivory', value: 'Trắng' },
+            { label: 'Xanh Rêu & Lục Bảo', value: 'Lục Bảo' },
+            { label: 'Đỏ Rượu Burgundy', value: 'Rượu' },
+            { label: 'Xám Taupe Thanh Lịch', value: 'Taupe' },
+            { label: 'Nâu Caramel Ấm Áp', value: 'Caramel' }
+          ]
+        }
+      ]
+    },
+    'giay-phu-kien': {
+      title: 'Bộ Lọc Giày & Phụ Kiện',
+      icon: 'fa-shoe-prints',
+      facets: [
+        {
+          key: 'size',
+          label: 'Size Giày Chuẩn EU',
+          icon: 'fa-shoe-prints',
+          type: 'size',
+          options: [
+            { label: 'Tất cả size', value: '' },
+            { label: '36', value: '36' },
+            { label: '37', value: '37' },
+            { label: '38', value: '38' },
+            { label: '39', value: '39' },
+            { label: '40', value: '40' },
+            { label: '41', value: '41' },
+            { label: '42', value: '42' }
+          ]
+        },
+        {
+          key: 'fit',
+          label: 'Phân Loại Dòng Sản Phẩm',
+          icon: 'fa-crown',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả sản phẩm', value: '' },
+            { label: 'Giày Cao Gót Stiletto', value: 'Stiletto' },
+            { label: 'Giày Bốt Cổ Cao / Chelsea', value: 'Boot' },
+            { label: 'Giày Lười Loafers Da Bê', value: 'Loafer' },
+            { label: 'Sandals Dạ Hội Cao Gót', value: 'Sandal' },
+            { label: 'Khăn Lụa Tơ Tằm Vuông', value: 'Khăn' },
+            { label: 'Khuyên Khăn & Cufflinks Vàng 18K', value: 'Ring' }
+          ]
+        },
+        {
+          key: 'material',
+          label: 'Chất Liệu Chế Tác',
+          icon: 'fa-gem',
+          type: 'pill',
+          options: [
+            { label: 'Tất cả chất liệu', value: '' },
+            { label: 'Da Bê Ý Nhập Khẩu', value: 'Da Bê' },
+            { label: 'Da Lộn Suede Ý', value: 'Suede' },
+            { label: 'Da Bóng Patent Leather', value: 'Patent' },
+            { label: 'Lụa Satin & Pha Lê', value: 'Pha Lê' },
+            { label: 'Đồng Thau Mạ Vàng 18K', value: 'Vàng 18K' },
+            { label: '100% Lụa Tơ Tằm Twill', value: 'Twill' }
+          ]
+        },
+        {
+          key: 'color',
+          label: 'Tông Màu Sắc',
+          icon: 'fa-palette',
+          type: 'color',
+          options: [
+            { label: 'Tất cả màu', value: '' },
+            { label: 'Đen Tuyền / Đen Bóng', value: 'Đen' },
+            { label: 'Nâu Cognac Cổ Điển', value: 'Cognac' },
+            { label: 'Đỏ Mận & Đế Đỏ Bóng', value: 'Đỏ' },
+            { label: 'Trắng Sữa Milky White', value: 'Trắng' },
+            { label: 'Vàng Hoàng Gia 18K', value: 'Vàng' }
+          ]
+        }
+      ]
+    }
+  };
+
+  // HÀM RENDER GIAO DIỆN BỘ LỌC ĐỘNG THEO DANH MỤC
+  window.renderCategoryFilters = async function(catSlug = catalogCategory) {
+    const desktopContainer = document.getElementById('dynamic-filter-container');
+    const mobileContainer = document.getElementById('dynamic-mobile-filter-container');
+    if (!desktopContainer && !mobileContainer) return;
+
+    let config = CATEGORY_FILTER_CONFIG[catSlug];
+    if (!config) {
+      // Trường hợp danh mục mới tạo từ CSDL (Fallback tự động thích ứng)
+      try {
+        const res = await fetch(`/api/v1/products/filters?category=${encodeURIComponent(catSlug)}`);
+        const result = await res.json();
+        const data = result.data || {};
+        config = {
+          title: `Bộ Lọc Danh Mục`,
+          icon: 'fa-sliders',
+          facets: []
+        };
+        if (data.sizes && data.sizes.length && !data.sizes.every(s => s === 'FreeSize')) {
+          config.facets.push({
+            key: 'size',
+            label: 'Kích Cỡ',
+            icon: 'fa-ruler-combined',
+            type: 'size',
+            options: [{ label: 'Tất cả', value: '' }, ...data.sizes.map(s => ({ label: s, value: s }))]
+          });
+        }
+        if (data.fits && data.fits.length) {
+          config.facets.push({
+            key: 'fit',
+            label: 'Phom Dáng / Kiểu',
+            icon: 'fa-tag',
+            type: 'pill',
+            options: [{ label: 'Tất cả', value: '' }, ...data.fits.map(f => ({ label: f, value: f }))]
+          });
+        }
+        if (data.materials && data.materials.length) {
+          config.facets.push({
+            key: 'material',
+            label: 'Chất Liệu',
+            icon: 'fa-gem',
+            type: 'pill',
+            options: [{ label: 'Tất cả', value: '' }, ...data.materials.map(m => ({ label: m, value: m }))]
+          });
+        }
+        if (data.colors && data.colors.length) {
+          config.facets.push({
+            key: 'color',
+            label: 'Màu Sắc',
+            icon: 'fa-palette',
+            type: 'color',
+            options: [{ label: 'Tất cả', value: '' }, ...data.colors.map(c => ({ label: c, value: c }))]
+          });
+        }
+      } catch (e) {
+        config = CATEGORY_FILTER_CONFIG['all'];
+      }
+    }
+
+    // Danh sách các bộ lọc đang kích hoạt để hiển thị Chips
+    const activeFiltersList = [];
+    if (catalogFilters.color) activeFiltersList.push({ key: 'color', label: 'Màu', val: catalogFilters.color });
+    if (catalogFilters.size) activeFiltersList.push({ key: 'size', label: 'Size', val: catalogFilters.size });
+    if (catalogFilters.fit) activeFiltersList.push({ key: 'fit', label: 'Kiểu', val: catalogFilters.fit });
+    if (catalogFilters.material) activeFiltersList.push({ key: 'material', label: 'Chất liệu', val: catalogFilters.material });
+    if (catalogFilters.minPrice || catalogFilters.maxPrice) {
+      activeFiltersList.push({ key: 'price', label: 'Mức giá', val: catalogFilters.minPrice ? 'Đã lọc giá' : 'Mức giá' });
+    }
+
+    const buildHTML = (isMobile = false) => {
+      let html = `
+        <div class="dynamic-filter-header">
+          <h3 class="dynamic-filter-title">
+            <i class="fa-solid ${config.icon || 'fa-sliders'}"></i> ${config.title}
+          </h3>
+          ${activeFiltersList.length > 0 ? `
+            <button type="button" class="clear-all-filters-btn" title="Xóa tất cả bộ lọc">
+              <i class="fa-solid fa-rotate-left"></i> Xóa lọc
+            </button>
+          ` : ''}
+        </div>
+      `;
+
+      if (activeFiltersList.length > 0) {
+        html += `
+          <div class="active-filter-chips">
+            ${activeFiltersList.map(item => `
+              <span class="filter-chip">
+                ${item.label}: <strong>${item.val}</strong>
+                <i class="fa-solid fa-xmark chip-remove" data-clear-facet="${item.key}" title="Bỏ lọc"></i>
+              </span>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      config.facets.forEach((facet, idx) => {
+        const collapseId = `${isMobile ? 'm-' : ''}facet-col-${idx}`;
+        let isFacetActive = false;
+        if (facet.key === 'price') {
+          isFacetActive = !!(catalogFilters.minPrice || catalogFilters.maxPrice);
+        } else {
+          isFacetActive = !!catalogFilters[facet.key];
+        }
+
+        html += `
+          <div class="filter-group-accordion">
+            <div class="widget-header-accordion" data-accordion="${collapseId}">
+              <span class="filter-label-accordion">
+                <i class="fa-solid ${facet.icon}"></i> ${facet.label}
+                ${isFacetActive ? `<span class="facet-active-badge">1</span>` : ''}
+              </span>
+              <i class="fa-solid fa-chevron-down accordion-icon"></i>
+            </div>
+            <div class="accordion-content" id="${collapseId}">
+              <div class="${facet.type === 'size' ? 'size-options compact-pills' : 'color-options compact-swatches'}" data-facet-key="${facet.key}">
+                ${facet.options.map(opt => {
+                  let isSelected = false;
+                  if (facet.key === 'price') {
+                    isSelected = (catalogFilters.minPrice === opt.min && catalogFilters.maxPrice === opt.max);
+                  } else {
+                    isSelected = (catalogFilters[facet.key] === opt.value);
+                  }
+                  return `
+                    <button type="button" 
+                      class="size-btn catalog-option ${isSelected ? 'active' : ''}" 
+                      data-facet-key="${facet.key}"
+                      data-facet-val="${opt.value !== undefined ? opt.value : ''}"
+                      data-facet-min="${opt.min !== undefined ? opt.min : ''}"
+                      data-facet-max="${opt.max !== undefined ? opt.max : ''}"
+                      aria-pressed="${isSelected}"
+                    >
+                      ${opt.label}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+          ${idx < config.facets.length - 1 ? '<div class="filter-divider"></div>' : ''}
+        `;
+      });
+
+      return html;
+    };
+
+    if (desktopContainer) desktopContainer.innerHTML = buildHTML(false);
+    if (mobileContainer) mobileContainer.innerHTML = buildHTML(true);
+
+    // Gán sự kiện Click cho các Accordion Header
+    initSidebarAccordion();
+
+    // Gán sự kiện Click cho nút Lọc (Option Buttons)
+    const attachOptionHandlers = (container, isMobile = false) => {
+      if (!container) return;
+
+      container.querySelectorAll('.catalog-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.getAttribute('data-facet-key');
+          if (key === 'price') {
+            const min = btn.getAttribute('data-facet-min');
+            const max = btn.getAttribute('data-facet-max');
+            if (catalogFilters.minPrice === min && catalogFilters.maxPrice === max) {
+              catalogFilters.minPrice = '';
+              catalogFilters.maxPrice = '';
+            } else {
+              catalogFilters.minPrice = min;
+              catalogFilters.maxPrice = max;
+            }
+          } else {
+            const val = btn.getAttribute('data-facet-val');
+            if (catalogFilters[key] === val) {
+              catalogFilters[key] = '';
+            } else {
+              catalogFilters[key] = val;
+            }
+          }
+
+          window.renderCategoryFilters(catSlug);
+          if (!isMobile) {
+            window.loadCatalogProducts();
+          }
+        });
+      });
+
+      // Nút Xóa tất cả bộ lọc
+      container.querySelectorAll('.clear-all-filters-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          window.clearAllCatalogFilters();
+        });
+      });
+
+      // Nút Xóa từng Chip
+      container.querySelectorAll('.chip-remove').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const facetKey = chip.getAttribute('data-clear-facet');
+          if (facetKey === 'price') {
+            catalogFilters.minPrice = '';
+            catalogFilters.maxPrice = '';
+          } else if (facetKey) {
+            catalogFilters[facetKey] = '';
+          }
+          window.renderCategoryFilters(catSlug);
+          if (!isMobile) {
+            window.loadCatalogProducts();
+          }
+        });
+      });
+    };
+
+    attachOptionHandlers(desktopContainer, false);
+    attachOptionHandlers(mobileContainer, true);
+  };
+
+  // HÀM RESET TẤT CẢ BỘ LỌC CỦA DANH MỤC HIỆN TẠI
+  window.clearAllCatalogFilters = function() {
+    catalogFilters = { ...defaultCatalogFilters };
+    window.renderCategoryFilters(catalogCategory);
+    window.loadCatalogProducts();
+  };
 
   window.loadCatalogProducts = async function(categorySlug = catalogCategory, searchQuery = catalogSearch) {
     const grid = document.getElementById('product-grid-container');
@@ -485,10 +1078,17 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     try {
-      const params = new URLSearchParams({ category: categorySlug });
+      const params = new URLSearchParams();
+      if (categorySlug) params.set('category', categorySlug);
       if (searchQuery) params.set('search', searchQuery);
       if (catalogFilters.size) params.set('size', catalogFilters.size);
       if (catalogFilters.color) params.set('color', catalogFilters.color);
+      if (catalogFilters.material) params.set('material', catalogFilters.material);
+      if (catalogFilters.fit) params.set('fit', catalogFilters.fit);
+      if (catalogFilters.minPrice) params.set('minPrice', catalogFilters.minPrice);
+      if (catalogFilters.maxPrice) params.set('maxPrice', catalogFilters.maxPrice);
+      if (catalogSort) params.set('sort', catalogSort);
+
       const res = await fetch(`/api/v1/products?${params}`, { signal: request.signal });
       const result = await res.json();
       if (request.signal.aborted) return;
@@ -511,21 +1111,54 @@ document.addEventListener('DOMContentLoaded', () => {
             ? 'Bộ Sưu Tập Nổi Bật'
             : `Danh Mục: ${products[0]?.category || categoryName || categorySlug}`;
         }
-        if (catalogSubtitle) {
-          catalogSubtitle.textContent = `Hiển thị ${products.length} sản phẩm`;
+        
+        let displayProducts = products;
+        if (categorySlug === 'all' && !searchQuery && !catalogFilters.size && !catalogFilters.color && !catalogFilters.material && !catalogFilters.fit && !catalogFilters.minPrice) {
+          const catBuckets = {};
+          products.forEach(p => {
+            const cat = p.category || p.catSlug || 'khac';
+            if (!catBuckets[cat]) catBuckets[cat] = [];
+            catBuckets[cat].push(p);
+          });
+
+          const catKeys = Object.keys(catBuckets);
+          const balanced = [];
+          let round = 0;
+          let hasMore = true;
+          while (balanced.length < 18 && hasMore) {
+            hasMore = false;
+            for (const k of catKeys) {
+              if (catBuckets[k][round]) {
+                balanced.push(catBuckets[k][round]);
+                hasMore = true;
+                if (balanced.length === 18) break;
+              }
+            }
+            round++;
+          }
+          displayProducts = balanced;
+        } else if (displayProducts.length > 18) {
+          displayProducts = displayProducts.slice(0, 18);
         }
-        if (products.length === 0) {
+
+        if (catalogSubtitle) {
+          catalogSubtitle.textContent = `Hiển thị ${displayProducts.length} sản phẩm tuyển chọn`;
+        }
+        if (displayProducts.length === 0) {
           grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
               <i class="fa-solid fa-box-open" style="font-size: 2.5rem; color: #888; margin-bottom: 1rem;"></i>
               <h3 style="font-family: var(--font-serif); font-size: 1.4rem;">Không tìm thấy sản phẩm phù hợp</h3>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Hãy thử đổi kích cỡ, màu sắc, danh mục hoặc từ khóa tìm kiếm.</p>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Hãy thử đổi tiêu chí bộ lọc, tông màu, kích cỡ hoặc bấm "Xóa lọc" để xem lại toàn bộ sản phẩm.</p>
+              <button type="button" class="btn-primary-luxury" onclick="window.clearAllCatalogFilters()" style="margin-top: 1.25rem;">
+                <i class="fa-solid fa-rotate-left"></i> Xóa Bộ Lọc
+              </button>
             </div>
           `;
           return;
         }
 
-        grid.innerHTML = products.map(p => `
+        grid.innerHTML = displayProducts.map(p => `
           <article class="fashion-card product-clickable" 
             data-id="${p.id}" 
             data-cat="${p.catSlug || 'vest-blazer'}" 
@@ -568,7 +1201,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </article>
         `).join('');
 
-        // Binds event listeners to dynamically rendered cards
+        // Gán sự kiện click vào thẻ sản phẩm để mở modal
         grid.querySelectorAll('.product-clickable').forEach(card => {
           card.addEventListener('click', (e) => {
             if (e.target.closest('.btn-add-cart')) return;
@@ -614,58 +1247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const catalogOptions = document.querySelectorAll('[data-catalog-filter]');
-  const updateCatalogOptions = () => {
-    catalogOptions.forEach(group => {
-      group.querySelectorAll('button').forEach(button => {
-        const selected = button.value === catalogFilters[group.dataset.catalogFilter];
-        button.classList.toggle('active', selected);
-        button.setAttribute('aria-pressed', String(selected));
-      });
-    });
-  };
-
-  if (catalogOptions.length) {
-    fetch('/api/v1/products/filters')
-      .then(response => {
-        if (!response.ok) throw new Error('Không thể tải bộ lọc.');
-        return response.json();
-      })
-      .then(({ data }) => {
-        catalogOptions.forEach(group => {
-          const kind = group.dataset.catalogFilter;
-          const options = kind === 'size' ? data.sizes : data.colors;
-          const buttons = ['', ...options].map(value => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'size-btn catalog-option';
-            button.value = value;
-            button.textContent = value || 'Tất cả';
-            button.addEventListener('click', () => {
-              catalogFilters[kind] = value;
-              updateCatalogOptions();
-              if (!group.closest('#mobile-filter-drawer')) window.loadCatalogProducts();
-            });
-            return button;
-          });
-          group.replaceChildren(...buttons);
-        });
-        updateCatalogOptions();
-      })
-      .catch(() => {
-        catalogOptions.forEach(group => { group.textContent = 'Tạm thời không tải được bộ lọc.'; });
-      });
-
-    const resetDraft = () => {
-      Object.assign(catalogFilters, appliedCatalogFilters);
-      updateCatalogOptions();
-    };
-    applyFilterBtn?.addEventListener('click', () => window.loadCatalogProducts());
-    closeFilterBtn?.addEventListener('click', resetDraft);
-    filterOverlay?.addEventListener('click', resetDraft);
-  }
-
-  // Wire Category links to live database queries
+  // Gán sự kiện chọn danh mục: Tự động đổi bộ lọc sang danh mục đó
   const catLinks = document.querySelectorAll('.category-list a');
   catLinks.forEach(link => {
     link.addEventListener('click', (e) => {
@@ -673,12 +1255,43 @@ document.addEventListener('DOMContentLoaded', () => {
       const selectedCat = link.getAttribute('data-cat') || 'all';
 
       catLinks.forEach(l => {
-        l.classList.toggle('active', l.getAttribute('data-cat') === selectedCat);
+        l.classList.toggle('active', (l.getAttribute('data-cat') || 'all') === selectedCat);
       });
 
+      // Reset các bộ lọc đang chọn khi đổi danh mục
+      catalogFilters = { ...defaultCatalogFilters };
+
+      // Render lại bộ lọc chuyên biệt cho danh mục vừa chọn
+      window.renderCategoryFilters(selectedCat);
+
+      // Tải lại sản phẩm của danh mục đó
       window.loadCatalogProducts(selectedCat, '');
     });
   });
+
+  // Gán sự kiện sắp xếp (Sort dropdown)
+  const sortSelect = document.getElementById('catalog-sort-select') || document.querySelector('.content-sort select');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', (e) => {
+      catalogSort = e.target.value;
+      window.loadCatalogProducts();
+    });
+  }
+
+  // Khởi tạo bộ lọc ban đầu (Danh mục: all)
+  window.renderCategoryFilters('all');
+
+  // Gán sự kiện cho nút "Áp dụng bộ lọc" trên Mobile Drawer
+  const mobileApplyBtn = document.getElementById('apply-filter-btn');
+  if (mobileApplyBtn) {
+    mobileApplyBtn.addEventListener('click', () => {
+      window.loadCatalogProducts();
+      const drawer = document.getElementById('mobile-filter-drawer');
+      const overlay = document.getElementById('drawer-overlay');
+      if (drawer) drawer.classList.remove('active');
+      if (overlay) overlay.classList.remove('active');
+    });
+  }
 
   // Wire desktop & mobile search inputs to dynamic database query (hỗ trợ tìm kiếm từ mọi trang)
   const allSearchInputs = document.querySelectorAll('.d-search-box input, input[type="search"], .search-input, #mobile-search-input');
@@ -812,6 +1425,145 @@ document.addEventListener('DOMContentLoaded', () => {
   window.loadHomeJournal();
   window.loadBlogPage('all');
 
+  // ==============================================================
+  // HYBRID RECOMMENDATION ENGINE (Content-based + Session + Popularity)
+  // Gợi ý 6 sản phẩm chia thành 2 hàng phía trên Tạp chí / Bài viết
+  // ==============================================================
+  window.loadRecommendedProducts = async function() {
+    const grid = document.getElementById('recommended-products-grid');
+    if (!grid) return;
+
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; color: var(--accent-gold);">
+        <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.8rem; margin-bottom: 0.8rem;"></i>
+        <p style="font-size: 0.95rem; font-weight: 600; color: var(--primary-dark); font-family: var(--font-serif);">Đang phân tích phong cách may đo và cá nhân hóa gợi ý...</p>
+      </div>
+    `;
+
+    try {
+      const sessionId = localStorage.getItem('auralie_session_id') || '';
+      const anonymousId = localStorage.getItem('auralie_anonymous_id') || '';
+      const token = sessionStorage.getItem('auralie_token') || '';
+
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      if (sessionId) headers['X-Session-Id'] = sessionId;
+      if (anonymousId) headers['X-Anonymous-Id'] = anonymousId;
+
+      const params = new URLSearchParams({ limit: '6' });
+      if (sessionId) params.set('sessionId', sessionId);
+      if (anonymousId) params.set('anonymousId', anonymousId);
+
+      const res = await fetch(`/api/v1/recommendations?${params}`, { headers });
+      const result = await res.json();
+
+      if (!res.ok || result.status !== 'success' || !result.data || result.data.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem 1rem; color: var(--text-muted);">
+            <p>Hệ thống đang cập nhật bộ sưu tập gợi ý độc quyền.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const products = result.data.slice(0, 6);
+      const isPersonalized = result.mode === 'PERSONALIZED_HYBRID' || result.meta?.mode === 'PERSONALIZED_HYBRID';
+
+      const badgeEl = document.getElementById('recommendation-badge');
+      const descEl = document.getElementById('recommendation-desc');
+      if (badgeEl) {
+        badgeEl.innerHTML = isPersonalized
+          ? '<i class="fa-solid fa-wand-magic-sparkles"></i> Dành Riêng Cho Quý Khách • Personalized Stylist'
+          : '<i class="fa-solid fa-fire"></i> Bộ Sưu Tập Thịnh Hành Được Yêu Thích Nhất';
+      }
+      if (descEl) {
+        descEl.textContent = isPersonalized
+          ? 'Tuyển chọn 6 thiết kế Haute Couture đồng điệu nhất với gu thời trang và chất liệu bạn vừa quan tâm.'
+          : 'Tuyển chọn 6 trang phục may đo cao cấp bán chạy nhất tại Atelier AURALIÈ.';
+      }
+
+      grid.innerHTML = products.map(p => `
+        <article class="fashion-card product-clickable" 
+          data-id="${p.id}" 
+          data-cat="${p.catSlug || 'vest-blazer'}" 
+          data-title="${p.name}" 
+          data-category="${p.category || 'Haute Couture'}" 
+          data-price="${Number(p.price).toLocaleString('vi-VN')} ₫" 
+          data-price-raw="${p.price}"
+          data-rating="${Number(p.rating || 5.0).toFixed(1)}" 
+          data-reviews="${p.reviewCount || 0}"
+          data-img="${p.img || 'assets/card_1.jpg'}" 
+          data-desc="${p.description || ''}"
+          data-tag="${p.tag || 'EXCLUSIVE'}"
+          data-material="${p.material || 'Len Cashmere & Lụa Ý'}"
+          data-fit="${p.fit || 'European Tailored'}"
+          data-lining="${p.lining || 'Lụa Cupro Thượng Hạng'}"
+          data-hardware="${p.hardware || 'Khuy Sừng / Khóa Mạ Vàng 18K'}"
+          data-origin="${p.origin || 'Atelier AURALIÈ Đồng Khởi'}"
+        >
+          <div class="card-img-wrap" style="position: relative;">
+            <img src="${p.img || 'assets/card_1.jpg'}" alt="${p.name}">
+            <span class="card-tag" style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">
+              <i class="fa-solid fa-sparkles"></i> ${p.isPersonalized ? 'GỢI Ý GU BẠN' : (p.tag || 'BESTSELLER')}
+            </span>
+            <div class="card-quick-actions">
+              <button class="btn-add-cart" onclick="event.stopPropagation(); window.addToCart({ id: ${p.id}, name: '${p.name.replace(/'/g, "\\'")}', category: '${p.category || 'Haute Couture'}', price: ${p.price}, img: '${p.img || 'assets/card_1.jpg'}' })">
+                <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div>
+              <span class="card-category" style="color: var(--accent-gold); font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
+                ${p.category || 'Haute Couture'}
+              </span>
+              <h3 class="card-title" style="font-size: 1.05rem; margin-top: 0.25rem;">${p.name}</h3>
+              <p style="font-size: 0.8rem; color: #64748b; margin-top: 0.2rem; font-style: italic;">
+                <i class="fa-solid fa-feather-pointed"></i> ${p.material || 'Chất liệu lụa tơ tằm thượng hạng'}
+              </p>
+            </div>
+            <div class="card-price-row" style="margin-top: 0.8rem;">
+              <span class="card-price" style="font-size: 1.1rem;">${Number(p.price).toLocaleString('vi-VN')} ₫</span>
+              <span class="card-rating open-reviews-btn" title="Đánh giá chất lượng">
+                <i class="fa-solid fa-star"></i> ${Number(p.rating || 5.0).toFixed(1)}
+              </span>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      // Gắn sự kiện click mở chi tiết sản phẩm
+      grid.querySelectorAll('.product-clickable').forEach(card => {
+        card.addEventListener('click', (e) => {
+          if (e.target.closest('.btn-add-cart')) return;
+          const pid = Number(card.getAttribute('data-id'));
+          const prodTitle = card.getAttribute('data-title');
+          if (window.AuralieTracking) {
+            window.AuralieTracking.track('product_view', {
+              product_id: pid,
+              properties: { name: prodTitle, source: 'recommendation_section' }
+            });
+          }
+          if (typeof openProductModal === 'function') {
+            openProductModal(card);
+          }
+        });
+      });
+
+    } catch (err) {
+      console.warn('[Auralie Recommendation] Chưa thể tải gợi ý:', err);
+    }
+  };
+
+  window.loadRecommendedProducts();
+
+  const btnRefreshRec = document.getElementById('btn-refresh-recommendations');
+  if (btnRefreshRec) {
+    btnRefreshRec.addEventListener('click', () => {
+      window.loadRecommendedProducts();
+    });
+  }
+
   // Binds category tabs on blog page
   const blogTabBtns = document.querySelectorAll('.blog-tab-btn');
   blogTabBtns.forEach(btn => {
@@ -859,8 +1611,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tag: 'LOOKBOOK #01',
       category: 'BỘ SƯU TẬP THU ĐÔNG',
       title: 'Winter Cashmere Tailored 2026',
-      img: 'assets/card_1.jpg',
-      thumbs: ['assets/card_1.jpg', 'assets/card_2.jpg', 'assets/card_6.jpg'],
+      img: 'assets/products/vest_1_double_breasted.jpg',
+      thumbs: ['assets/products/vest_1_double_breasted.jpg', 'assets/products/vest_2_black_blazer.jpg', 'assets/products/vest_3_velvet_tuxedo.jpg'],
       concept: 'Bản giao thoa tinh tế giữa phong cách may đo chuẩn quý tộc Châu Âu và chất liệu len Cashmere thượng hạng vùng Piedmont (Ý). Từng đường cắt cúp tạo phom dáng chuẩn mực, cân đối tỉ lệ cơ thể và toát lên khí chất quyền lực, đĩnh đạc của giới thượng lưu.',
       tailoring: 'Cắt cúp Bespoke 3D, đệm vai bán thủ công',
       fabric: '100% Cashmere Loro Piana Ý',
@@ -874,8 +1626,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tag: 'LOOKBOOK #02',
       category: 'HAUTE COUTURE RUNWAY',
       title: 'Auralia Silk Evening Dress',
-      img: 'assets/card_2.jpg',
-      thumbs: ['assets/card_2.jpg', 'assets/card_1.jpg', 'assets/card_5.jpg'],
+      img: 'assets/products/dress_1_silk_minimalist.jpg',
+      thumbs: ['assets/products/dress_1_silk_minimalist.jpg', 'assets/products/dress_2_emerald_velvet.jpg', 'assets/products/dress_3_midnight_satin.jpg'],
       concept: 'Tuyệt phẩm đầm dạ hội dệt từ lụa tơ tằm nguyên bản cao cấp, áp dụng kỹ thuật draping điêu khắc trực tiếp trên phom ma-nơ-canh Paris. Thiết kế đường xẻ tà sắc sảo cùng bờ vai quyến rũ tôn vinh đường cong tự nhiên và nét đẹp kiêu sa lộng lẫy dưới ánh đèn đêm.',
       tailoring: 'Draping 3D Haute Couture Paris',
       fabric: '100% Lụa Tơ Tằm Bảo Lộc & Taffeta Pháp',
@@ -889,8 +1641,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tag: 'LOOKBOOK #03',
       category: 'MINIMALIST COLLECTION',
       title: 'Oversized Knitwear Capsule',
-      img: 'assets/card_3.jpg',
-      thumbs: ['assets/card_3.jpg', 'assets/card_4.jpg', 'assets/card_1.jpg'],
+      img: 'assets/products/coat_1_cashmere_sweater.jpg',
+      thumbs: ['assets/products/coat_1_cashmere_sweater.jpg', 'assets/products/coat_3_cashmere_trench.jpg', 'assets/products/coat_4_double_faced_wool.jpg'],
       concept: 'Biểu tượng của xu hướng Quiet Luxury (Sang trọng thầm lặng). Những chiếc áo len dệt kim sợi len cừu Merino chải kỹ mang phom dáng thả lỏng tinh tế, đem lại cảm giác ấm áp, thư thái và đẳng cấp vượt thời gian không cần phô trương.',
       tailoring: 'Dệt kim nguyên khối Seamless Knit',
       fabric: 'Superfine Merino Wool & Cashmere pha lụa',
@@ -904,8 +1656,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tag: 'LOOKBOOK #04',
       category: 'LUXURY ACCESSORIES',
       title: 'Heritage Leather Goods',
-      img: 'assets/card_4.jpg',
-      thumbs: ['assets/card_4.jpg', 'assets/card_5.jpg', 'assets/card_2.jpg'],
+      img: 'assets/products/bag_1_heritage_tan_handbag.jpg',
+      thumbs: ['assets/products/bag_1_heritage_tan_handbag.jpg', 'assets/products/bag_2_ostrich_tote.jpg', 'assets/products/bag_3_mini_flap_crossbody.jpg'],
       concept: 'Bộ sưu tập đồ da thủ công trường tồn với thời gian. Sử dụng dòng da thuộc thảo mộc Full-grain nguyên tấm từ vùng Florence, kết hợp các chi tiết kim loại đúc đặc mạ vàng 18K bền màu vĩnh cửu.',
       tailoring: 'Khâu tay thủ công Saddle Stitching',
       fabric: 'Da bò thuộc thảo mộc Tuscany Full-Grain',
@@ -919,8 +1671,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tag: 'LOOKBOOK #05',
       category: 'WOMEN TAILORED SUITS',
       title: 'Modern Power Suiting',
-      img: 'assets/card_5.jpg',
-      thumbs: ['assets/card_5.jpg', 'assets/card_6.jpg', 'assets/card_3.jpg'],
+      img: 'assets/products/vest_2_black_blazer.jpg',
+      thumbs: ['assets/products/vest_2_black_blazer.jpg', 'assets/products/vest_4_wool_blazer.jpg', 'assets/products/vest_5_ivory_satin.jpg'],
       concept: 'Thiết kế bộ vest nữ tôn vinh nữ quyền và tầm vóc của các nữ lãnh đạo kiệt xuất. Đường vai sắc gọn kết hợp đường eo chiết lượn sóng tạo nên sự quyền lực tối thượng nhưng vẫn đầy nét mềm mại, quyến rũ.',
       tailoring: 'Bespoke Savile Row Tailored Cut',
       fabric: 'Len Wool Crepe Ý & Lót lụa Habotai',
@@ -934,8 +1686,8 @@ document.addEventListener('DOMContentLoaded', () => {
       tag: 'LOOKBOOK #06',
       category: 'GENTLEMAN COLLECTION',
       title: 'Midnight Navy Tailored Suit',
-      img: 'assets/card_6.jpg',
-      thumbs: ['assets/card_6.jpg', 'assets/card_1.jpg', 'assets/card_4.jpg'],
+      img: 'assets/products/vest_6_navy_pinstripe.jpg',
+      thumbs: ['assets/products/vest_6_navy_pinstripe.jpg', 'assets/products/vest_3_velvet_tuxedo.jpg', 'assets/products/vest_7_burgundy_tuxedo.jpg'],
       concept: 'Đỉnh cao của phong độ quý ông thượng lưu. Màu xanh Midnight Navy huyền bí dưới ánh đèn tiệc sang trọng, sử dụng vải Super 160s độc quyền dệt từ len cừu Úc nguyên lông cho bề mặt óng ả và độ rủ hoàn mỹ.',
       tailoring: 'May đo chuẩn phom Napoli Bespoke',
       fabric: 'Super 160s Worsted Wool Scabal',
@@ -3567,6 +4319,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileBottomNav();
   initAbandonedCartNotification();
   initBannerTracking();
+
+  // ==============================================================
+  // SIDEBAR ACCORDION COLLAPSIBLE HANDLER (CÁCH 3)
+  // ==============================================================
+  function initSidebarAccordion() {
+    const accordionHeaders = document.querySelectorAll('.widget-header-accordion');
+    accordionHeaders.forEach(header => {
+      if (header.dataset.hasAccordion) return;
+      header.dataset.hasAccordion = 'true';
+      header.addEventListener('click', () => {
+        const targetId = header.getAttribute('data-accordion');
+        const targetContent = document.getElementById(targetId);
+        if (targetContent) {
+          const isCollapsed = targetContent.classList.toggle('is-collapsed');
+          header.classList.toggle('collapsed', isCollapsed);
+        }
+      });
+    });
+  }
+
+  initSidebarAccordion();
 
 });
 

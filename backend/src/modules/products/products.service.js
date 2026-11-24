@@ -2,11 +2,13 @@ const ProductRepository = require('./products.repository');
 const ProductImage = require('./product-image');
 
 class ProductService {
-  static async getFilters() {
-    const variants = await ProductRepository.findCatalogVariantOptions();
+  static async getFilters(category) {
+    const variants = await ProductRepository.findCatalogVariantOptions(category);
     return {
-      sizes: [...new Set(variants.map(variant => variant.size))],
-      colors: [...new Set(variants.map(variant => variant.color))]
+      sizes: [...new Set(variants.map(variant => variant.size).filter(Boolean))],
+      colors: [...new Set(variants.map(variant => variant.color).filter(Boolean))],
+      materials: [...new Set(variants.map(variant => variant.material).filter(Boolean))],
+      fits: [...new Set(variants.map(variant => variant.fit).filter(Boolean))]
     };
   }
 
@@ -28,7 +30,7 @@ class ProductService {
     const parsed = ProductImage.parseImage(data.imageData);
     const image = parsed ? await ProductImage.save(parsed) : null;
     try {
-      return await ProductRepository.create({ ...data, imageUrl: image?.url });
+      return await ProductRepository.create({ ...data, imageUrl: image?.url || data.imageUrl });
     } catch (error) {
       await ProductImage.remove(image);
       throw error;

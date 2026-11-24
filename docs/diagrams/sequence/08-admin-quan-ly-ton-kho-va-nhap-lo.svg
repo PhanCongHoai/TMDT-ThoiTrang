@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 1188" width="840" height="1188">
+  <defs>
+    <style>
+      .title { font-family: 'Times New Roman', serif; font-size: 19.5px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .subtitle { font-family: 'Times New Roman', serif; font-size: 12.5px; font-style: italic; fill: #000000; text-anchor: middle; }
+      .actor-lbl { font-family: 'Times New Roman', serif; font-size: 14.5px; font-weight: bold; fill: #000000; text-anchor: middle; }
+      .msg-txt { font-family: 'Times New Roman', serif; font-size: 12px; font-weight: bold; fill: #000000; }
+      .guard-txt { font-family: 'Times New Roman', serif; font-size: 11.5px; font-weight: bold; fill: #000000; }
+      .frame-lbl { font-family: 'Times New Roman', serif; font-size: 12px; font-weight: bold; fill: #000000; }
+      .footer-txt { font-family: 'Times New Roman', serif; font-size: 11.5px; font-style: italic; fill: #000000; text-anchor: middle; }
+      .line { stroke: #000000; stroke-width: 1.6; fill: none; }
+      .lifeline { stroke: #000000; stroke-width: 1.3; stroke-dasharray: 4,4; fill: none; }
+      .activation { fill: #FFFFFF; stroke: #000000; stroke-width: 1.6; }
+      .frame-box { fill: none; stroke: #000000; stroke-width: 1.3; }
+      .divider { stroke: #000000; stroke-width: 1.1; stroke-dasharray: 4,4; fill: none; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 9 5 L 0 8.5 Z" fill="#000000"/>
+    </marker>
+    <marker id="arrow-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M 0 1.5 L 9 5 L 0 8.5" fill="none" stroke="#000000" stroke-width="1.6"/>
+    </marker>
+  </defs>
+
+  <!-- Trang A4 Nền Trắng & Khung Viền -->
+  <rect x="0" y="0" width="840" height="1188" fill="#FFFFFF"/>
+  <rect x="25" y="25" width="790" height="1138" fill="none" stroke="#000000" stroke-width="1"/>
+
+  <!-- Tiêu Đề -->
+  <text x="420.0" y="58" class="title">SƠ ĐỒ TUẦN TỰ: QUẢN TRỊ VIÊN QUẢN LÝ TỒN KHO VÀ NHẬP LÔ HÀNG</text>
+  <text x="420.0" y="80" class="subtitle">Đặc tả quy trình nghiệp vụ 08 | Chuẩn UML 2.x | Hệ thống AURALIÈ | Hình 8 / 8</text>
+  <line x1="45" y1="94" x2="795" y2="94" class="line"/>
+
+  <!-- LIFELINE HEADERS -->
+  
+            <circle cx="160" cy="112" r="10" fill="none" stroke="#000000" stroke-width="1.8"/>
+            <line x1="160" y1="122" x2="160" y2="142" stroke="#000000" stroke-width="1.8"/>
+            <line x1="146" y1="130" x2="174" y2="130" stroke="#000000" stroke-width="1.8"/>
+            <line x1="160" y1="142" x2="148" y2="158" stroke="#000000" stroke-width="1.8"/>
+            <line x1="160" y1="142" x2="172" y2="158" stroke="#000000" stroke-width="1.8"/>
+            <text x="160" y="176" class="actor-lbl">Quản trị viên</text>
+            
+  
+            <rect x="345" y="118" width="150" height="40" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+            <text x="420" y="143" class="actor-lbl">Hệ thống</text>
+            
+  
+            <path d="M 620 122 A 60 12 0 0 0 740 122 L 740 148 A 60 12 0 0 1 620 148 Z" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+            <ellipse cx="680" cy="122" rx="60" ry="12" fill="#FFFFFF" stroke="#000000" stroke-width="1.8"/>
+            <text x="680" y="145" class="actor-lbl">Cơ sở dữ liệu</text>
+            
+
+  <!-- LIFELINES (Vertical Dashed Lines) -->
+  <line x1="160" y1="185" x2="160" y2="1080" class="lifeline"/>
+  <line x1="420" y1="185" x2="420" y2="1080" class="lifeline"/>
+  <line x1="680" y1="185" x2="680" y2="1080" class="lifeline"/>
+
+  <!-- NỘI DUNG TƯƠNG TÁC NGHIỆP VỤ -->
+  
+    <rect x="154" y="210" width="12" height="740" class="activation"/>
+    <rect x="414" y="210" width="12" height="740" class="activation"/>
+
+    <line x1="166" y1="230" x2="414" y2="230" class="line" marker-end="url(#arrow)"/>
+    <text x="175" y="224" class="msg-txt">[01] Gửi yêu cầu xem lịch sử nhập kho: GET /api/v1/admin/inventory/batches</text>
+
+    <path d="M 426 245 L 455 245 L 455 267 L 426 267" class="line" marker-end="url(#arrow)"/>
+    <text x="462" y="259" class="msg-txt">[02] Kiểm tra quyền truy cập: verifyToken() &amp; requireAdmin()</text>
+
+    <rect x="674" y="270" width="12" height="580" class="activation"/>
+
+    <line x1="426" y1="290" x2="674" y2="290" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="284" class="msg-txt">[03] Truy vấn dữ liệu: SELECT * FROM inventory_imports ORDER BY created_at DESC</text>
+
+    <line x1="674" y1="330" x2="426" y2="330" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="435" y="324" class="msg-txt">[04] Trả kết quả: Danh sách các lô vải Haute Couture (mã lô, nhà cung cấp Ý, số lượng)</text>
+
+    <line x1="414" y1="365" x2="166" y2="365" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="175" y="359" class="msg-txt">[05] Phản hồi thành công: 200 OK (Hiển thị bảng danh sách lô hàng)</text>
+
+    <line x1="166" y1="415" x2="414" y2="415" class="line" marker-end="url(#arrow)"/>
+    <text x="175" y="409" class="msg-txt">[06] Gửi yêu cầu nhập lô hàng mới: POST /api/v1/admin/inventory/batch-import</text>
+
+    <path d="M 426 430 L 455 430 L 455 452 L 426 452" class="line" marker-end="url(#arrow)"/>
+    <text x="462" y="444" class="msg-txt">[07] Kiểm tra dữ liệu đầu vào: Mã lô hàng và số lượng nhập phải hợp lệ</text>
+
+    <!-- Alt: Batch Import -->
+    <rect x="55" y="470" width="730" height="235" class="frame-box"/>
+    <polygon points="55,470 115,470 115,485 95,485 95,470" fill="#F4F4F4" stroke="#000000" stroke-width="0.8"/>
+    <text x="65" y="482" class="frame-lbl">alt</text>
+    <text x="125" y="482" class="guard-txt">[Dữ liệu thiếu hoặc số lượng nhập không hợp lệ]</text>
+
+    <line x1="414" y1="510" x2="166" y2="510" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="175" y="504" class="msg-txt">[08] Phản hồi lỗi: 400 Bad Request ("Mã lô hàng và số lượng là bắt buộc")</text>
+
+    <line x1="55" y1="535" x2="785" y2="535" class="divider"/>
+    <text x="125" y="550" class="guard-txt">[Dữ liệu lô hàng hợp lệ]</text>
+
+    <line x1="426" y1="570" x2="674" y2="570" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="564" class="msg-txt">[09] Khởi tạo giao dịch nhập kho: BEGIN TRANSACTION</text>
+
+    <line x1="426" y1="600" x2="674" y2="600" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="594" class="msg-txt">[10] Thêm dữ liệu: INSERT INTO inventory_imports (batch_code, supplier_name, quantity, cost)</text>
+
+    <line x1="426" y1="630" x2="674" y2="630" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="624" class="msg-txt">[11] Cập nhật tồn kho: UPDATE product_variants SET stock_quantity = stock_quantity + @qty</text>
+
+    <line x1="426" y1="660" x2="674" y2="660" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="654" class="msg-txt">[12] Xác nhận giao dịch: COMMIT TRANSACTION</text>
+
+    <line x1="674" y1="685" x2="426" y2="685" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="435" y="679" class="msg-txt">[13] Trả kết quả: Ghi nhận thành công lô hàng mới vào cơ sở dữ liệu</text>
+
+    <line x1="414" y1="715" x2="166" y2="715" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="175" y="709" class="msg-txt">[14] Phản hồi thành công: 201 Created ("Đã nhập thành công lô hàng vào CSDL!")</text>
+
+    <!-- Adjust -->
+    <line x1="166" y1="770" x2="414" y2="770" class="line" marker-end="url(#arrow)"/>
+    <text x="175" y="764" class="msg-txt">[15] Gửi yêu cầu điều chỉnh tồn kho: POST /api/v1/admin/inventory/adjust { variantId, newQty }</text>
+
+    <line x1="426" y1="800" x2="674" y2="800" class="line" marker-end="url(#arrow)"/>
+    <text x="435" y="794" class="msg-txt">[16] Cập nhật dữ liệu: UPDATE product_variants SET stock_quantity = @newQty WHERE id = @id</text>
+
+    <line x1="674" y1="830" x2="426" y2="830" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="435" y="824" class="msg-txt">[17] Trả kết quả: Xác nhận cập nhật số lượng tồn kho biến thể</text>
+
+    <line x1="414" y1="855" x2="166" y2="855" stroke="#000000" stroke-width="1.3" stroke-dasharray="4,4" marker-end="url(#arrow-open)"/>
+    <text x="175" y="849" class="msg-txt">[18] Phản hồi thành công: 200 OK ("Đã điều chỉnh tồn kho thành công!")</text>
+    
+
+  <!-- FOOTER CHUẨN A4 -->
+  <line x1="45" y1="1085" x2="795" y2="1085" class="line"/>
+  <rect x="105" y="1092" width="110" height="28" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>
+  <text x="160" y="1111" class="actor-lbl">Quản trị viên</text>
+
+  <rect x="360" y="1092" width="120" height="28" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>
+  <text x="420" y="1111" class="actor-lbl">Hệ thống</text>
+
+  <rect x="615" y="1092" width="130" height="28" fill="#FFFFFF" stroke="#000000" stroke-width="1.2"/>
+  <text x="680" y="1111" class="actor-lbl">Cơ sở dữ liệu</text>
+
+  <text x="420.0" y="1145" class="footer-txt">Báo Cáo Đồ Án Tốt Nghiệp: Hệ Thống Thương Mại Điện Tử May Đo AURALIÈ | Chuẩn UML 2.x Sequence Diagram</text>
+</svg>
