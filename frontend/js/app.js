@@ -79,10 +79,10 @@ window.alert = function(msg) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  const mobileLayout = window.matchMedia('(max-width: 992px)');
   
   // 1. Mobile Menu Drawer Toggle
   const mobileMenuToggles = document.querySelectorAll('#mobile-menu-toggle, .mobile-menu-btn');
-  const closeDrawerBtns = document.querySelectorAll('#close-drawer-btn, #mobile-menu-close, .close-drawer-btn, .drawer-close-btn');
   const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
   const drawerOverlay = document.getElementById('drawer-overlay');
 
@@ -100,8 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     mobileMenuToggles.forEach(btn => btn.addEventListener('click', openDrawer));
-    closeDrawerBtns.forEach(btn => btn.addEventListener('click', closeDrawer));
+    mobileNavDrawer.querySelectorAll('#close-drawer-btn, #mobile-menu-close, .close-drawer-btn, .drawer-close-btn')
+      .forEach(btn => btn.addEventListener('click', closeDrawer));
     drawerOverlay.addEventListener('click', closeDrawer);
+    mobileLayout.addEventListener('change', (event) => {
+      if (!event.matches && mobileNavDrawer.classList.contains('open')) closeDrawer();
+    });
 
     // Also close drawer when clicking on internal hash links (e.g. #catalog)
     mobileNavDrawer.querySelectorAll('a[href^="#"], a[href*="#"]').forEach(link => {
@@ -132,6 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mobileSearchToggle) mobileSearchToggle.addEventListener('click', openSearch);
     if (bottomSearchTrigger) bottomSearchTrigger.addEventListener('click', openSearch);
     if (closeSearchBtn) closeSearchBtn.addEventListener('click', closeSearch);
+    mobileLayout.addEventListener('change', (event) => {
+      if (!event.matches && mobileSearchOverlay.classList.contains('active')) {
+        closeSearch();
+        mobileSearchInput?.blur();
+      }
+    });
     mobileSearchOverlay.addEventListener('click', (e) => {
       if (e.target === mobileSearchOverlay) closeSearch();
     });
@@ -161,6 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeFilterBtn) closeFilterBtn.addEventListener('click', closeFilter);
     if (applyFilterBtn) applyFilterBtn.addEventListener('click', closeFilter);
     filterOverlay.addEventListener('click', closeFilter);
+    mobileLayout.addEventListener('change', (event) => {
+      if (!event.matches && mobileFilterDrawer.classList.contains('open')) closeFilter();
+    });
   }
 
   // ====================================================================
@@ -1113,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         let displayProducts = products;
-        if (categorySlug === 'all' && !searchQuery && !catalogFilters.size && !catalogFilters.color && !catalogFilters.material && !catalogFilters.fit && !catalogFilters.minPrice) {
+        if (catalogSort === 'newest' && categorySlug === 'all' && !searchQuery && !catalogFilters.size && !catalogFilters.color && !catalogFilters.material && !catalogFilters.fit && !catalogFilters.minPrice && !catalogFilters.maxPrice) {
           const catBuckets = {};
           products.forEach(p => {
             const cat = p.category || p.catSlug || 'khac';
@@ -1282,16 +1295,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.renderCategoryFilters('all');
 
   // Gán sự kiện cho nút "Áp dụng bộ lọc" trên Mobile Drawer
-  const mobileApplyBtn = document.getElementById('apply-filter-btn');
-  if (mobileApplyBtn) {
-    mobileApplyBtn.addEventListener('click', () => {
-      window.loadCatalogProducts();
-      const drawer = document.getElementById('mobile-filter-drawer');
-      const overlay = document.getElementById('drawer-overlay');
-      if (drawer) drawer.classList.remove('active');
-      if (overlay) overlay.classList.remove('active');
-    });
-  }
+  if (applyFilterBtn) applyFilterBtn.addEventListener('click', () => window.loadCatalogProducts());
 
   // Wire desktop & mobile search inputs to dynamic database query (hỗ trợ tìm kiếm từ mọi trang)
   const allSearchInputs = document.querySelectorAll('.d-search-box input, input[type="search"], .search-input, #mobile-search-input');
@@ -2066,12 +2070,14 @@ document.addEventListener('DOMContentLoaded', () => {
     switchModalTab(focusTab);
 
     productModal.classList.add('active');
+    productModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   };
 
   const closeProductModal = () => {
     if (!productModal) return;
     productModal.classList.remove('active');
+    productModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   };
 

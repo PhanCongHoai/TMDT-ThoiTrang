@@ -4477,8 +4477,6 @@ html:not(.has-wishlist-count) a[href="wishlist.html"] :is(.badge-count, .dropdow
 /* COMPACT SIDEBAR & COLLAPSIBLE ACCORDION STYLES */
 /* ============================================================== */
 .compact-sidebar {
-  display: flex;
-  flex-direction: column;
   gap: 1rem;
 }
 
