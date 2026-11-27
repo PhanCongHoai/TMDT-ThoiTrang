@@ -52,6 +52,9 @@
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="Tìm kiếm sản phẩm...">
       </div>
+      <button type="button" class="d-btn-icon desktop-image-search-btn" onclick="openAIImageSearchModal()" aria-label="Tìm kiếm bằng hình ảnh" title="Tìm kiếm bằng hình ảnh">
+        <i class="fa-solid fa-camera" aria-hidden="true"></i>
+      </button>
 
       <!-- Search Trigger Icon Button on Mobile -->
       <button class="d-btn-icon mobile-search-btn" id="mobile-search-toggle" title="Tìm kiếm">
@@ -113,6 +116,9 @@
     <div class="mobile-search-container">
       <i class="fa-solid fa-magnifying-glass"></i>
       <input type="text" placeholder="Tìm kiếm sản phẩm thời trang..." id="mobile-search-input">
+      <button type="button" class="mobile-image-search-btn" aria-label="Tìm kiếm bằng hình ảnh">
+        <i class="fa-solid fa-camera" aria-hidden="true"></i>
+      </button>
       <button class="close-search-btn" id="close-search-btn">&times;</button>
     </div>
     <div class="trending-search-tags">
@@ -173,14 +179,6 @@
         </ul>
       </div>
 
-      <div class="filter-group">
-        <span class="filter-label">Tông Màu Sắc</span>
-        <div class="color-options" data-catalog-filter="color" role="group" aria-label="Màu sắc"></div>
-      </div>
-      <div class="filter-group">
-        <span class="filter-label">Kích Cỡ</span>
-        <div class="size-options" data-catalog-filter="size" role="group" aria-label="Kích cỡ"></div>
-      </div>
       <div id="dynamic-mobile-filter-container"></div>
     </div>
     <div class="filter-drawer-footer">
@@ -282,28 +280,6 @@
             </div>
           </div>
 
-          <div class="sidebar-widget compact-widget">
-            <div class="filter-group-accordion">
-              <div class="widget-header-accordion" data-accordion="color-collapse">
-                <span class="filter-label-accordion"><i class="fa-solid fa-palette"></i> Tông Màu Sắc</span>
-                <i class="fa-solid fa-chevron-down accordion-icon"></i>
-              </div>
-              <div class="accordion-content" id="color-collapse">
-                <div class="color-options compact-swatches" data-catalog-filter="color" role="group" aria-label="Màu sắc"></div>
-              </div>
-            </div>
-
-            <div class="filter-divider"></div>
-            <div class="filter-group-accordion">
-              <div class="widget-header-accordion" data-accordion="size-collapse">
-                <span class="filter-label-accordion"><i class="fa-solid fa-ruler-combined"></i> Kích Cỡ</span>
-                <i class="fa-solid fa-chevron-down accordion-icon"></i>
-              </div>
-              <div class="accordion-content" id="size-collapse">
-                <div class="size-options compact-pills" data-catalog-filter="size" role="group" aria-label="Kích cỡ"></div>
-              </div>
-            </div>
-          </div>
           <div class="sidebar-widget compact-widget" id="dynamic-filter-container"></div>
         </aside>
 
@@ -333,9 +309,7 @@
             <!-- ================= 1. ÁO VEST & BLAZER (4 SẢN PHẨM) ================= -->
             <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Double-Breasted Tailored Suit" data-category="Áo Vest & Blazer" data-price="12.500.000 ₫" data-rating="4.9" data-img="assets/products/vest_1_double_breasted.jpg" data-desc="Áo Vest may đo độc bản từ len Cashmere nhập khẩu Ý. Thiết kế Double-Breasted mang đến diện mạo quyền lực, chuẩn phom dáng Châu Âu.">
               <div class="card-img-wrap">
-                <img src="assets/products/vest_1_double_breasted.jpg" alt="Áo Vest Tailored Double-Breasted">
-                <span class="card-tag">NEW ARRIVAL</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/vest_1_double_breasted.jpg" alt="Áo Vest Tailored Double-Breasted">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -353,9 +327,7 @@
 
             <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Black Blazer & High Boots Set" data-category="Áo Vest & Blazer" data-price="16.800.000 ₫" data-rating="4.9" data-img="assets/products/vest_2_black_blazer.jpg" data-desc="Bộ Blazer đen huyền bí phối cùng boots cổ cao hiện đại. Điểm nhấn đường chiết eo thon gọn, tôn vinh vóc dáng người phụ nữ thành đạt.">
               <div class="card-img-wrap">
-                <img src="assets/products/vest_2_black_blazer.jpg" alt="Bộ Vest Nữ Blazer & Boots">
-                <span class="card-tag">TRENDING</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/vest_2_black_blazer.jpg" alt="Bộ Vest Nữ Blazer & Boots">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -373,9 +345,7 @@
 
             <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Royal Cashmere Velvet Tuxedo" data-category="Áo Vest & Blazer" data-price="19.500.000 ₫" data-rating="5.0" data-img="assets/products/vest_3_velvet_tuxedo.jpg" data-desc="Tuxedo nhung cao cấp phối ve áo lụa bóng. Thiết kế dành riêng cho các buổi dạ tiệc Black Tie quý phái.">
               <div class="card-img-wrap">
-                <img src="assets/products/vest_3_velvet_tuxedo.jpg" alt="Royal Cashmere Velvet Tuxedo">
-                <span class="card-tag">VIP EXCLUSIVE</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/vest_3_velvet_tuxedo.jpg" alt="Royal Cashmere Velvet Tuxedo">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -393,9 +363,7 @@
 
             <article class="fashion-card product-clickable" data-cat="vest-blazer" data-title="Italian Wool Tailored Blazer" data-category="Áo Vest & Blazer" data-price="14.800.000 ₫" data-rating="4.8" data-img="assets/products/vest_4_wool_blazer.jpg" data-desc="Blazer may thủ công từ len cừu Ý cao cấp. Gam màu trung tính thanh lịch, phom dáng công sở thượng lưu.">
               <div class="card-img-wrap">
-                <img src="assets/products/vest_4_wool_blazer.jpg" alt="Italian Wool Tailored Blazer">
-                <span class="card-tag">HAUTE COUTURE</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/vest_4_wool_blazer.jpg" alt="Italian Wool Tailored Blazer">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -414,9 +382,7 @@
             <!-- ================= 2. VÁY & ĐẦM DẠ HỘI (4 SẢN PHẨM) ================= -->
             <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Minimalist Silk Trench Dress" data-category="Váy & Đầm Dạ Hội" data-price="18.900.000 ₫" data-rating="5.0" data-img="assets/products/dress_1_silk_minimalist.jpg" data-desc="Đầm dạ hội phong cách Trench Dress may từ lụa tơ tằm nguyên chất. Đường cắt tỉ mỉ tôn vinh nét quyến rũ kiêu sa.">
               <div class="card-img-wrap">
-                <img src="assets/products/dress_1_silk_minimalist.jpg" alt="Đầm Lụa Minimalist Silk Trench">
-                <span class="card-tag">BESTSELLER</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/dress_1_silk_minimalist.jpg" alt="Đầm Lụa Minimalist Silk Trench">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -434,9 +400,7 @@
 
             <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Auralia Emerald Velvet Gown" data-category="Váy & Đầm Dạ Hội" data-price="21.500.000 ₫" data-rating="5.0" data-img="assets/products/dress_2_emerald_velvet.jpg" data-desc="Đầm dạ hội chất liệu nhung đỏ tuyền quyến rũ. Cổ xẻ sâu tinh tế kết hợp đai lưng đính đá Swarovsky xa xỉ.">
               <div class="card-img-wrap">
-                <img src="assets/products/dress_2_emerald_velvet.jpg" alt="Đầm Nhung Đỏ Emerald Velvet Gown">
-                <span class="card-tag">HAUTE COUTURE</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/dress_2_emerald_velvet.jpg" alt="Đầm Nhung Đỏ Emerald Velvet Gown">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -454,9 +418,7 @@
 
             <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Midnight Satin Evening Gown" data-category="Váy & Đầm Dạ Hội" data-price="25.000.000 ₫" data-rating="4.9" data-img="assets/products/dress_3_midnight_satin.jpg" data-desc="Đầm satin xanh đêm dạ tiệc Haute Couture. Thiết kế tà váy dài thướt tha, lộng lẫy trên mọi thảm đỏ.">
               <div class="card-img-wrap">
-                <img src="assets/products/dress_3_midnight_satin.jpg" alt="Midnight Satin Evening Gown">
-                <span class="card-tag">RUNWAY 2026</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/dress_3_midnight_satin.jpg" alt="Midnight Satin Evening Gown">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -474,9 +436,7 @@
 
             <article class="fashion-card product-clickable" data-cat="vay-dam" data-title="Chiffon Silk Cocktail Dress" data-category="Váy & Đầm Dạ Hội" data-price="15.500.000 ₫" data-rating="4.8" data-img="assets/products/dress_4_chiffon_cocktail.jpg" data-desc="Đầm cocktail lụa Chiffon xếp ly mềm mại. Phù hợp cho các buổi tiệc champagne và gala sang trọng.">
               <div class="card-img-wrap">
-                <img src="assets/products/dress_4_chiffon_cocktail.jpg" alt="Chiffon Silk Cocktail Dress">
-                <span class="card-tag">LIMITED</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/dress_4_chiffon_cocktail.jpg" alt="Chiffon Silk Cocktail Dress">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -495,9 +455,7 @@
             <!-- ================= 3. ÁO KHOÁC THU ĐÔNG (4 SẢN PHẨM) ================= -->
             <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Oversized Cashmere Wool Sweater" data-category="Áo Khoác Thu Đông" data-price="8.200.000 ₫" data-rating="4.8" data-img="assets/products/coat_1_cashmere_sweater.jpg" data-desc="Áo len dáng rộng dệt từ 100% sợi Cashmere nguyên chất. Ấm áp, siêu nhẹ và êm ái trên làn da.">
               <div class="card-img-wrap">
-                <img src="assets/products/coat_1_cashmere_sweater.jpg" alt="Áo Len Oversized Wool Sweater">
-                <span class="card-tag">LIMITED</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/coat_1_cashmere_sweater.jpg" alt="Áo Len Oversized Wool Sweater">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -515,9 +473,7 @@
 
             <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Midnight Navy Tailored Jacket" data-category="Áo Khoác Thu Đông" data-price="14.200.000 ₫" data-rating="4.7" data-img="assets/products/coat_2_navy_tailored_jacket.jpg" data-desc="Áo khoác dạ ngắn tông màu Navy chìm quý phái. Chất vải chống nhăn và giữ ấm tuyệt đối.">
               <div class="card-img-wrap">
-                <img src="assets/products/coat_2_navy_tailored_jacket.jpg" alt="Áo Khoác Nam Navy Wool Blazer">
-                <span class="card-tag">HOT ITEM</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/coat_2_navy_tailored_jacket.jpg" alt="Áo Khoác Nam Navy Wool Blazer">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -535,9 +491,7 @@
 
             <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Alpine Cashmere Trench Coat" data-category="Áo Khoác Thu Đông" data-price="22.800.000 ₫" data-rating="5.0" data-img="assets/products/coat_3_cashmere_trench.jpg" data-desc="Áo khoác dạ Măng-tô dáng dài Thượng Hải. Chi tiết đai da bò thật và lớp lót lụa cao cấp.">
               <div class="card-img-wrap">
-                <img src="assets/products/coat_3_cashmere_trench.jpg" alt="Alpine Cashmere Trench Coat">
-                <span class="card-tag">LUXURY WINTER</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/coat_3_cashmere_trench.jpg" alt="Alpine Cashmere Trench Coat">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -555,9 +509,7 @@
 
             <article class="fashion-card product-clickable" data-cat="ao-khoac" data-title="Double-Faced Wool Long Coat" data-category="Áo Khoác Thu Đông" data-price="17.900.000 ₫" data-rating="4.9" data-img="assets/products/coat_4_double_faced_wool.jpg" data-desc="Áo khoác dạ hai mặt thủ công cao cấp. Thiết kế tối giản mang đến vẻ đẹp vĩnh cửu thời trang Thu Đông.">
               <div class="card-img-wrap">
-                <img src="assets/products/coat_4_double_faced_wool.jpg" alt="Double-Faced Wool Long Coat">
-                <span class="card-tag">NEW COLLECTION</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/coat_4_double_faced_wool.jpg" alt="Double-Faced Wool Long Coat">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -576,9 +528,7 @@
             <!-- ================= 4. TÚI XÁCH DA CAO CẤP (4 SẢN PHẨM) ================= -->
             <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Heritage Tan Leather Handbag" data-category="Túi Xách Da Cao Cấp" data-price="24.000.000 ₫" data-rating="4.9" data-img="assets/products/bag_1_heritage_tan_handbag.jpg" data-desc="Túi xách da thuộc thủ công màu nâu di sản. Khóa kim loại mạ vàng 18K khâu tay theo tiêu chuẩn Ý.">
               <div class="card-img-wrap">
-                <img src="assets/products/bag_1_heritage_tan_handbag.jpg" alt="Túi Xách Da Handbag Luna">
-                <span class="card-tag">EXCLUSIVE</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/bag_1_heritage_tan_handbag.jpg" alt="Túi Xách Da Handbag Luna">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -596,9 +546,7 @@
 
             <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Monogram Ostrich Leather Tote" data-category="Túi Xách Da Cao Cấp" data-price="32.500.000 ₫" data-rating="5.0" data-img="assets/products/bag_2_ostrich_tote.jpg" data-desc="Túi Tote da đà điểu tự nhiên khắc họa tiết Monogram độc quyền. Đạt chứng nhận da xa xỉ quốc tế.">
               <div class="card-img-wrap">
-                <img src="assets/products/bag_2_ostrich_tote.jpg" alt="Monogram Ostrich Leather Tote">
-                <span class="card-tag">VIP CRAFT</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/bag_2_ostrich_tote.jpg" alt="Monogram Ostrich Leather Tote">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -616,9 +564,7 @@
 
             <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Auralia Mini Flap Crossbody Bag" data-category="Túi Xách Da Cao Cấp" data-price="18.500.000 ₫" data-rating="4.8" data-img="assets/products/bag_3_mini_flap_crossbody.jpg" data-desc="Túi đeo chéo nắp gập cỡ nhỏ nhỏ gọn sang trọng. Dây xích mạ vàng bóng bẩy tôn dáng phái đẹp.">
               <div class="card-img-wrap">
-                <img src="assets/products/bag_3_mini_flap_crossbody.jpg" alt="Auralia Mini Flap Crossbody Bag">
-                <span class="card-tag">BESTSELLER</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/bag_3_mini_flap_crossbody.jpg" alt="Auralia Mini Flap Crossbody Bag">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -636,9 +582,7 @@
 
             <article class="fashion-card product-clickable" data-cat="tui-xach" data-title="Crocodile Embossed Clutch" data-category="Túi Xách Da Cao Cấp" data-price="21.000.000 ₫" data-rating="4.9" data-img="assets/products/bag_4_crocodile_clutch.jpg" data-desc="Ví cầm tay Clutch da cá sấu cao cấp dự tiệc. Phom dáng vuông vắn, cứng cáp thể hiện sự kiêu hãnh.">
               <div class="card-img-wrap">
-                <img src="assets/products/bag_4_crocodile_clutch.jpg" alt="Crocodile Embossed Clutch">
-                <span class="card-tag">LIMITED</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/bag_4_crocodile_clutch.jpg" alt="Crocodile Embossed Clutch">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -657,9 +601,7 @@
             <!-- ================= 5. GIÀY & PHỤ KIỆN (4 SẢN PHẨM) ================= -->
             <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="Royale Gold Buckle Boots" data-category="Giày & Phụ Kiện" data-price="15.800.000 ₫" data-rating="4.9" data-img="assets/products/shoe_1_gold_buckle_boots.jpg" data-desc="Boots da bò thật khóa mạ vàng 18K. Đế cao su chống trượt cao cấp cùng lót đệm êm ái.">
               <div class="card-img-wrap">
-                <img src="assets/products/shoe_1_gold_buckle_boots.jpg" alt="Giày Boots Khóa Mạ Vàng">
-                <span class="card-tag">NEW ACCESSORIES</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/shoe_1_gold_buckle_boots.jpg" alt="Giày Boots Khóa Mạ Vàng">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -677,9 +619,7 @@
 
             <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="Handcrafted Calfskin Loafers" data-category="Giày & Phụ Kiện" data-price="11.200.000 ₫" data-rating="4.8" data-img="assets/products/shoe_2_calfskin_loafers.jpg" data-desc="Giày Loafer da bê may thủ công tỉ mỉ. Tông màu đen bóng thanh lịch cho quý ông & quý cô thành thị.">
               <div class="card-img-wrap">
-                <img src="assets/products/shoe_2_calfskin_loafers.jpg" alt="Handcrafted Calfskin Loafers">
-                <span class="card-tag">GENTLEMAN</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/shoe_2_calfskin_loafers.jpg" alt="Handcrafted Calfskin Loafers">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -697,9 +637,7 @@
 
             <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="18K Gold Plated Silk Scarf Ring" data-category="Giày & Phụ Kiện" data-price="5.500.000 ₫" data-rating="5.0" data-img="assets/products/shoe_3_scarf_ring_gold.jpg" data-desc="Nẫn cài khăn lụa mạ vàng 18K đính đá quý. Phụ kiện tinh tế điểm xuyết cho trang phục thời thượng.">
               <div class="card-img-wrap">
-                <img src="assets/products/shoe_3_scarf_ring_gold.jpg" alt="18K Gold Plated Silk Scarf Ring">
-                <span class="card-tag">LUXURY GIFT</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/shoe_3_scarf_ring_gold.jpg" alt="18K Gold Plated Silk Scarf Ring">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -717,9 +655,7 @@
 
             <article class="fashion-card product-clickable" data-cat="giay-phu-kien" data-title="Classic Leather Stiletto Heels" data-category="Giày & Phụ Kiện" data-price="13.500.000 ₫" data-rating="4.9" data-img="assets/products/shoe_4_stiletto_heels.jpg" data-desc="Giày cao gót 9cm da thuộc bóng kiêu kỳ. Phom dáng ôm chân chuẩn xác, khẳng định bước tiến kiêu hãnh.">
               <div class="card-img-wrap">
-                <img src="assets/products/shoe_4_stiletto_heels.jpg" alt="Classic Leather Stiletto Heels">
-                <span class="card-tag">HAUTE COUTURE</span>
-                <div class="card-quick-actions">
+                <img src="assets/products/shoe_4_stiletto_heels.jpg" alt="Classic Leather Stiletto Heels">                <div class="card-quick-actions">
                   <button class="btn-add-cart"><i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng</button>
                 </div>
               </div>
@@ -862,7 +798,7 @@
         <div class="modal-gallery-col">
           <div class="modal-main-img-wrap">
             <img id="modal-main-img" src="assets/products/vest_1_double_breasted.jpg" alt="Chi tiết sản phẩm AURALIÈ">
-            <span id="modal-product-tag" class="modal-badge-tag">NEW ARRIVAL</span>
+            <span id="modal-product-tag" class="modal-badge-tag" hidden></span>
           </div>
           <div class="modal-thumbnails">
             <img src="assets/products/vest_1_double_breasted.jpg" class="modal-thumb active" alt="Góc 1">

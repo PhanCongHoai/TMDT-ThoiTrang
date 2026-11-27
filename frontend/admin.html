@@ -661,6 +661,58 @@
         height: 220px !important;
       }
     }
+    .product-image-picker {
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:1rem;
+      padding:1rem;
+      border:1px dashed #b79a5d;
+      border-radius:10px;
+      background:#faf8f3;
+    }
+    .product-image-picker .product-image-tile {
+      display:grid;
+      place-items:center;
+      width:76px;
+      height:76px;
+      flex:none;
+      overflow:hidden;
+      border-radius:8px;
+      background:#eee5d4;
+      color:#785c2d;
+      font-size:1.5rem;
+    }
+    .product-image-tile img { width:100%; height:100%; object-fit:cover; }
+    .product-image-tile [hidden] { display:none; }
+    .product-image-picker .product-image-controls { flex:1 1 180px; min-width:0; }
+    .product-image-controls p { color:#666; margin-top:.4rem; overflow-wrap:anywhere; }
+    .product-image-controls input { width:100%; font:inherit; color:#333; }
+    .product-image-controls input::file-selector-button {
+      margin-right:.55rem;
+      padding:.5rem .75rem;
+      border:1px solid #c4aa73;
+      border-radius:6px;
+      background:#fff;
+      color:#29251f;
+      font:inherit;
+      cursor:pointer;
+    }
+    .admin-attribute-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr)); gap:.75rem; }
+    .admin-attribute-select { width:100%; margin-top:.3rem; padding:.55rem; border:1px solid var(--border-light); border-radius:4px; }
+    .admin-attribute-grid > div { min-width:0; }
+    .admin-product-preview-header {
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:.5rem 1rem;
+      padding:1rem 4rem 1rem 1.25rem;
+      background:var(--primary-dark);
+      color:#fff;
+    }
+    #close-admin-preview-modal { top:.55rem; right:.8rem; color:#fff; }
+    .admin-product-preview-header .status-badge { white-space:normal; }
+    .admin-product-preview-dismiss { align-self:flex-start; white-space:nowrap; }
   </style>
 </head>
 
@@ -1704,7 +1756,8 @@
                         data-category="${p.category || 'Thời Trang'}" 
                         data-price="${Number(p.price).toLocaleString('vi-VN')} ₫" 
                         data-img="${p.img || 'assets/card_1.jpg'}" 
-                        data-tag="${p.tag || 'NEW'}" 
+                        data-tag="${AdminUI.escape(p.tag || '')}"
+                        data-listing-status="${!inventory.has(Number(p.id)) ? 'Chưa tải được tồn kho' : Number(inventory.get(Number(p.id)).remaining_quantity) > 0 ? 'Đang bán' : 'Hết hàng'}"
                         data-desc="${AdminUI.escape(p.description || '')}">
                         <i class="fa-solid fa-eye"></i> Xem
                       </button>
@@ -1836,10 +1889,11 @@
               <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
               <td>
                 <div class="table-actions-cell" style="flex-wrap: nowrap; gap: 6px;">
-                  <select onchange="updateOrderStatus(${o.id}, this.value)" ${isFinal ? 'disabled title="Đơn hàng đã kết thúc"' : ''} 
+                  <select aria-label="Cập nhật đơn ${AdminUI.escape(o.order_code)}" onchange="updateOrderStatus(${Number(o.id)}, this)" ${isFinal ? 'disabled title="Đơn hàng đã kết thúc"' : ''}
                     style="padding: 0.35rem 0.5rem; font-size:0.78rem; border-radius:4px; border:1px solid var(--border-light); background: ${isFinal ? '#f5f5f5' : '#fff'}; cursor: ${isFinal ? 'not-allowed' : 'pointer'};">
                     <option value="PENDING" ${statusUpper === 'PENDING' ? 'selected' : ''}>Chờ Duyệt Kho</option>
                     <option value="CONFIRMED" ${statusUpper === 'CONFIRMED' ? 'selected' : ''}>Đã Xác Nhận</option>
+                    ${statusUpper === 'PROCESSING' ? '<option value="PROCESSING" selected>Đang xử lý</option>' : ''}
                     <option value="SHIPPED" ${statusUpper === 'SHIPPED' ? 'selected' : ''}>Đang Giao Hàng</option>
                     <option value="COMPLETED" ${statusUpper === 'COMPLETED' ? 'selected' : ''}>Đã Hoàn Thành</option>
                     <option value="CANCELLED" ${statusUpper === 'CANCELLED' ? 'selected' : ''}>Hủy Đơn</option>
@@ -1876,15 +1930,40 @@
           });
       };
 
-      // Cập nhật trạng thái đơn hàng trực tiếp vào SQL Server
-      window.updateOrderStatus = (orderId, newStatus) => {
-        window.ApiClient.put(`/api/v1/orders/${orderId}/status`, { status: newStatus })
-          .then(data => {
-            alert(data.message || 'Cập nhật trạng thái đơn hàng thành công!');
-            window.loadAdminOrders();
-            loadAdminStats();
-          })
-          .catch(err => alert('Lỗi cập nhật trạng thái đơn: ' + err.message));
+      const pendingStatusUpdates = new Set();
+      window.updateOrderStatus = async (orderId, select) => {
+        const order = window.adminOrdersData?.find(item => Number(item.id) === orderId);
+        if (!order) return;
+        const currentStatus = order.status.toUpperCase();
+        const nextStatus = select.value;
+        const nextLabel = select.selectedOptions[0].textContent;
+        const currentLabel = [...select.options].find(option => option.value === currentStatus)?.textContent || currentStatus;
+        select.value = currentStatus;
+        if (currentStatus === nextStatus || pendingStatusUpdates.has(orderId)) return;
+
+        const code = AdminUI.escape(order.order_code || ('#' + orderId));
+        pendingStatusUpdates.add(orderId);
+        select.disabled = true;
+        try {
+          const confirmed = await Commerce.dialog('Xác nhận cập nhật đơn hàng', `
+            <dl class="commerce-details">
+              <dt>Mã đơn</dt><dd>${code}</dd>
+              <dt>Hiện tại</dt><dd>${AdminUI.escape(currentLabel)}</dd>
+              <dt>Trạng thái mới</dt><dd>${AdminUI.escape(nextLabel)}</dd>
+            </dl>`, 'Xác nhận cập nhật');
+          if (!confirmed) return;
+
+          const result = await window.ApiClient.put(`/api/v1/orders/${orderId}/status`, { status: nextStatus });
+          if (result.status !== 'success') throw new Error(result.message || 'Không thể cập nhật trạng thái.');
+          window.loadAdminOrders();
+          loadAdminStats();
+          await Commerce.dialog('Đã cập nhật đơn hàng', `<p>Đơn <strong>${code}</strong> đã chuyển sang <strong>${AdminUI.escape(nextLabel)}</strong>.</p>`, 'Đã hiểu');
+        } catch (error) {
+          await Commerce.dialog('Không thể cập nhật đơn hàng', `<p>${AdminUI.escape(error.message)}</p>`, 'Đã hiểu');
+        } finally {
+          pendingStatusUpdates.delete(orderId);
+          select.disabled = false;
+        }
       };
 
       // 4. Danh Sách Đánh Giá Khách Hàng Từ Database
@@ -2279,10 +2358,7 @@
         if (modal) {
           modal.classList.add('active');
           document.body.style.overflow = 'hidden';
-          const catSelect = document.getElementById('add-prod-category');
-          if (catSelect && window.renderCategoryAttributes) {
-            window.renderCategoryAttributes(catSelect.value || 1);
-          }
+          window.renderCategoryAttributes?.();
         }
       };
 
@@ -2390,7 +2466,7 @@
             const cat = btn.getAttribute('data-category') || 'Danh Mục';
             const price = btn.getAttribute('data-price') || '10.000.000 ₫';
             const img = btn.getAttribute('data-img') || 'assets/card_1.jpg';
-            const tag = btn.getAttribute('data-tag') || 'NEW ARRIVAL';
+            const tag = btn.dataset.tag;
             const desc = btn.getAttribute('data-desc') || 'Mô tả sản phẩm xa xỉ.';
 
             const previewTitle = document.getElementById('admin-preview-title');
@@ -2398,6 +2474,7 @@
             const previewPrice = document.getElementById('admin-preview-price');
             const previewImg = document.getElementById('admin-preview-img');
             const previewTag = document.getElementById('admin-preview-tag');
+            const previewStatus = document.getElementById('admin-preview-status');
             const previewDesc = document.getElementById('admin-preview-desc');
             const previewModal = document.getElementById('admin-product-preview-modal');
 
@@ -2405,11 +2482,19 @@
             if (previewCat) previewCat.textContent = cat;
             if (previewPrice) previewPrice.textContent = price;
             if (previewImg) previewImg.src = img;
-            if (previewTag) previewTag.textContent = tag;
+            if (previewTag) {
+              previewTag.textContent = tag;
+              previewTag.hidden = !tag;
+            }
+            if (previewStatus) {
+              previewStatus.textContent = btn.dataset.listingStatus;
+              previewStatus.classList.toggle('active', btn.dataset.listingStatus === 'Đang bán');
+            }
             if (previewDesc) previewDesc.textContent = desc;
 
             if (previewModal) {
               previewModal.classList.add('active');
+              previewModal.setAttribute('aria-hidden', 'false');
               document.body.style.overflow = 'hidden';
             }
           });
@@ -2420,6 +2505,7 @@
         const previewModal = document.getElementById('admin-product-preview-modal');
         if (previewModal) {
           previewModal.classList.remove('active');
+          previewModal.setAttribute('aria-hidden', 'true');
           document.body.style.overflow = '';
         }
       };
@@ -2593,16 +2679,11 @@
 
   <!-- MODAL XEM TRƯỚC GIAO DIỆN SẢN PHẨM KHI ĐĂNG (LIVE PRODUCT PREVIEW BOX) -->
   <div id="admin-product-preview-modal" class="modal-overlay" aria-hidden="true">
-    <div class="modal-container" style="max-width: 780px;">
-      <button id="close-admin-preview-modal" class="modal-close-btn" aria-label="Đóng preview">&times;</button>
-
-      <div
-        style="background: var(--primary-dark); color: var(--accent-gold); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; flex-wrap: wrap; gap: 0.5rem;">
-        <span style="font-size: 0.82rem; font-weight: 700; letter-spacing: 1px;"><i class="fa-solid fa-eye"></i> XEM
-          TRƯỚC GIAO DIỆN SẢN PHẨM KHI ĐĂNG</span>
-        <span
-          style="font-size: 0.72rem; background: rgba(255,255,255,0.15); padding: 0.2rem 0.6rem; border-radius: 4px; color: #fff;">Admin
-          Live Preview</span>
+    <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="admin-preview-heading" style="max-width: 780px;">
+      <button id="close-admin-preview-modal" class="modal-close-btn" aria-label="Đóng xem trước">&times;</button>
+      <div class="admin-product-preview-header">
+        <strong id="admin-preview-heading">Xem trước sản phẩm</strong>
+        <span id="admin-preview-status" class="status-badge gold"></span>
       </div>
 
       <div style="padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem;"
@@ -2611,7 +2692,7 @@
         <div>
           <div class="modal-main-img-wrap" style="height: 300px;">
             <img id="admin-preview-img" src="assets/card_1.jpg" alt="Preview Image">
-            <span class="modal-badge-tag" id="admin-preview-tag">NEW ARRIVAL</span>
+            <span class="modal-badge-tag" id="admin-preview-tag" hidden></span>
           </div>
         </div>
 
@@ -2639,18 +2720,7 @@
             Thiết kế Haute Couture may đo độc bản từ len Cashmere Ý. Chuẩn phom dáng Châu Âu sắc sảo.
           </p>
 
-          <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap;">
-            <button class="btn-primary-luxury"
-              style="flex: 1; justify-content: center; padding: 0.7rem; font-size: 0.8rem; min-width: 160px;"
-              onclick="closeAdminPreviewModal(); alert('Đã xác nhận trạng thái sản phẩm hiển thị công khai trên website AURALIÈ!');">
-              <i class="fa-solid fa-check"></i> Xác Nhận Đăng
-            </button>
-            <button class="btn-primary-luxury"
-              style="background: var(--secondary-dark); padding: 0.7rem 1rem; font-size: 0.8rem;"
-              onclick="closeAdminPreviewModal(); openAddProductModal();">
-              <i class="fa-solid fa-pen"></i> Chỉnh Sửa / Thêm Mới
-            </button>
-          </div>
+          <button type="button" class="btn-primary-luxury admin-product-preview-dismiss" onclick="closeAdminPreviewModal()">Đóng</button>
         </div>
 
       </div>
@@ -2668,13 +2738,17 @@
       </div>
 
       <form id="admin-add-product-form" style="display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem;">
-        <div>
-          <label for="add-prod-image" style="font-weight:bold;display:block;margin-bottom:0.3rem">Ảnh sản phẩm</label>
-          <input id="add-prod-image" type="file" accept="image/png,image/jpeg,image/webp">
-          <p style="font-size:0.8rem;color:#777;margin-top:6px">Chọn ảnh PNG, JPEG hoặc WebP, tối đa 2 MB.</p>
-          <img id="add-prod-image-preview" alt="Ảnh sản phẩm xem trước" hidden
-            style="max-height: 120px; border-radius: 6px; margin-top: 6px; object-fit: cover;">
-          <p id="add-prod-image-status" role="status"></p>
+        <div class="product-image-picker">
+          <div class="product-image-tile">
+            <i id="add-prod-image-icon" class="fa-solid fa-image" aria-hidden="true"></i>
+            <img id="add-prod-image-preview" alt="Ảnh sản phẩm xem trước" hidden>
+          </div>
+          <div class="product-image-controls">
+            <label for="add-prod-image"><strong>Ảnh sản phẩm</strong></label>
+            <input id="add-prod-image" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="add-prod-image-help">
+            <p id="add-prod-image-help">PNG, JPEG hoặc WebP, tối đa 2 MB.</p>
+            <p id="add-prod-image-status" role="status"></p>
+          </div>
         </div>
 
         <div>
@@ -2688,11 +2762,11 @@
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Danh Mục Sản Phẩm *</label>
             <select id="add-prod-category"
               style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none; font-weight: 600;">
-              <option value="1">Áo Vest & Blazer</option>
-              <option value="2">Váy & Đầm Dạ Hội</option>
-              <option value="3">Áo Khoác Thu Đông</option>
-              <option value="4">Túi Xách Da Cao Cấp</option>
-              <option value="5">Giày & Phụ Kiện</option>
+              <option value="1" data-slug="vest-blazer">Áo Vest & Blazer</option>
+              <option value="2" data-slug="vay-dam">Váy & Đầm Dạ Hội</option>
+              <option value="3" data-slug="ao-khoac">Áo Khoác Thu Đông</option>
+              <option value="4" data-slug="tui-xach">Túi Xách Da Cao Cấp</option>
+              <option value="5" data-slug="giay-phu-kien">Giày & Phụ Kiện</option>
             </select>
           </div>
           <div>
@@ -2702,23 +2776,10 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;" class="responsive-grid">
-          <div>
-            <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Huy Hiệu (Tag)</label>
-            <select id="add-prod-tag"
-              style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
-              <option value="NEW ARRIVAL">NEW ARRIVAL</option>
-              <option value="BESTSELLER">BESTSELLER</option>
-              <option value="EXCLUSIVE">EXCLUSIVE</option>
-              <option value="LIMITED">LIMITED</option>
-              <option value="TRENDING">TRENDING</option>
-            </select>
-          </div>
-          <div>
+        <div>
             <label style="font-weight: bold; display: block; margin-bottom: 0.3rem;">Xuất Xứ Chế Tác</label>
             <input type="text" id="add-prod-origin" value="Atelier AURALIÈ Đồng Khởi"
               style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-light); border-radius: 6px; outline: none;">
-          </div>
         </div>
 
         <!-- KHU VỰC THUỘC TÍNH ĐỘNG THEO TỪNG DANH MỤC THỜI TRANG -->
@@ -3232,7 +3293,9 @@
         // Tự động đồng bộ sang ô chọn Danh Mục ở modal Thêm Sản Phẩm Mới
         const prodCatSelect = document.getElementById('add-prod-category');
         if (prodCatSelect) {
-          prodCatSelect.innerHTML = categories.map(c => `<option value="${c.id}">${AdminUI.escape(c.name)}</option>`).join('');
+          const selectedCategory = prodCatSelect.value;
+          prodCatSelect.innerHTML = categories.map(c => `<option value="${Number(c.id)}" data-slug="${AdminUI.escape(c.slug)}">${AdminUI.escape(c.name)}</option>`).join('');
+          if (categories.some(category => String(category.id) === selectedCategory)) prodCatSelect.value = selectedCategory;
         }
       } catch (err) {
         console.error('Lỗi khi tải danh sách danh mục:', err);

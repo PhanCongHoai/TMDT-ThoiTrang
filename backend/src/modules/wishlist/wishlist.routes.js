@@ -3,6 +3,7 @@ const router = express.Router();
 const { query } = require('../../config/db');
 const { verifyToken } = require('../../middlewares/auth.middleware');
 const ApiResponse = require('../../utils/response');
+const { productBadgeJoin } = require('../products/product-badges');
 
 // GET Wishlist
 router.get('/', verifyToken, async (req, res, next) => {
@@ -10,13 +11,14 @@ router.get('/', verifyToken, async (req, res, next) => {
     const userId = req.user.id;
     const result = await query(`
       SELECT w.id AS wishlist_id, w.created_at AS added_at,
-             p.id, p.name, p.slug, p.base_price AS price, p.tag, p.material,
+             p.id, p.name, p.slug, p.base_price AS price, badge.tag, p.material,
              c.name AS category, c.slug AS category_slug,
              COALESCE(img.image_url, 'assets/card_1.jpg') AS img,
              COALESCE(AVG(CAST(r.rating AS FLOAT)), 5.0) AS rating,
              COUNT(r.id) AS review_count
       FROM wishlists w
       JOIN products p ON w.product_id = p.id AND p.is_active = 1
+      ${productBadgeJoin}
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN (
         SELECT product_id, image_url, ROW_NUMBER() OVER(PARTITION BY product_id ORDER BY is_thumbnail DESC, id ASC) AS rn
@@ -24,7 +26,7 @@ router.get('/', verifyToken, async (req, res, next) => {
       ) img ON p.id = img.product_id AND img.rn = 1
       LEFT JOIN product_reviews r ON p.id = r.product_id
       WHERE w.user_id = @userId
-      GROUP BY w.id, w.created_at, p.id, p.name, p.slug, p.base_price, p.tag, p.material, c.name, c.slug, img.image_url
+      GROUP BY w.id, w.created_at, p.id, p.name, p.slug, p.base_price, badge.tag, p.material, c.name, c.slug, img.image_url
       ORDER BY w.created_at DESC
     `, { userId });
 

@@ -1,4 +1,5 @@
 const { query } = require('../../config/db');
+const { productBadgeJoin } = require('../products/product-badges');
 
 class RecommendationService {
   /**
@@ -43,9 +44,10 @@ class RecommendationService {
     // 2. NẾU CÓ DỮ LIỆU TƯƠNG TÁC -> THỰC HIỆN CONTENT-BASED & SESSION-BASED FILTERING
     if (contextProductIds.length > 0) {
       const contextInfo = await query(`
-        SELECT id, category_id, base_price, tag, material, fit
-        FROM products
-        WHERE id IN (${contextProductIds.join(',')})
+        SELECT p.id, p.category_id, p.base_price, badge.tag, p.material, p.fit
+        FROM products p
+        ${productBadgeJoin}
+        WHERE p.id IN (${contextProductIds.join(',')})
       `);
 
       if (contextInfo.recordset.length > 0) {
@@ -65,7 +67,7 @@ class RecommendationService {
             p.slug,
             p.description,
             p.base_price AS price,
-            p.tag,
+            badge.tag,
             p.material,
             p.fit,
             p.lining,
@@ -81,10 +83,11 @@ class RecommendationService {
             (
               CASE WHEN p.category_id IN (${catListStr}) THEN 40 ELSE 0 END +
               CASE WHEN p.material IN (${materials.map(m => `'${m.replace(/'/g, "''")}'`).join(',') || "''"}) THEN 30 ELSE 0 END +
-              CASE WHEN p.tag IN (${tags.map(t => `'${t.replace(/'/g, "''")}'`).join(',') || "''"}) THEN 15 ELSE 0 END +
+              CASE WHEN badge.tag IN (${tags.map(t => `'${t.replace(/'/g, "''")}'`).join(',') || "''"}) THEN 15 ELSE 0 END +
               CASE WHEN ABS(p.base_price - ${avgPrice}) <= (${avgPrice} * 0.4) THEN 15 ELSE 5 END
             ) AS similarity_score
           FROM products p
+          ${productBadgeJoin}
           OUTER APPLY (SELECT SUM(pv.stock_quantity) AS stock_quantity FROM product_variants pv WHERE pv.product_id=p.id) stock
           LEFT JOIN categories c ON p.category_id = c.id
           LEFT JOIN (
@@ -96,7 +99,7 @@ class RecommendationService {
             AND p.id NOT IN (${excludeListStr})
             AND COALESCE(stock.stock_quantity, 0) > 0
           GROUP BY 
-            p.id, p.name, p.slug, p.description, p.base_price, p.tag, p.material, p.fit, p.lining, p.hardware, p.origin,
+            p.id, p.name, p.slug, p.description, p.base_price, badge.tag, p.material, p.fit, p.lining, p.hardware, p.origin,
             p.created_at, stock.stock_quantity, c.name, c.slug, img.image_url, p.category_id
           ORDER BY similarity_score DESC, rating DESC, p.created_at DESC
         `;
@@ -126,7 +129,7 @@ class RecommendationService {
           p.slug,
           p.description,
           p.base_price AS price,
-          p.tag,
+          badge.tag,
           p.material,
           p.fit,
           p.lining,
@@ -140,13 +143,8 @@ class RecommendationService {
           COUNT(r.id) AS reviewCount,
           COALESCE(sales.sold_units, 0) AS sold_units
         FROM products p
+        ${productBadgeJoin}
         OUTER APPLY (SELECT SUM(pv.stock_quantity) AS stock_quantity FROM product_variants pv WHERE pv.product_id=p.id) stock
-        OUTER APPLY (
-          SELECT SUM(oi.quantity) AS sold_units 
-          FROM order_items oi 
-          JOIN product_variants pv2 ON oi.variant_id = pv2.id 
-          WHERE pv2.product_id = p.id
-        ) sales
         LEFT JOIN categories c ON p.category_id = c.id
         LEFT JOIN (
           SELECT product_id, image_url, ROW_NUMBER() OVER(PARTITION BY product_id ORDER BY is_thumbnail DESC, id ASC) AS rn
@@ -157,7 +155,7 @@ class RecommendationService {
           AND COALESCE(stock.stock_quantity, 0) > 0
           ${excludeClause}
         GROUP BY 
-          p.id, p.name, p.slug, p.description, p.base_price, p.tag, p.material, p.fit, p.lining, p.hardware, p.origin,
+          p.id, p.name, p.slug, p.description, p.base_price, badge.tag, p.material, p.fit, p.lining, p.hardware, p.origin,
           p.created_at, stock.stock_quantity, c.name, c.slug, img.image_url, sales.sold_units
         ORDER BY sold_units DESC, rating DESC, p.created_at DESC
       `;

@@ -52,7 +52,7 @@ class ProductController {
   static async createProduct(req, res, next) {
     try {
       const {
-        name, categoryId, basePrice, price, description, tag,
+        name, categoryId, basePrice, price, description,
         material, fit, lining, hardware, origin,
         variants, color, size, stockQuantity, imageData, imageUrl
       } = req.body;
@@ -62,7 +62,7 @@ class ProductController {
       }
 
       const result = await ProductService.createProduct({
-        name, categoryId, basePrice: resolvedPrice, description, tag,
+        name, categoryId, basePrice: resolvedPrice, description,
         material, fit, lining, hardware, origin,
         variants, color, size, stockQuantity, imageData, imageUrl
       });

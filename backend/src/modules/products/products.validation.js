@@ -21,7 +21,7 @@ class ProductValidation {
     if (req.body.basePrice === undefined && req.body.price !== undefined) {
       req.body.basePrice = req.body.price;
     }
-    const { name, categoryId, basePrice, description, tag, material, fit } = req.body;
+    const { name, categoryId, basePrice, material, fit } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return ApiResponse.error(res, 'Tên sản phẩm là bắt buộc.', 400);
@@ -39,10 +39,6 @@ class ProductValidation {
       if (isNaN(numCat) || numCat <= 0) {
         return ApiResponse.error(res, 'Danh mục sản phẩm không hợp lệ.', 400);
       }
-    }
-
-    if (tag && typeof tag === 'string' && tag.length > 50) {
-      return ApiResponse.error(res, 'Tag sản phẩm không được vượt quá 50 ký tự.', 400);
     }
 
     if (material && typeof material === 'string' && material.length > 150) {

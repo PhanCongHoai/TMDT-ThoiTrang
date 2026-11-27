@@ -251,7 +251,12 @@
 
       const switchTab = (target) => {
         if (!sections[target]) target = '#orders';
-        tabLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === target));
+        tabLinks.forEach(link => {
+          const selected = link.getAttribute('href') === target;
+          link.classList.toggle('active', selected);
+          if (selected) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
         Object.keys(sections).forEach(key => {
           if (sections[key]) sections[key].style.display = key === target ? 'block' : 'none';
         });
@@ -262,16 +267,13 @@
           const target = link.getAttribute('href');
           if (sections[target]) {
             e.preventDefault();
-            switchTab(target);
             window.location.hash = target;
           }
         });
       });
 
-      // Switch according to hash in URL if provided
-      if (window.location.hash && sections[window.location.hash]) {
-        switchTab(window.location.hash);
-      }
+      switchTab(window.location.hash);
+      window.addEventListener('hashchange', () => switchTab(window.location.hash));
 
       // 2. Fetch Live User Profile & Orders Directly from SQL Server
       const userRole = localStorage.getItem('userRole');

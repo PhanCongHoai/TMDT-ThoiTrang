@@ -184,12 +184,16 @@
   <script src="js/commerce.js"></script>
   <script src="js/app.js"></script>
   <script>
-    const recoveryHash = window.location.hash || '';
-    let recoveryToken = recoveryHash ? new URLSearchParams(recoveryHash.slice(1)).get('reset') : null;
-    const opensRecovery = Boolean(recoveryToken) || recoveryHash === '#forgot-password';
-    if (recoveryToken) {
-      window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+    function readRecoveryToken() {
+      const token = new URLSearchParams(window.location.hash.slice(1)).get('reset');
+      if (token) {
+        window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+      }
+      return token;
     }
+    const recoveryHash = window.location.hash;
+    let recoveryToken = readRecoveryToken();
+    const opensRecovery = Boolean(recoveryToken) || recoveryHash === '#forgot-password';
 
     function initPasswordRecovery() {
       const form = document.getElementById('form-password-recovery');
@@ -215,6 +219,8 @@
         password.disabled = confirmation.disabled = !reset;
         password.required = confirmation.required = reset;
         submit.textContent = reset ? 'Cập nhật mật khẩu' : 'Gửi liên kết đặt lại';
+        submit.hidden = false;
+        message.hidden = true;
         form.hidden = false;
         form.style.display = 'flex';
         if (!reset) email.value = document.getElementById('login-email-input').value;
@@ -224,6 +230,15 @@
       document.getElementById('forgot-password-link').addEventListener('click', event => {
         event.preventDefault();
         showRecovery();
+      });
+      window.addEventListener('hashchange', () => {
+        const hash = window.location.hash;
+        const token = readRecoveryToken();
+        if (token || hash === '#forgot-password') {
+          recoveryToken = token;
+          password.value = confirmation.value = '';
+          showRecovery();
+        }
       });
       if (opensRecovery) showRecovery();
 
@@ -460,14 +475,15 @@
               sessionStorage.setItem('cartReminderShownAfterLogin', 'false');
 
               const isAdmin = data.data.role === 'ADMIN';
+              const destination = authDestination(data.data);
               showLuxuryAlert({
                 title: isAdmin ? 'Xác Thực Quản Trị Viên' : 'Đăng Nhập Thành Công',
                 message: isAdmin
                   ? `Chào <strong>${data.data.fullName}</strong>! Đang mở Bảng Quản Trị...`
                   : `Chào mừng <strong>${data.data.fullName}</strong> trở lại AURALIÈ Haute Couture!`,
                 type: isAdmin ? 'admin' : 'customer',
-                btnText: isAdmin ? 'Truy Cập Ngay' : 'Vào Trang Cá Nhân',
-                redirectUrl: authDestination(data.data),
+                btnText: destination.startsWith('cart.html') ? 'Vào giỏ hàng' : 'Tiếp tục',
+                redirectUrl: destination,
                 autoCloseMs: 1800
               });
             } else {

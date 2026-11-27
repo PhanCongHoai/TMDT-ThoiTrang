@@ -80,7 +80,11 @@ window.alert = function(msg) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const mobileLayout = window.matchMedia('(max-width: 992px)');
-  
+  if (!sessionStorage.getItem('auralie_token') && location.pathname.endsWith('/cart.html')) {
+    const returnTo = new URLSearchParams(location.search).has('checkout') ? 'cart.html?checkout=1' : 'cart.html';
+    window.Commerce.redirectToLogin(returnTo);
+    return;
+  }
   // 1. Mobile Menu Drawer Toggle
   const mobileMenuToggles = document.querySelectorAll('#mobile-menu-toggle, .mobile-menu-btn');
   const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
@@ -1118,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const catalogTitle = document.getElementById('catalog-title');
         const catalogSubtitle = document.getElementById('catalog-subtitle');
-        const categoryName = document.querySelector('.category-list a.active')?.firstChild?.textContent.trim();
+        const categoryName = document.querySelector('.category-list a[data-cat].active')?.firstChild?.textContent.trim();
         if (catalogTitle) {
           catalogTitle.textContent = categorySlug === 'all'
             ? 'Bộ Sưu Tập Nổi Bật'
@@ -1183,16 +1187,16 @@ document.addEventListener('DOMContentLoaded', () => {
             data-reviews="${p.reviewCount || 0}"
             data-img="${p.img || 'assets/card_1.jpg'}" 
             data-desc="${p.description || ''}"
-            data-tag="${p.tag || 'NEW ARRIVAL'}"
+            data-tag="${p.tag || ''}"
             data-material="${p.material || 'Len Cashmere & Lụa Ý'}"
             data-fit="${p.fit || 'European Tailored'}"
             data-lining="${p.lining || 'Lụa Cupro Thượng Hạng'}"
-            data-hardware="${p.hardware || 'Khuy Sừng / Khóa Mạ Vàng 18K'}"
+            data-hardware="${window.Commerce.escape(p.hardware)}"
             data-origin="${p.origin || 'Atelier AURALIÈ Đồng Khởi'}"
           >
             <div class="card-img-wrap">
               <img src="${p.img || 'assets/card_1.jpg'}" alt="${p.name}">
-              <span class="card-tag">${p.tag || 'NEW ARRIVAL'}</span>
+              ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ''}
               <div class="card-quick-actions">
                 <button class="btn-add-cart" onclick="event.stopPropagation(); window.addToCart({ id: ${p.id}, name: '${p.name.replace(/'/g, "\\'")}', category: '${p.category || 'Haute Couture'}', price: ${p.price}, img: '${p.img || 'assets/card_1.jpg'}' })">
                   <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng
@@ -1261,7 +1265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Gán sự kiện chọn danh mục: Tự động đổi bộ lọc sang danh mục đó
-  const catLinks = document.querySelectorAll('.category-list a');
+  const catLinks = document.querySelectorAll('.category-list a[data-cat]');
   catLinks.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1498,18 +1502,16 @@ document.addEventListener('DOMContentLoaded', () => {
           data-reviews="${p.reviewCount || 0}"
           data-img="${p.img || 'assets/card_1.jpg'}" 
           data-desc="${p.description || ''}"
-          data-tag="${p.tag || 'EXCLUSIVE'}"
+          data-tag="${p.tag || ''}"
           data-material="${p.material || 'Len Cashmere & Lụa Ý'}"
           data-fit="${p.fit || 'European Tailored'}"
           data-lining="${p.lining || 'Lụa Cupro Thượng Hạng'}"
-          data-hardware="${p.hardware || 'Khuy Sừng / Khóa Mạ Vàng 18K'}"
+          data-hardware="${window.Commerce.escape(p.hardware)}"
           data-origin="${p.origin || 'Atelier AURALIÈ Đồng Khởi'}"
         >
           <div class="card-img-wrap" style="position: relative;">
             <img src="${p.img || 'assets/card_1.jpg'}" alt="${p.name}">
-            <span class="card-tag" style="background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4);">
-              <i class="fa-solid fa-sparkles"></i> ${p.isPersonalized ? 'GỢI Ý GU BẠN' : (p.tag || 'BESTSELLER')}
-            </span>
+            ${p.tag ? `<span class="card-tag">${p.tag}</span>` : ''}
             <div class="card-quick-actions">
               <button class="btn-add-cart" onclick="event.stopPropagation(); window.addToCart({ id: ${p.id}, name: '${p.name.replace(/'/g, "\\'")}', category: '${p.category || 'Haute Couture'}', price: ${p.price}, img: '${p.img || 'assets/card_1.jpg'}' })">
                 <i class="fa-solid fa-bag-shopping"></i> Thêm Giỏ Hàng
@@ -1981,6 +1983,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalPrice) modalPrice.textContent = price;
     if (modalRatingVal) modalRatingVal.textContent = rating;
     if (modalMainImg) modalMainImg.src = img;
+    if (modalTag) {
+      modalTag.textContent = card.dataset.tag || '';
+      modalTag.hidden = !card.dataset.tag;
+    }
     
     const modalDescElem = document.getElementById('modal-desc');
     if (modalDescElem) modalDescElem.textContent = desc;
@@ -1995,7 +2001,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let defaultMaterial = '100% Cashmere Lụa Ý';
     let defaultFit = 'European Tailored Fit';
     let defaultLining = 'Lụa Cupro Thượng Hạng';
-    let defaultHardware = 'Khuy Sừng / Khóa Mạ Vàng 18K';
     let defaultOrigin = 'Atelier AURALIÈ Đồng Khởi';
     let defaultSku = 'AUR-2026-VIP';
 
@@ -2003,28 +2008,24 @@ document.addEventListener('DOMContentLoaded', () => {
       defaultMaterial = '100% Lụa Tơ Tằm Bảo Lộc';
       defaultFit = 'Slim Evening Gown Cut';
       defaultLining = 'Lụa Chiffon Mềm Mại';
-      defaultHardware = 'Đai Lưng Đính Đá Swarovsky';
       defaultOrigin = 'Atelier AURALIÈ Haute Couture';
       defaultSku = 'AUR-2026-GOWN';
     } else if (catLower.includes('khoác') || catLower.includes('len')) {
       defaultMaterial = 'Len Cashmere Thượng Hải 100%';
       defaultFit = 'Oversized Winter Capsule';
       defaultLining = 'Lớp Lót Dạ Hai Mặt';
-      defaultHardware = 'Đai Da Bò Thật & Mạ Đồng';
       defaultOrigin = 'Atelier AURALIÈ Winter Craft';
       defaultSku = 'AUR-2026-COAT';
     } else if (catLower.includes('túi')) {
       defaultMaterial = 'Da Bò Thuộc Nâu / Da Đà Điểu';
       defaultFit = 'Structured Luxury Handbag';
       defaultLining = 'Da Cừu Nappa Siêu Mịn';
-      defaultHardware = 'Khóa Kim Loại Mạ Vàng 18K';
       defaultOrigin = 'Chế Tác Thủ Công Tiêu Chuẩn Ý';
       defaultSku = 'AUR-2026-BAG';
     } else if (catLower.includes('giày') || catLower.includes('phụ kiện')) {
       defaultMaterial = 'Da Bê Ý / Kim Loại Mạ Vàng 18K';
       defaultFit = 'Ergonomic Luxury Craft';
       defaultLining = 'Lót Đệm Da Bò Êm Ái';
-      defaultHardware = 'Khóa Mạ Vàng 18K Chống Khói';
       defaultOrigin = 'Atelier AURALIÈ Accessories';
       defaultSku = 'AUR-2026-ACC';
     }
@@ -2032,7 +2033,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const material = card.getAttribute('data-material') || defaultMaterial;
     const fit = card.getAttribute('data-fit') || defaultFit;
     const lining = card.getAttribute('data-lining') || defaultLining;
-    const hardware = card.getAttribute('data-hardware') || defaultHardware;
+    const hardware = card.dataset.hardware || '';
     const origin = card.getAttribute('data-origin') || defaultOrigin;
     const sku = card.getAttribute('data-sku') || (defaultSku + '-' + Math.floor(10 + Math.random() * 89));
 
@@ -2047,7 +2048,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (attrMaterial) attrMaterial.textContent = material;
     if (attrFit) attrFit.textContent = fit;
     if (attrLining) attrLining.textContent = lining;
-    if (attrHardware) attrHardware.textContent = hardware;
+    if (attrHardware) {
+      attrHardware.textContent = hardware;
+      attrHardware.closest('.attr-item').hidden = !hardware;
+    }
     if (attrOrigin) attrOrigin.textContent = origin;
     if (attrSku) attrSku.textContent = sku;
 
@@ -2062,7 +2066,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tabAttrMaterial) tabAttrMaterial.textContent = material;
     if (tabAttrFit) tabAttrFit.textContent = fit;
     if (tabAttrLining) tabAttrLining.textContent = lining;
-    if (tabAttrHardware) tabAttrHardware.textContent = hardware;
+    if (tabAttrHardware) {
+      tabAttrHardware.textContent = hardware;
+      tabAttrHardware.closest('tr').hidden = !hardware;
+    }
     if (tabAttrOrigin) tabAttrOrigin.textContent = origin;
     if (tabAttrSku) tabAttrSku.textContent = sku;
 
@@ -2727,12 +2734,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  document.querySelectorAll('a[href="wishlist.html"]').forEach(link => {
+  document.querySelectorAll('a[href="cart.html"], a[href="wishlist.html"]').forEach(link => {
     link.addEventListener('click', event => {
       if (sessionStorage.getItem('auralie_token')) return;
       event.preventDefault();
-      sessionStorage.setItem('commerce_return', 'wishlist.html');
-      location.href = 'login.html';
+      window.Commerce.redirectToLogin(link.getAttribute('href'));
     });
   });
 
@@ -3019,16 +3025,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      const checkoutBtnElem = document.getElementById('btn-proceed-checkout');
-      if (checkoutBtnElem) {
-        if (selectedPaymentMethod === 'SEPAY_QR') {
-          checkoutBtnElem.innerHTML = '<i class="fa-solid fa-qrcode"></i> Thanh Toán Tự Động Qua SePay <i class="fa-solid fa-bolt" style="color: #ffd700;"></i>';
-        } else if (selectedPaymentMethod === 'COD') {
-          checkoutBtnElem.innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Đặt Hàng Thanh Toán Khi Nhận (COD)';
-        } else {
-          checkoutBtnElem.innerHTML = '<i class="fa-brands fa-cc-visa"></i> Thanh Toán Thẻ Quốc Tế (VISA / Mastercard)';
-        }
-      }
+      window.Commerce.renderCheckoutButton();
     });
   });
 
@@ -3136,7 +3133,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.Commerce.rememberOrder(orderRes.data, shipping);
           delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
-          checkoutBtn.innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Đặt Hàng Thanh Toán Khi Nhận (COD)';
+          window.Commerce.renderCheckoutButton();
 
           window.Commerce.completePurchase(cart);
           window.appliedCouponDiscount = 0;
@@ -3155,7 +3152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
           delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
-          checkoutBtn.innerHTML = '<i class="fa-solid fa-money-bill-wave"></i> Đặt Hàng Thanh Toán Khi Nhận (COD)';
+          window.Commerce.renderCheckoutButton();
           window.showLuxuryAlert({ title: 'Lỗi', message: err.message, type: 'warning' });
         });
         return;
@@ -3185,7 +3182,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.Commerce.rememberOrder(orderRes.data, shipping);
           delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
-          checkoutBtn.innerHTML = '<i class="fa-brands fa-cc-visa"></i> Thanh Toán Thẻ Quốc Tế (VISA / Mastercard)';
+          window.Commerce.renderCheckoutButton();
 
           window.Commerce.completePurchase(cart);
           window.appliedCouponDiscount = 0;
@@ -3204,7 +3201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
           delete checkoutBtn.dataset.submitting;
           checkoutBtn.disabled = false;
-          checkoutBtn.innerHTML = '<i class="fa-brands fa-cc-visa"></i> Thanh Toán Thẻ Quốc Tế (VISA / Mastercard)';
+          window.Commerce.renderCheckoutButton();
           window.showLuxuryAlert({ title: 'Lỗi', message: err.message, type: 'warning' });
         });
         return;
@@ -3233,7 +3230,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.Commerce.rememberOrder(orderRes.data, shipping);
         delete checkoutBtn.dataset.submitting;
         checkoutBtn.disabled = false;
-        checkoutBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> Thanh Toán Tự Động Qua SePay <i class="fa-solid fa-bolt" style="color: #ffd700;"></i>';
+        window.Commerce.renderCheckoutButton();
 
         const orderData = orderRes.data || {};
         const orderCode = orderData.orderCode || 'AUR-2026-992';
@@ -3484,7 +3481,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => {
         delete checkoutBtn.dataset.submitting;
         checkoutBtn.disabled = false;
-        checkoutBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> Thanh Toán Tự Động Qua SePay <i class="fa-solid fa-bolt" style="color: #ffd700;"></i>';
+        window.Commerce.renderCheckoutButton();
         window.showLuxuryAlert({
           title: 'Lỗi Kết Nối',
           message: 'Không thể khởi tạo đơn hàng: ' + err.message,
@@ -3804,22 +3801,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 17. AI Image-Based Product Search Modal (Computer Vision Search)
   window.openAIImageSearchModal = () => {
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay active';
+    if (document.querySelector('.image-search-dialog')) return;
+    const modal = document.createElement('dialog');
+    modal.className = 'image-search-dialog';
+    modal.setAttribute('aria-labelledby', 'ai-search-title');
     modal.innerHTML = `
-      <div class="modal-container" style="max-width: 540px; padding: 1.75rem; text-align: center;">
-        <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">&times;</button>
-        <div style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem; border-radius: 8px; margin-bottom: 1.25rem;">
+      <div>
+        <button type="button" class="modal-close-btn" aria-label="Đóng tìm kiếm bằng hình ảnh">&times;</button>
+        <div id="ai-search-title" style="background: var(--primary-dark); color: var(--accent-gold); padding: 0.8rem; border-radius: 8px; margin-bottom: 1.25rem;">
           <i class="fa-solid fa-camera"></i> AI COMPUTER VISION: TÌM KIẾM BẰNG HÌNH ẢNH
         </div>
         <p style="font-size: 0.85rem; color: #666; margin-bottom: 1.25rem;">Tải lên ảnh trang phục thời trang bạn yêu thích để AI nhận diện kiểu dáng và gợi ý thiết kế tương tự từ AURALIÈ.</p>
         
-        <div id="ai-upload-area" style="border: 2px dashed var(--accent-gold); padding: 2rem 1rem; border-radius: 12px; background: #faf8f5; cursor: pointer; margin-bottom: 1.25rem;" onclick="document.getElementById('ai-file-input').click()">
+        <button type="button" id="ai-upload-area" class="image-search-upload">
           <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--accent-gold); margin-bottom: 0.5rem;"></i>
-          <p style="font-size: 0.9rem; font-weight: bold; margin: 0;">Nhấp để tải ảnh lên hoặc kéo thả vào đây</p>
+          <strong>Nhấp để tải ảnh lên hoặc kéo thả vào đây</strong>
           <span style="font-size: 0.75rem; color: #888;">Hỗ trợ định dạng JPG, PNG, WEBP (Tối đa 5MB)</span>
-          <input type="file" id="ai-file-input" accept="image/*" style="display: none;" onchange="handleAIImageProcess(this)">
-        </div>
+        </button>
+        <input type="file" id="ai-file-input" accept="image/jpeg,image/png,image/webp" hidden>
+        <p class="image-search-error" role="status"></p>
 
         <div id="ai-processing-box" style="display: none; padding: 1.5rem; background: #faf7f2; border-radius: 12px; margin-bottom: 1rem;">
           <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-gold); margin-bottom: 0.5rem;"></i>
@@ -3841,20 +3841,45 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
-    document.body.appendChild(modal);
-
-    window.handleAIImageProcess = (input) => {
-      if (input.files && input.files[0]) {
-        document.getElementById('ai-upload-area').style.display = 'none';
-        document.getElementById('ai-processing-box').style.display = 'block';
-
-        setTimeout(() => {
-          document.getElementById('ai-processing-box').style.display = 'none';
-          document.getElementById('ai-result-box').style.display = 'block';
-        }, 1200);
+    const upload = modal.querySelector('#ai-upload-area');
+    const input = modal.querySelector('#ai-file-input');
+    const processing = modal.querySelector('#ai-processing-box');
+    const result = modal.querySelector('#ai-result-box');
+    const error = modal.querySelector('.image-search-error');
+    let processingTimer;
+    const processImage = file => {
+      if (!file || upload.hidden) return;
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024) {
+        error.textContent = 'Vui lòng chọn ảnh JPG, PNG hoặc WEBP không quá 5 MB.';
+        input.value = '';
+        return;
       }
+      error.textContent = '';
+      upload.hidden = true;
+      processing.style.display = 'block';
+      processingTimer = setTimeout(() => {
+        processing.style.display = 'none';
+        result.style.display = 'block';
+      }, 1200);
     };
+
+    modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.close());
+    modal.addEventListener('close', () => {
+      clearTimeout(processingTimer);
+      modal.remove();
+    });
+    modal.addEventListener('click', event => { if (event.target === modal) modal.close(); });
+    upload.addEventListener('click', () => input.click());
+    input.addEventListener('change', () => processImage(input.files[0]));
+    upload.addEventListener('dragover', event => event.preventDefault());
+    upload.addEventListener('drop', event => {
+      event.preventDefault();
+      processImage(event.dataTransfer.files[0]);
+    });
+    document.body.appendChild(modal);
+    modal.showModal();
   };
+  document.querySelector('.mobile-image-search-btn')?.addEventListener('click', window.openAIImageSearchModal);
 
   // 18. Abandoned Cart Recovery & Marketing Notification
   const initAbandonedCartNotification = () => {

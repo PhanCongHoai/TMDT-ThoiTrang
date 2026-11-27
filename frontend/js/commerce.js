@@ -44,15 +44,17 @@
     });
   }
   const notify = message => dialog('Thông báo', `<p>${escape(message)}</p>`, 'Đã hiểu');
+  function redirectToLogin(returnTo) {
+    sessionStorage.setItem('commerce_return', returnTo);
+    location.href = 'login.html';
+  }
+
   async function requireUser(returnTo = 'cart.html') {
     try { if (token()) return await request('/api/v1/auth/me'); } catch (error) { /* Request login again. */ }
     sessionStorage.removeItem('auralie_token');
     sessionStorage.removeItem('auralie_user');
     const answer = await dialog('Yêu cầu đăng nhập', '<p>Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng và thanh toán.</p>', 'Đăng nhập');
-    if (answer) {
-      sessionStorage.setItem('commerce_return', returnTo);
-      location.href = 'login.html';
-    }
+    if (answer) redirectToLogin(returnTo);
     return null;
   }
   const key = user => `auralie_shipping_${user.id}`;
@@ -157,15 +159,89 @@
   function addressFields(current = {}) {
     const id = `address-${crypto.randomUUID()}`;
     return `<div class="address-picker" data-picker-id="${id}">
-      <label>Tỉnh / Thành phố<input name="province" list="${id}-provinces" autocomplete="shipping address-level1" required placeholder="Gõ để tìm tỉnh / thành phố" value="${escape(current.province || '')}"><datalist id="${id}-provinces"></datalist></label>
-      <label>Phường / Xã<input name="ward" list="${id}-wards" autocomplete="shipping address-level2" required disabled placeholder="Chọn tỉnh / thành phố trước" value="${escape(current.ward || '')}"><datalist id="${id}-wards"></datalist></label>
-      <label>Đường<input name="street" list="${id}-streets" autocomplete="shipping address-line1" required placeholder="Tìm đường đã lưu hoặc nhập tên đường" value="${escape(current.street || '')}"><datalist id="${id}-streets"></datalist></label>
-      <label>Số nhà / Tòa nhà / Căn hộ<input name="houseNumber" autocomplete="shipping address-line2" required value="${escape(current.houseNumber || '')}"></label>
+      <div><label>Tỉnh / Thành phố<input name="province" autocomplete="shipping address-level1" required placeholder="Gõ để tìm tỉnh / thành phố" value="${escape(current.province || '')}"></label></div>
+      <div><label>Phường / Xã<input name="ward" autocomplete="shipping address-level2" required disabled placeholder="Chọn tỉnh / thành phố trước" value="${escape(current.ward || '')}"></label></div>
+      <div><label>Đường<input name="street" autocomplete="shipping address-line1" required placeholder="Tìm đường đã lưu hoặc nhập tên đường" value="${escape(current.street || '')}"></label></div>
+      <label>Số nhà / Tòa nhà / Căn hộ<input name="houseNumber" autocomplete="shipping address-line2" required placeholder="Ví dụ: Số 25, căn hộ A12" value="${escape(current.houseNumber || '')}"></label>
       <input type="hidden" name="provinceCode"><input type="hidden" name="wardCode"><input type="hidden" name="address">
       ${current.address && !current.provinceCode ? `<p class="address-legacy">Địa chỉ trước đây: ${escape(current.address)}. Vui lòng chọn lại tỉnh và phường/xã để lưu theo từng mục.</p>` : ''}
       <p class="address-picker-status" role="status">Đang tải danh sách tỉnh / thành phố…</p>
     </div>`;
   }
+  function mountAddressSuggestions(input, id, getOptions) {
+    const list = document.createElement('ul');
+    list.id = id;
+    list.className = 'address-suggestions';
+    list.setAttribute('role', 'listbox');
+    list.setAttribute('aria-label', input.closest('label').textContent.trim());
+    input.closest('label').after(list);
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-controls', id);
+    let options = [];
+    let activeIndex = -1;
+
+    function close() {
+      list.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+      input.removeAttribute('aria-activedescendant');
+      activeIndex = -1;
+    }
+    function render() {
+      close();
+      const term = normalizeName(input.value.trim());
+      options = getOptions().filter(value => normalizeName(value).includes(term));
+      if (!options.length || input.disabled) return;
+      list.replaceChildren(...options.map((value, index) => {
+        const option = document.createElement('li');
+        option.id = id + '-' + index;
+        option.dataset.index = index;
+        option.setAttribute('role', 'option');
+        option.setAttribute('aria-selected', 'false');
+        option.textContent = value;
+        return option;
+      }));
+      list.hidden = false;
+      list.scrollTop = 0;
+      input.setAttribute('aria-expanded', 'true');
+    }
+    function select(index) {
+      input.value = options[index];
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      close();
+    }
+    close();
+    for (const event of ['focus', 'click', 'input']) input.addEventListener(event, render);
+    input.addEventListener('blur', close);
+    list.addEventListener('mousedown', event => event.preventDefault());
+    list.addEventListener('click', event => {
+      const option = event.target.closest('[data-index]');
+      if (option) select(Number(option.dataset.index));
+    });
+    input.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !list.hidden) {
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+      } else if (event.key === 'Enter' && activeIndex >= 0) {
+        event.preventDefault();
+        select(activeIndex);
+      } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        if (list.hidden) render();
+        if (list.hidden) return;
+        event.preventDefault();
+        list.children[activeIndex]?.setAttribute('aria-selected', 'false');
+        const direction = event.key === 'ArrowDown' ? 1 : -1;
+        activeIndex = activeIndex === -1 && direction === -1 ? options.length - 1
+          : (activeIndex + direction + options.length) % options.length;
+        const option = list.children[activeIndex];
+        option.setAttribute('aria-selected', 'true');
+        input.setAttribute('aria-activedescendant', option.id);
+        option.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  }
+
   async function mountAddressPicker(form, user, current = {}) {
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;
@@ -173,10 +249,11 @@
     const status = picker.querySelector('.address-picker-status');
     try {
       const provinces = await loadDivisions();
-      const provinceInput = form.elements.province, wardInput = form.elements.ward;
-      picker.querySelector('datalist[id$="-provinces"]').innerHTML = provinces.map(p => `<option value="${escape(p.name)}"></option>`).join('');
+      const { province: provinceInput, ward: wardInput, street: streetInput } = form.elements;
+      let wards = [];
+      let streets = [];
       let activeCode = null;
-      const findProvince = () => provinces.find(p => normalizeName(p.name) === normalizeName(provinceInput.value));
+      const findProvince = () => provinces.find(p => normalizeName(p.name) === normalizeName(provinceInput.value.trim()));
       function update() {
         const province = findProvince();
         if (activeCode !== province?.code) {
@@ -186,23 +263,74 @@
         provinceInput.setCustomValidity(province ? '' : 'Vui lòng chọn tỉnh / thành phố trong danh sách gợi ý.');
         wardInput.disabled = !province;
         wardInput.placeholder = province ? 'Gõ để tìm phường / xã' : 'Chọn tỉnh / thành phố trước';
-        picker.querySelector('datalist[id$="-wards"]').innerHTML = (province?.wards || []).map(w => `<option value="${escape(w.name)}"></option>`).join('');
-        const ward = province?.wards.find(w => normalizeName(w.name) === normalizeName(wardInput.value));
+        wards = province?.wards || [];
+        const ward = wards.find(w => normalizeName(w.name) === normalizeName(wardInput.value.trim()));
         wardInput.setCustomValidity(ward ? '' : 'Vui lòng chọn phường / xã thuộc tỉnh / thành phố đã chọn.');
         form.elements.provinceCode.value = province?.code || '';
         form.elements.wardCode.value = ward?.code || '';
-        const streets = [...new Set(savedAddresses(user).filter(entry => Number(entry.provinceCode) === province?.code && Number(entry.wardCode) === ward?.code).map(entry => entry.street).filter(Boolean))];
-        picker.querySelector('datalist[id$="-streets"]').innerHTML = streets.map(street => `<option value="${escape(street)}"></option>`).join('');
+        streets = [...new Set(savedAddresses(user).filter(entry => Number(entry.provinceCode) === province?.code && Number(entry.wardCode) === ward?.code).map(entry => entry.street).filter(Boolean))];
         form.elements.address.value = province && ward ? [form.elements.houseNumber.value.trim(), form.elements.street.value.trim(), ward.name, province.name].filter(Boolean).join(', ') : '';
       }
       for (const field of ['province', 'ward', 'street', 'houseNumber']) form.elements[field].addEventListener('input', update);
       update();
+      const id = picker.dataset.pickerId;
+      mountAddressSuggestions(provinceInput, id + '-provinces', () => provinces.map(province => province.name));
+      mountAddressSuggestions(wardInput, id + '-wards', () => wards.map(ward => ward.name));
+      mountAddressSuggestions(streetInput, id + '-streets', () => streets);
       status.textContent = 'Chọn tỉnh, phường/xã từ gợi ý. Tên đường có thể nhập mới.';
       submit.disabled = false;
       return true;
     } catch (error) { status.textContent = error.message; return false; }
   }
-  const validShipping = value => Boolean(value && value.fullName?.trim() && value.fullName.length <= 100 && /^(0|\+84)[0-9]{8,11}$/.test(value.phone?.replace(/[\s.-]/g, '')) && value.address?.trim().length >= 5);
+  const normalizePhone = value => value?.replace(/[\s.-]/g, '');
+  const validPhone = value => /^(0|\+84)[0-9]{8,11}$/.test(normalizePhone(value));
+  const validShipping = value => Boolean(value && value.fullName?.trim() && value.fullName.length <= 100 && validPhone(value.phone) && value.address?.trim().length >= 5);
+
+  function setupCheckoutShippingValidation(form) {
+    const requirements = {
+      fullName: 'Nhập họ tên người nhận, tối đa 100 ký tự.',
+      phone: 'Nhập số điện thoại bắt đầu bằng 0 hoặc +84, theo sau là 8–11 chữ số.',
+      province: 'Chọn tỉnh / thành phố trong danh sách gợi ý.',
+      ward: 'Chọn phường / xã thuộc tỉnh / thành phố đã chọn.',
+      street: 'Nhập tên đường hoặc chọn từ gợi ý.',
+      houseNumber: 'Nhập số nhà, tên tòa nhà hoặc số căn hộ.'
+    };
+    const fields = Object.entries(requirements).map(([name, message]) => {
+      const input = form.elements[name];
+      const error = document.createElement('span');
+      error.id = `checkout-error-${name}`;
+      error.className = 'checkout-field-error';
+      error.hidden = true;
+      error.textContent = message;
+      input.setAttribute('aria-describedby', error.id);
+      input.closest('label').after(error);
+      return { input, error };
+    });
+
+    function validateField(field, showError) {
+      const { input, error } = field;
+      const valid = input.disabled || (input.validity.valid && input.value.trim() &&
+        (input.name !== 'phone' || validPhone(input.value)));
+      const invalid = !valid && showError;
+      if (invalid) input.setAttribute('aria-invalid', 'true');
+      else input.removeAttribute('aria-invalid');
+      error.hidden = !invalid;
+      return Boolean(valid);
+    }
+
+    form.addEventListener('input', () => {
+      fields.forEach(field => validateField(field, !field.error.hidden));
+    });
+    form.addEventListener('focusout', event => {
+      const field = fields.find(({ input }) => input === event.target);
+      if (field && (field.input.value || !field.error.hidden)) validateField(field, true);
+    });
+    return () => {
+      const invalidFields = fields.filter(field => !validateField(field, true));
+      if (invalidFields.length) invalidFields[0].input.focus();
+      return invalidFields.length === 0;
+    };
+  }
   function savedAddresses(user) {
     try { const addresses = JSON.parse(localStorage.getItem(key(user)) || '[]'); return Array.isArray(addresses) ? addresses.filter(validShipping) : []; } catch { return []; }
   }
@@ -216,6 +344,7 @@
     return saved;
   }
   let checkoutReady = false;
+  let validateShippingForm;
   let checkoutEntries = [];
   let checkoutAddressIndex = 0;
   const addressKey = entry => JSON.stringify([entry.fullName, entry.phone, entry.address]);
@@ -236,6 +365,20 @@
       }
     };
   }
+  function renderCheckoutButton() {
+    const button = document.querySelector('#checkout-page #btn-proceed-checkout');
+    if (!button || button.dataset.submitting === '1') return;
+    const methods = {
+      SEPAY_QR: ['fa-solid fa-qrcode', 'Thanh toán qua SePay'],
+      COD: ['fa-solid fa-money-bill-wave', 'THANH TOÁN', 'KHI NHẬN HÀNG'],
+      VISA: ['fa-brands fa-cc-visa', 'Thanh toán thẻ quốc tế', 'Visa / Mastercard']
+    };
+    const method = readDraft().paymentMethod;
+    const [icon, label, detail] = methods[Object.hasOwn(methods, method) ? method : 'SEPAY_QR'];
+    button.classList.toggle('checkout-cod-button', method === 'COD');
+    button.innerHTML = `<i class="${icon}" aria-hidden="true"></i><span class="checkout-payment-label">${label}${detail ? `<small>${detail}</small>` : ''}</span>`;
+  }
+
   function renderCheckoutSummary() {
     const container = document.getElementById('checkout-items');
     if (!container || !window.getCart) return;
@@ -251,7 +394,7 @@
     const button = document.getElementById('btn-proceed-checkout');
     if (button.dataset.submitting !== '1') {
       button.disabled = !checkoutReady || !items.length;
-      button.textContent = 'Xác nhận đặt hàng';
+      renderCheckoutButton();
     }
   }
   async function checkoutPage() {
@@ -267,10 +410,16 @@
         checkoutAddressIndex = savedIndex >= 0 ? savedIndex : 0;
         renderDeliveryCard();
       } else {
-        container.innerHTML = `<p>Nhập thông tin người nhận để đặt hàng.</p><form id="checkout-shipping-form"><label>Họ tên người nhận<input name="fullName" required maxlength="100" autocomplete="shipping name" value="${escape(user.fullName)}"></label><label>Số điện thoại<input name="phone" type="tel" required autocomplete="shipping tel" pattern="(0|\\+84)[0-9]{8,11}"></label>${addressFields()}<button type="submit" hidden>Kiểm tra thông tin</button></form>`;
+        container.innerHTML = `<p>Nhập thông tin người nhận để đặt hàng.</p><form id="checkout-shipping-form" novalidate>
+          <label>Họ tên người nhận<input name="fullName" required maxlength="100" autocomplete="shipping name" placeholder="Nhập họ tên người nhận" value="${escape(user.fullName)}"></label>
+          <label>Số điện thoại<input name="phone" type="tel" required autocomplete="shipping tel" placeholder="Ví dụ: 0912 345 678"></label>
+          ${addressFields()}
+          <button type="submit" hidden>Kiểm tra thông tin</button>
+        </form>`;
         const form = document.getElementById('checkout-shipping-form');
         form.onsubmit = event => { event.preventDefault(); document.getElementById('btn-proceed-checkout').click(); };
         if (!await mountAddressPicker(form, user)) return;
+        validateShippingForm = setupCheckoutShippingValidation(form);
       }
       checkoutReady = true;
       await refreshCoupon();
@@ -289,10 +438,10 @@
     let shipping;
     const form = document.getElementById('checkout-shipping-form');
     if (form) {
-      if (!form.reportValidity()) return null;
+      if (!validateShippingForm()) return null;
       shipping = Object.fromEntries(new FormData(form));
       for (const field of Object.keys(shipping)) shipping[field] = shipping[field].trim();
-      shipping.phone = shipping.phone.replace(/[\s.-]/g, '');
+      shipping.phone = normalizePhone(shipping.phone);
       if (!validShipping(shipping)) throw new Error('Vui lòng nhập đầy đủ thông tin nhận hàng hợp lệ.');
       const remaining = savedAddresses(user).filter(entry => entry.address !== shipping.address || entry.phone !== shipping.phone);
       localStorage.setItem(key(user), JSON.stringify([shipping, ...remaining].slice(0, 10)));
@@ -419,6 +568,6 @@
       form.querySelector('button[type="submit"]').disabled = false;
     } catch (error) { await notify(error.message); }
   }
-  window.Commerce = { escape, request, dialog, notify, requireUser, prepareCheckout, rememberOrder, trackOrder, openTracker, reorder, shippingPage, savedAddresses, validShipping, editAddress, normalizeCart, selectedItems, readDraft, saveDraft, restoreDraft, refreshCoupon, cartChanged, completePurchase, applyCoupon, checkoutPage, renderCheckoutSummary };
+  window.Commerce = { escape, request, dialog, notify, redirectToLogin, requireUser, prepareCheckout, rememberOrder, trackOrder, openTracker, reorder, shippingPage, savedAddresses, validShipping, editAddress, normalizeCart, selectedItems, readDraft, saveDraft, restoreDraft, refreshCoupon, cartChanged, completePurchase, applyCoupon, checkoutPage, renderCheckoutButton, renderCheckoutSummary };
   document.addEventListener('DOMContentLoaded', () => { shippingPage(); });
 })();

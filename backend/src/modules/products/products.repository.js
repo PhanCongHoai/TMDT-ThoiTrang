@@ -1,4 +1,5 @@
 const { query, sql, poolPromise } = require('../../config/db');
+const { productBadgeJoin } = require('./product-badges');
 
 class ProductRepository {
   static async findCatalogVariantOptions(category) {
@@ -27,7 +28,7 @@ class ProductRepository {
         p.slug, 
         p.description, 
         p.base_price AS price, 
-        p.tag,
+        badge.tag,
         p.material,
         p.fit,
         p.lining,
@@ -40,6 +41,7 @@ class ProductRepository {
         COALESCE(AVG(CAST(r.rating AS FLOAT)), 5.0) AS rating,
         COUNT(r.id) AS reviewCount
       FROM products p
+      ${productBadgeJoin}
       OUTER APPLY (SELECT SUM(pv.stock_quantity) AS stock_quantity FROM product_variants pv WHERE pv.product_id=p.id) stock
       LEFT JOIN categories c ON p.category_id = c.id
       LEFT JOIN (
@@ -92,13 +94,13 @@ class ProductRepository {
       params.maxPrice = Number(maxPrice);
     }
     if (tag) {
-      sqlQuery += ` AND p.tag = @tag`;
+      sqlQuery += ` AND badge.tag = @tag`;
       params.tag = tag;
     }
 
     sqlQuery += `
       GROUP BY 
-        p.id, p.name, p.slug, p.description, p.base_price, p.tag, 
+        p.id, p.name, p.slug, p.description, p.base_price, badge.tag,
         p.material, p.fit, p.lining, p.hardware, p.origin, 
         c.name, c.slug, img.image_url, stock.stock_quantity
     `;
@@ -119,9 +121,10 @@ class ProductRepository {
 
   static async findById(id) {
     const prodResult = await query(`
-      SELECT p.*, c.name AS category_name, c.slug AS category_slug,
+      SELECT p.*, badge.tag AS display_tag, c.name AS category_name, c.slug AS category_slug,
         COALESCE((SELECT SUM(pv.stock_quantity) FROM product_variants pv WHERE pv.product_id=p.id),0) AS stock_quantity
       FROM products p
+      ${productBadgeJoin}
       LEFT JOIN categories c ON p.category_id = c.id
       WHERE p.id = @id AND p.is_active = 1
         AND COALESCE((SELECT SUM(pv.stock_quantity) FROM product_variants pv WHERE pv.product_id=p.id),0) > 0
@@ -129,7 +132,8 @@ class ProductRepository {
 
     if (!prodResult.recordset.length) return null;
 
-    const product = prodResult.recordset[0];
+    const { display_tag: tag, ...product } = prodResult.recordset[0];
+    product.tag = tag;
     const varResult = await query(`SELECT * FROM product_variants WHERE product_id = @id`, { id });
     product.variants = varResult.recordset;
 
@@ -140,7 +144,7 @@ class ProductRepository {
   }
 
   static async create({
-    name, categoryId, basePrice, description, tag, material, fit,
+    name, categoryId, basePrice, description, material, fit,
     lining, hardware, origin, variants, color, size, stockQuantity, imageUrl
   }) {
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') + '-' + Date.now();
@@ -154,19 +158,23 @@ class ProductRepository {
         description: description || '',
         basePrice: Number(basePrice),
         categoryId: Number(categoryId) || 1,
-        tag: tag || 'NEW ARRIVAL',
         material: material || '',
         fit: fit || '',
-        lining: lining || 'Lụa Cupro Thượng Hạng',
-        hardware: hardware || 'Khuy Sừng / Khóa Mạ Vàng 18K',
+        lining: lining || '',
+        hardware: hardware || '',
+        hasShoeSizes: [size, ...(Array.isArray(variants) ? variants.map(variant => variant?.size) : [])]
+          .some(value => /^(?:EU\s*)?(?:3[6-9]|4[0-2])$/i.test(value)),
         origin: origin || 'Atelier AURALIÈ Đồng Khởi'
       };
       for (const [key, value] of Object.entries(inputs)) request.input(key, value);
 
       const insertResult = await request.query(`
-        INSERT INTO products (name, slug, description, base_price, category_id, tag, material, fit, lining, hardware, origin, is_active)
+        INSERT INTO products (name, slug, description, base_price, category_id, material, fit, lining, hardware, origin, is_active)
         OUTPUT INSERTED.id
-        VALUES (@name, @slug, @description, @basePrice, @categoryId, @tag, @material, @fit, @lining, @hardware, @origin, 1)
+        VALUES (@name, @slug, @description, @basePrice, @categoryId, @material, @fit, @lining,
+          CASE WHEN @hasShoeSizes = 1 AND EXISTS (
+            SELECT 1 FROM categories WHERE id = @categoryId AND slug = 'giay-phu-kien'
+          ) THEN N'' ELSE @hardware END, @origin, 1)
       `);
       const id = insertResult.recordset[0].id;
 

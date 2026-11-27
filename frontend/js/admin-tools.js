@@ -162,6 +162,8 @@
   function resetImage() {
     const preview = document.getElementById('add-prod-image-preview');
     if (preview) { preview.hidden = true; preview.removeAttribute('src'); }
+    const icon = document.getElementById('add-prod-image-icon');
+    if (icon) icon.hidden = false;
     const message = document.getElementById('add-prod-image-status');
     if (message) message.textContent = '';
   }
@@ -175,9 +177,14 @@
         if (image) {
           const preview = document.getElementById('add-prod-image-preview');
           preview.src = image; preview.hidden = false;
+          document.getElementById('add-prod-image-icon').hidden = true;
           document.getElementById('add-prod-image-status').textContent = file.name;
         }
-      } catch (error) { document.getElementById('add-prod-image-status').textContent = error.message; }
+      } catch (error) {
+        if (file === document.getElementById('add-prod-image').files[0]) {
+          document.getElementById('add-prod-image-status').textContent = error.message;
+        }
+      }
     });
   });
 
@@ -185,7 +192,7 @@
   // CẤU HÌNH THUỘC TÍNH THỰC TẾ RIÊNG BIỆT CHO TỪNG DANH MỤC (ADMIN)
   // ==============================================================
   const CATEGORY_ATTR_SCHEMES = {
-    '1': { // Áo Vest & Blazer
+    'vest-blazer': {
       title: 'Thông Số Âu Phục & May Đo (Suits & Blazers)',
       badge: 'Haute Tailoring',
       fits: ['European Tailored Fit', 'Slim Structured Cut', 'Savile Row Regular Fit', 'Double-Breasted Tailored', 'Black Tie Velvet Tuxedo'],
@@ -197,7 +204,7 @@
       isBag: false,
       isShoe: false
     },
-    '2': { // Váy & Đầm Dạ Hội
+    'vay-dam': {
       title: 'Thông Số Váy & Đầm Dạ Hội (Evening Gowns)',
       badge: 'Haute Couture Gown',
       fits: ['Fitted Mermaid Silhouette (Đầm đuôi cá)', 'Floor-Length Evening Cut (Đầm dạ hội suông dài)', 'A-Line Pleated Silhouette (Đầm xòe chữ A dập ly)', 'One-Shoulder High Slit Cut (Lệch vai xẻ tà)', 'Cocktail Midi Cut (Đầm tiệc lửng)'],
@@ -209,7 +216,7 @@
       isBag: false,
       isShoe: false
     },
-    '3': { // Áo Khoác Thu Đông
+    'ao-khoac': {
       title: 'Thông Số Áo Khoác Thu Đông (Winter Outerwear)',
       badge: 'Luxury Winter',
       fits: ['Long Trench Classic Cut (Trench coat dáng dài)', 'Straight Flowing Overcoat (Overcoat dạ ép suông)', 'Modern Cropped Tailored (Áo khoác dạ lửng)', 'Relaxed Oversized Fit (Form rộng áo len Cashmere)', 'Slim Longline Puffer (Áo phao lông vũ)'],
@@ -221,7 +228,7 @@
       isBag: false,
       isShoe: false
     },
-    '4': { // Túi Xách Da Cao Cấp
+    'tui-xach': {
       title: 'Thông Số Túi Xách Da Cao Cấp (Không có size quần áo)',
       badge: 'Leather Craft',
       fits: ['Structured Luxury Handbag (Túi xách tay / Kelly)', 'Spacious Luxury Tote (Túi tote cỡ lớn)', 'Compact Flap Crossbody (Túi đeo chéo nắp gập)', 'Rigid Evening Clutch (Ví cầm tay dạ tiệc)', 'Curved Saddle Shoulder Bag (Túi yên ngựa)', 'Slim Shoulder Baguette (Túi kẹp nách)'],
@@ -233,30 +240,58 @@
       isBag: true,
       isShoe: false
     },
-    '5': { // Giày & Phụ Kiện
-      title: 'Thông Số Giày & Phụ Kiện Xa Xỉ (Footwear & Fine Acc)',
-      badge: 'Footwear & Jewelry',
-      fits: ['Giày Cao Gót Stiletto (Mũi nhọn 9cm)', 'Bốt Cổ Cao / Chelsea Boots Da Bê', 'Giày Lười Loafers Cổ Điển', 'Sandals Dạ Hội Quai Mảnh', 'Khăn Lụa Tơ Tằm Vuông 90cm x 90cm', 'Khuyên Khăn & Cufflinks Mạ Vàng 18K'],
-      materials: ['Da Bê Ý Nhập Khẩu Nguyên Tấm', 'Da Lộn Suede Ý Cao Cấp', 'Da Bóng Patent Leather (Đế đỏ)', 'Lụa Satin Láng Mịn & Pha Lê Swarovski', '100% Lụa Tơ Tằm Twill', 'Đồng Thau Mạ Vàng 18K Khảm Xà Cừ'],
-      linings: ['Lót Da Bê Êm Ái', 'Không Lớp Lót (Khăn lụa/Phụ kiện)', 'Lót Lụa Satin'],
-      hardwares: ['Khóa Mạ Vàng 18K', 'Đế Đỏ Bóng Sơn Mài', 'Hợp Kim Chống Ô-xy Hóa'],
+  };
+  const ACCESSORY_SCHEMES = {
+    shoes: {
+      title: 'Thông Số Giày Dép',
+      badge: 'Giày dép',
+      fits: ['Giày Cao Gót Stiletto (Mũi nhọn 9cm)', 'Bốt Cổ Cao / Chelsea Boots Da Bê', 'Giày Lười Loafers Cổ Điển', 'Sandals Dạ Hội Quai Mảnh'],
+      materials: ['Da Bê Ý Nhập Khẩu Nguyên Tấm', 'Da Lộn Suede Ý Cao Cấp', 'Da Bóng Patent Leather (Đế đỏ)', 'Lụa Satin Láng Mịn & Pha Lê Swarovski'],
+      linings: ['Lót Da Bê Êm Ái', 'Lót Lụa Satin'],
       colors: ['Đen Tuyền / Đen Bóng', 'Nâu Cognac Cổ Điển', 'Đỏ Mận / Đế Đỏ', 'Trắng Sữa Milky White', 'Vàng Hoàng Gia 18K'],
       sizes: ['36', '37', '38', '39', '40', '41', '42'],
-      isShoe: true,
-      isBag: false
+      isShoe: true
+    },
+    scarves: {
+      title: 'Thông Số Khăn',
+      badge: 'Khăn',
+      fits: ['Khăn Vuông 90 × 90 cm', 'Khăn Dài'],
+      materials: ['100% Lụa Tơ Tằm Twill', 'Lụa Satin'],
+      colors: ['Đen Tuyền', 'Trắng Ngà', 'Xanh Navy', 'Đỏ Burgundy'],
+      sizes: ['FreeSize']
+    },
+    jewelry: {
+      title: 'Thông Số Trang Sức & Phụ Kiện Kim Loại',
+      badge: 'Trang sức & phụ kiện kim loại',
+      fits: ['Khuyên Khăn', 'Khuy Măng Sét'],
+      materials: ['Đồng Thau Mạ Vàng 18K Khảm Xà Cừ', 'Hợp Kim Chống Ô-xy Hóa', 'Da Bê Ý'],
+      hardwares: ['Chi Tiết Mạ Vàng 18K', 'Chi Tiết Mạ Bạc'],
+      colors: ['Vàng Hoàng Gia 18K', 'Bạc', 'Đen Tuyền'],
+      sizes: ['FreeSize']
+    },
+    belts: {
+      title: 'Thông Số Thắt Lưng',
+      badge: 'Thắt lưng',
+      fits: ['Thắt Lưng Bản Nhỏ', 'Thắt Lưng Bản Cổ Điển'],
+      materials: ['Da Bê Ý', 'Da Bò Nappa'],
+      hardwares: ['Khóa Mạ Vàng', 'Khóa Mạ Bạc'],
+      colors: ['Đen Tuyền', 'Nâu Cognac'],
+      sizes: ['85', '90', '95', '100', '105']
     }
   };
 
-  function renderCategoryAttributes(catId) {
+  function renderCategoryAttributes(type = 'shoes') {
     const container = document.getElementById('dynamic-category-fields');
     if (!container) return;
-    const scheme = CATEGORY_ATTR_SCHEMES[String(catId)] || {
+    const category = document.getElementById('add-prod-category')?.selectedOptions[0]?.dataset.slug;
+    const chooseType = category === 'giay-phu-kien';
+    const categoryScheme = Object.hasOwn(CATEGORY_ATTR_SCHEMES, category) ? CATEGORY_ATTR_SCHEMES[category] : null;
+    const scheme = (chooseType ? ACCESSORY_SCHEMES[type] : categoryScheme) || {
       title: 'Thông Số Đặc Trưng Sản Phẩm',
       badge: 'Couture Item',
       fits: ['Tiêu chuẩn', 'Regular Fit', 'Slim Fit'],
       materials: ['Vải cao cấp nhập khẩu', 'Lụa thượng hạng'],
       linings: ['Lụa lót cao cấp'],
-      hardwares: ['Phụ kiện mạ vàng'],
       colors: ['Đen Tuyền', 'Trắng Sữa', 'Navy'],
       sizes: ['S', 'M', 'L', 'FreeSize'],
       isBag: false,
@@ -298,6 +333,12 @@
     }
 
     container.innerHTML = `
+      ${chooseType ? `<div>
+        <label for="attr-product-type"><strong>Loại sản phẩm</strong></label>
+        <select id="attr-product-type" class="admin-attribute-select">
+          ${Object.entries(ACCESSORY_SCHEMES).map(([key, subtype]) => `<option value="${key}" ${key === type ? 'selected' : ''}>${subtype.badge}</option>`).join('')}
+        </select>
+      </div>` : ''}
       <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px dashed #cbd5e1; padding-bottom:0.4rem;">
         <span style="font-weight:700; color:var(--primary-dark); font-size:0.88rem;">
           <i class="fa-solid fa-sliders"></i> ${scheme.title}
@@ -305,7 +346,7 @@
         <span style="background:var(--accent-gold); color:#000; font-size:0.68rem; font-weight:700; padding:2px 8px; border-radius:12px;">${scheme.badge}</span>
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+      <div class="admin-attribute-grid">
         <div>
           <label style="font-weight:bold; display:block; margin-bottom:0.3rem;">Phom Dáng / Thiết Kế (Fit) *</label>
           <select id="attr-fit" style="width:100%; padding:0.55rem; border:1px solid var(--border-light); border-radius:4px; outline:none;">
@@ -320,20 +361,21 @@
         </div>
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
-        <div>
+      ${scheme.linings?.length || scheme.hardwares?.length ? `<div class="admin-attribute-grid">
+        ${scheme.linings?.length ? `<div>
           <label style="font-weight:bold; display:block; margin-bottom:0.3rem;">Lớp Lót (Lining)</label>
           <select id="attr-lining" style="width:100%; padding:0.55rem; border:1px solid var(--border-light); border-radius:4px; outline:none;">
             ${scheme.linings.map(l => `<option value="${l}">${l}</option>`).join('')}
           </select>
-        </div>
-        <div>
-          <label style="font-weight:bold; display:block; margin-bottom:0.3rem;">Khóa / Chi Tiết (Hardware)</label>
+        </div>` : ''}
+        ${scheme.hardwares?.length ? `<div>
+          <label for="attr-hardware" style="font-weight:bold; display:block; margin-bottom:0.3rem;">${type === 'jewelry' && chooseType ? 'Chi tiết kim loại' : 'Khóa / Chi Tiết'}</label>
           <select id="attr-hardware" style="width:100%; padding:0.55rem; border:1px solid var(--border-light); border-radius:4px; outline:none;">
+            <option value="">Không áp dụng</option>
             ${scheme.hardwares.map(h => `<option value="${h}">${h}</option>`).join('')}
           </select>
-        </div>
-      </div>
+        </div>` : ''}
+      </div>` : ''}
 
       <div>
         <label style="font-weight:bold; display:block; margin-bottom:0.3rem;">Tông Màu Sản Phẩm *</label>
@@ -344,6 +386,10 @@
 
       ${sizeSectionHtml}
     `;
+    container.querySelector('#attr-product-type')?.addEventListener('change', event => {
+      renderCategoryAttributes(event.target.value);
+      container.querySelector('#attr-product-type')?.focus();
+    });
   }
 
   // Khởi tạo và lắng nghe thay đổi danh mục
@@ -351,9 +397,9 @@
     const catSelect = document.getElementById('add-prod-category');
     if (catSelect) {
       catSelect.addEventListener('change', () => {
-        renderCategoryAttributes(catSelect.value);
+        renderCategoryAttributes();
       });
-      renderCategoryAttributes(catSelect.value || 1);
+      renderCategoryAttributes();
     }
   });
 
@@ -366,19 +412,18 @@
     form.dataset.submitting = '1'; button.disabled = true;
     try {
       const categoryId = document.getElementById('add-prod-category').value;
-      const scheme = CATEGORY_ATTR_SCHEMES[String(categoryId)];
-
       const fit = document.getElementById('attr-fit')?.value || 'European Tailored Fit';
       const material = document.getElementById('attr-material')?.value || '100% Cashmere';
-      const lining = document.getElementById('attr-lining')?.value || 'Lụa Cupro Thượng Hạng';
-      const hardware = document.getElementById('attr-hardware')?.value || 'Khuy Sừng / Khóa Mạ Vàng';
+      const lining = document.getElementById('attr-lining')?.value || '';
+      const hardware = document.getElementById('attr-hardware')?.value || '';
       const color = document.getElementById('attr-color')?.value || 'Đen Tuyền';
       const origin = document.getElementById('add-prod-origin')?.value.trim() || 'Atelier AURALIÈ Đồng Khởi';
 
       const variants = [];
-      if (scheme && scheme.isBag) {
+      const bagDimensions = form.querySelector('#attr-bag-dim');
+      if (bagDimensions) {
         const stock = Number(document.getElementById('attr-single-stock')?.value) || 10;
-        const dim = document.getElementById('attr-bag-dim')?.value || 'Medium';
+        const dim = bagDimensions.value;
         variants.push({ size: 'FreeSize', color: `${color} (${dim})`, stock });
       } else {
         const sizeInputs = document.querySelectorAll('.attr-size-stock');
@@ -389,7 +434,7 @@
           }
         });
         if (variants.length === 0) {
-          variants.push({ size: 'M', color, stock: 10 });
+          throw new Error('Nhập tồn kho lớn hơn 0 cho ít nhất một kích cỡ.');
         }
       }
 
@@ -397,7 +442,6 @@
         name: document.getElementById('add-prod-name').value.trim(),
         categoryId: Number(categoryId),
         basePrice: document.getElementById('add-prod-price').value,
-        tag: document.getElementById('add-prod-tag').value,
         origin,
         material,
         fit,
@@ -412,6 +456,7 @@
       await Commerce.request('/api/v1/products', { method: 'POST', body: JSON.stringify(data) });
       window.closeAddProductModal();
       form.reset();
+      renderCategoryAttributes();
       resetImage();
       window.loadAdminProducts();
       window.refreshAdminStats?.();
