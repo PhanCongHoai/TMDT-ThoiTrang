@@ -46,9 +46,19 @@
     </nav>
 
     <div class="d-user-actions">
+      <!-- Search Box on Desktop -->
+      <div class="d-search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+      </div>
+
+      <button class="d-btn-icon" onclick="openAIImageSearchModal()" title="AI Tìm kiếm bằng hình ảnh">
+        <i class="fa-solid fa-camera" style="color: var(--accent-gold);"></i>
+      </button>
+
       <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
         <i class="fa-regular fa-heart"></i>
-        <span class="badge-count">2</span>
+        <span class="badge-count" id="wishlist-count" style="display: none;">0</span>
       </a>
 
       <a href="cart.html" class="d-btn-icon" id="cart-btn" title="Giỏ hàng">
@@ -470,15 +480,39 @@
         });
       }
 
-      // Confirm cancellation using the website dialog.
+      // Confirm cancellation using the website dialog with reason selection.
       const cancellingOrders = new Set();
       window.cancelMyOrder = async (orderId, orderCode) => {
         if (cancellingOrders.has(orderId)) return;
         cancellingOrders.add(orderId);
         try {
-          const confirmed = await Commerce.dialog('Xác nhận hủy đơn', `<p>Bạn có chắc muốn hủy đơn <strong>${Commerce.escape(orderCode)}</strong>?</p><p>Chỉ xác nhận nếu bạn muốn hủy đơn hàng này.</p>`, 'Xác nhận hủy');
+          const formHtml = `
+            <div style="text-align: left; margin: 1rem 0;">
+              <p style="margin-bottom: 0.75rem;">Quý khách vui lòng cho biết lý do hủy đơn hàng <strong>${Commerce.escape(orderCode)}</strong>:</p>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="cancel_reason" value="Muốn thay đổi sản phẩm / kích cỡ" checked> Muốn thay đổi sản phẩm / kích cỡ
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="cancel_reason" value="Thời gian giao hàng không phù hợp"> Thời gian giao hàng không phù hợp
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="cancel_reason" value="Muốn thay đổi phương thức thanh toán / địa chỉ"> Muốn thay đổi phương thức thanh toán / địa chỉ
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="cancel_reason" value="Tìm thấy ưu đãi tốt hơn"> Tìm thấy ưu đãi tốt hơn
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                  <input type="radio" name="cancel_reason" value="Lý do khác"> Lý do khác
+                </label>
+              </div>
+            </div>
+          `;
+          const confirmed = await Commerce.dialog('Xác nhận hủy đơn hàng', formHtml, 'Xác nhận hủy đơn');
           if (!confirmed) return;
-          await Commerce.request(`/api/v1/orders/${orderId}/cancel`, { method: 'POST', body: JSON.stringify({ reason: 'Khách hủy từ trang cá nhân' }) });
+          const selectedRadio = document.querySelector('input[name="cancel_reason"]:checked');
+          const reasonText = selectedRadio ? selectedRadio.value : 'Khách hủy từ trang cá nhân';
+          await Commerce.request(`/api/v1/orders/${orderId}/cancel`, { method: 'POST', body: JSON.stringify({ reason: reasonText }) });
           await Commerce.notify('Đã hủy đơn hàng thành công.');
           location.reload();
         } catch (error) { await Commerce.notify(error.message); }

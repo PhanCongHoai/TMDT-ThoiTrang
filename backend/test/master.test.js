@@ -85,7 +85,8 @@ async function run() {
         phone: '0908888999',
         address: 'Hanoi',
         paymentMethod: 'COD',
-        cartItems: [{ variantId: sample.variant_id, quantity: 1, price: itemPrice }]
+        cartItems: [{ variantId: sample.variant_id, quantity: 1, price: itemPrice }],
+        user: { id: regUser.user.id }
       }).then(() => true).catch((err) => {
         console.error(`Task ${i} error:`, err?.message || err);
         return false;
@@ -120,7 +121,8 @@ async function run() {
         address: 'Hanoi',
         paymentMethod: 'COD',
         couponCode: testCouponCode,
-        cartItems: [{ variantId: sample.variant_id, quantity: 1, price: itemPrice }]
+        cartItems: [{ variantId: sample.variant_id, quantity: 1, price: itemPrice }],
+        user: { id: regUser.user.id }
       }).then(() => true).catch((err) => {
         console.error(`Coupon task ${i} error:`, err?.message || err);
         return false;

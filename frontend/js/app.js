@@ -56,6 +56,54 @@ window.showLuxuryAlert = function({ title = 'Thông Báo', message = '', type = 
   }
 };
 
+// HỘP THOẠI XÁC NHẬN (LUXURY CONFIRMATION MODAL - KHÔNG DÙNG LOG/ALERT)
+window.showLuxuryConfirm = function({ title = 'Xác Nhận Thao Tác', message = '', type = 'warning', confirmText = 'Xác Nhận', cancelText = 'Hủy Bỏ', onConfirm = null, onCancel = null }) {
+  const old = document.querySelector('.luxury-alert-overlay');
+  if (old) old.remove();
+
+  let iconHtml = '<i class="fa-solid fa-triangle-exclamation"></i>';
+  if (type === 'danger') iconHtml = '<i class="fa-solid fa-trash-can"></i>';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'luxury-alert-overlay';
+  overlay.innerHTML = `
+    <div class="luxury-alert-card" style="position: relative; max-width: 440px;">
+      <button class="modal-close-btn" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+      <div class="luxury-alert-icon-wrap ${type}">
+        ${iconHtml}
+      </div>
+      <h3 class="luxury-alert-title">${title}</h3>
+      <div class="luxury-alert-message" style="margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.5;">${message}</div>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; width: 100%;">
+        <button class="luxury-confirm-cancel-btn" style="flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border-light); background: #f5f5f5; border-radius: 6px; cursor: pointer; font-weight: 600; color: var(--text-dark);">
+          ${cancelText}
+        </button>
+        <button class="luxury-confirm-ok-btn" style="flex: 1; padding: 0.75rem 1rem; border: none; background: #c59b27; color: #fff; border-radius: 6px; cursor: pointer; font-weight: 600;">
+          ${confirmText}
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  requestAnimationFrame(() => {
+    overlay.classList.add('active');
+  });
+
+  const closeOverlay = (confirmed) => {
+    overlay.classList.remove('active');
+    setTimeout(() => {
+      overlay.remove();
+      if (confirmed && typeof onConfirm === 'function') onConfirm();
+      if (!confirmed && typeof onCancel === 'function') onCancel();
+    }, 200);
+  };
+
+  overlay.querySelector('.modal-close-btn').addEventListener('click', () => closeOverlay(false));
+  overlay.querySelector('.luxury-confirm-cancel-btn').addEventListener('click', () => closeOverlay(false));
+  overlay.querySelector('.luxury-confirm-ok-btn').addEventListener('click', () => closeOverlay(true));
+};
+
 // Tự động chuyển đổi các alert() mặc định trên mọi trang thành Luxury Modal Box
 window.alert = function(msg) {
   let type = 'success';
@@ -274,14 +322,34 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.updateCartBadge = function() {
-    const signedIn = Boolean(sessionStorage.getItem('auralie_token'));
+    const signedIn = Boolean(sessionStorage.getItem('auralie_token') || sessionStorage.getItem('auralie_user') || localStorage.getItem('auralie_user'));
     document.documentElement.classList.toggle('has-cart-count', signedIn);
     const cart = signedIn ? window.getCart() : [];
     const totalQty = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
     document.querySelectorAll('#cart-count, .cart-count-badge').forEach(badge => {
       badge.textContent = totalQty;
+      badge.style.display = (signedIn && totalQty > 0) ? 'inline-block' : 'none';
+    });
+    // Wishlist badge
+    document.querySelectorAll('#wishlist-count, .wishlist-badge').forEach(badge => {
+      let wlCount = 0;
+      try { wlCount = JSON.parse(localStorage.getItem('auralie_wishlist') || '[]').length; } catch (e) { wlCount = 0; }
+      badge.textContent = wlCount;
+      badge.style.display = (signedIn && wlCount > 0) ? 'inline-block' : 'none';
     });
   };
+
+  // Nếu chưa đăng nhập mà bấm vào Giỏ hàng hoặc Yêu thích thì chuyển sang trang Đăng nhập
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href="cart.html"], a[href="wishlist.html"]');
+    if (link && !window.location.pathname.endsWith('cart.html') && !window.location.pathname.endsWith('wishlist.html')) {
+      const signedIn = Boolean(sessionStorage.getItem('auralie_token') || sessionStorage.getItem('auralie_user') || localStorage.getItem('auralie_user'));
+      if (!signedIn) {
+        e.preventDefault();
+        window.location.href = 'login.html';
+      }
+    }
+  });
 
   window.renderCartPage = function() {
     const container = document.getElementById('cart-items-container');
@@ -361,7 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('') + `
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
         <a href="index.html#catalog" style="color: var(--primary-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;"><i class="fa-solid fa-arrow-left"></i> Tiếp Tục Mua Sắm</a>
-        <button onclick="window.saveCart(window.getCart()); alert('Đã cập nhật giỏ hàng thành công!');" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;"><i class="fa-solid fa-arrows-rotate"></i> Cập Nhật Giỏ Hàng</button>
+        <button onclick="window.saveCart(window.getCart()); window.showLuxuryAlert({ title: 'Đã Cập Nhật', message: 'Giỏ hàng đã được đồng bộ thành công!', type: 'success', autoCloseMs: 2000 });" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem;"><i class="fa-solid fa-arrows-rotate"></i> Cập Nhật Giỏ Hàng</button>
       </div>
     `;
 
@@ -375,6 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (discountRow) discountRow.style.display = discountAmount > 0 ? 'flex' : 'none';
     if (discountVal) discountVal.textContent = '-' + discountAmount.toLocaleString('vi-VN') + ' ₫';
+    const removeCouponBtnElem = document.getElementById('remove-coupon-btn');
+    if (removeCouponBtnElem) removeCouponBtnElem.style.display = discountAmount > 0 ? 'inline-block' : 'none';
     
     const finalTotal = Math.max(0, subtotal - discountAmount);
     if (finalTotalVal) finalTotalVal.textContent = finalTotal.toLocaleString('vi-VN') + ' ₫';
@@ -433,25 +503,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.removeCartItem = function(index) {
     const cart = window.getCart();
-    if (cart[index]) {
-      const removed = cart[index];
-      cart.splice(index, 1);
-      window.saveCart(cart);
-      if (window.AuralieTracking) {
-        const pid = parseInt(String(removed.id || '').replace(/\D/g, ''), 10) || null;
-        window.AuralieTracking.track('remove_from_cart', {
-          productId: pid,
-          properties: {
-            product_name: removed.name,
-            qty: removed.qty || 1,
-            price: Number(removed.price || 0),
-            size: removed.size,
-            color: removed.color
-          }
+    if (!cart[index]) return;
+    const item = cart[index];
+
+    window.showLuxuryConfirm({
+      title: 'Xác Nhận Xóa Sản Phẩm',
+      message: `Quý khách có chắc chắn muốn xóa sản phẩm <strong>${item.name}</strong> (Size ${item.size || 'M'}, Màu ${item.color || 'Đen'}) khỏi giỏ hàng?`,
+      type: 'danger',
+      confirmText: 'Xóa Ngay',
+      cancelText: 'Giữ Lại',
+      onConfirm: () => {
+        cart.splice(index, 1);
+        window.saveCart(cart);
+        if (window.AuralieTracking) {
+          const pid = parseInt(String(item.id || '').replace(/\D/g, ''), 10) || null;
+          window.AuralieTracking.track('remove_from_cart', {
+            productId: pid,
+            properties: {
+              product_name: item.name,
+              qty: item.qty || 1,
+              price: Number(item.price || 0),
+              size: item.size,
+              color: item.color
+            }
+          });
+        }
+        if (window.renderCartPage) window.renderCartPage();
+        window.updateCartBadge();
+        window.showLuxuryAlert({
+          title: 'Đã Xóa Sản Phẩm',
+          message: 'Sản phẩm đã được xóa khỏi giỏ hàng của Quý khách.',
+          type: 'success',
+          autoCloseMs: 2000
         });
       }
-    }
-  };
+    });
+  }
+
+;
 
   // Khởi chạy cập nhật giỏ hàng
   window.Commerce.restoreDraft();
@@ -2198,15 +2287,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Color Swatch Selection inside Modal
+  // Color Swatch Selection inside Modal (Đổi ảnh theo màu sắc tương ứng)
   const modalColorDots = document.querySelectorAll('.modal-color-dots .color-dot');
   const modalSelectedColorText = document.getElementById('modal-selected-color');
-  modalColorDots.forEach(dot => {
+  modalColorDots.forEach((dot, dotIdx) => {
     dot.addEventListener('click', () => {
       modalColorDots.forEach(d => d.classList.remove('selected'));
       dot.classList.add('selected');
       const colorName = dot.getAttribute('data-color') || 'Đen Tuyền';
       if (modalSelectedColorText) modalSelectedColorText.textContent = colorName;
+
+      // Đổi ảnh chính tương ứng khi chọn màu
+      const colorImg = dot.getAttribute('data-img');
+      const thumbs = document.querySelectorAll('.modal-thumb-img');
+      if (modalMainImg) {
+        if (colorImg) {
+          modalMainImg.src = colorImg;
+        } else if (thumbs && thumbs[dotIdx]) {
+          modalMainImg.src = thumbs[dotIdx].src;
+          thumbs.forEach(t => t.classList.remove('active'));
+          thumbs[dotIdx].classList.add('active');
+        }
+      }
+
       if (window.AuralieTracking) {
         const pid = parseInt(String((productModal && productModal.getAttribute('data-product-id')) || '').replace(/\D/g, ''), 10) || null;
         window.AuralieTracking.track('product_variant_select', {
@@ -2235,7 +2338,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
-  });
+  }
+
+);
 
   // 10.1. SIZE GUIDE MODAL LOGIC (BẢNG QUY ĐỔI KÍCH CỠ CHUẨN AURALIÈ THEO TỪNG MẶT HÀNG)
   const sizeGuideModal = document.getElementById('size-guide-modal');
@@ -2522,7 +2627,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <p class="review-text">${r.comment}</p>
                 <div class="review-actions">
-                  <button class="btn-helpful" onclick="this.innerHTML='<i class=\\'fa-solid fa-thumbs-up\\'></i> Cảm ơn bạn!'"><i class="fa-regular fa-thumbs-up"></i> Hữu ích</button>
+                  <button class="btn-helpful" data-likes="${r.helpful_count || 0}" onclick="window.likeReview(${r.id}, this)"><i class="fa-regular fa-thumbs-up"></i> Hữu ích (${r.helpful_count || 0})</button>
                 </div>
               </div>
             `;
@@ -2535,14 +2640,61 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   };
 
+  window.likeReview = function(revId, btn) {
+    if (!revId) return;
+    const current = parseInt(btn.getAttribute('data-likes') || '0', 10);
+    const nextVal = current + 1;
+    btn.setAttribute('data-likes', nextVal);
+    btn.innerHTML = `<i class="fa-solid fa-thumbs-up" style="color:var(--accent-gold);"></i> Đã thích (${nextVal})`;
+    btn.disabled = true;
+    fetch(`/api/v1/reviews/${revId}/like`, { method: 'POST' }).catch(e => console.warn('Like review failed:', e));
+  };
+
   // Toggle Write Review Form
   const toggleWriteReviewBtn = document.getElementById('toggle-write-review-btn');
   const writeReviewForm = document.getElementById('write-review-form');
 
   if (toggleWriteReviewBtn && writeReviewForm) {
-    toggleWriteReviewBtn.addEventListener('click', () => {
+    toggleWriteReviewBtn.addEventListener('click', async () => {
+      let currentUser = null;
+      try {
+        currentUser = JSON.parse(sessionStorage.getItem('auralie_user') || localStorage.getItem('auralie_user') || 'null');
+      } catch (e) { currentUser = null; }
+
+      if (!currentUser) {
+        window.showLuxuryAlert({
+          title: 'Yêu Cầu Đăng Nhập',
+          message: 'Chưa đăng nhập quý khách chỉ có thể xem các đánh giá từ khách hàng khác. Vui lòng đăng nhập để gửi đánh giá sản phẩm.',
+          type: 'warning',
+          btnText: 'Đăng Nhập Ngay',
+          onConfirm: () => { window.location.href = 'login.html'; }
+        });
+        return;
+      }
+
+      const prodId = window.activeModalProductId || 1;
+      try {
+        const checkRes = await fetch(`/api/v1/products/${prodId}/reviews/eligibility?email=${encodeURIComponent(currentUser.email || '')}&phone=${encodeURIComponent(currentUser.phone || '')}`);
+        const checkData = await checkRes.json();
+        if (checkData && checkData.data && checkData.data.eligible === false) {
+          window.showLuxuryAlert({
+            title: 'Chưa Thể Đánh Giá',
+            message: 'Chỉ khách hàng <strong>đã mua sản phẩm này và đơn hàng đã hoàn tất (COMPLETED)</strong> mới được quyền gửi đánh giá.',
+            type: 'warning',
+            btnText: 'Đã Hiểu'
+          });
+          return;
+        }
+      } catch (err) {
+        console.warn('Review eligibility check bypassed:', err);
+      }
+
       writeReviewForm.classList.toggle('hidden');
       if (!writeReviewForm.classList.contains('hidden')) {
+        const nameInput = document.getElementById('review-user-name');
+        if (nameInput && currentUser.name && !nameInput.value) {
+          nameInput.value = currentUser.name;
+        }
         writeReviewForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
@@ -2595,6 +2747,11 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu vào CSDL...';
       }
 
+      let currentUser = null;
+      try {
+        currentUser = JSON.parse(sessionStorage.getItem('auralie_user') || localStorage.getItem('auralie_user') || 'null');
+      } catch (e) { currentUser = null; }
+
       const variantStr = `Màu: ${modalSelectedColorText ? modalSelectedColorText.textContent : 'Đen'} | Size: ${modalSelectedSizeText ? modalSelectedSizeText.textContent : 'M'}`;
 
       fetch('/api/v1/reviews', {
@@ -2603,6 +2760,8 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({
           productId: prodId,
           userName: userName,
+          userEmail: currentUser?.email || '',
+          userPhone: currentUser?.phone || '',
           rating: currentRatingScore,
           comment: userComment,
           variantInfo: variantStr
@@ -2994,6 +3153,30 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }
+    });
+  }
+
+
+
+    const removeCouponBtn = document.getElementById('remove-coupon-btn');
+  if (removeCouponBtn && couponInput) {
+    removeCouponBtn.addEventListener('click', async () => {
+      couponInput.value = '';
+      window.appliedCouponDiscount = 0;
+      window.appliedCouponCode = null;
+      window.couponMessage = '';
+      removeCouponBtn.style.display = 'none';
+      if (window.Commerce && typeof window.Commerce.applyCoupon === 'function') {
+        await window.Commerce.applyCoupon('');
+      } else {
+        if (window.renderCartPage) window.renderCartPage();
+      }
+      window.showLuxuryAlert({
+        title: 'Đã Hủy Mã',
+        message: 'Đã xóa mã ưu đãi thành công. Giá trị đơn hàng đã trở về mức ban đầu.',
+        type: 'success',
+        autoCloseMs: 2000
+      });
     });
   }
 

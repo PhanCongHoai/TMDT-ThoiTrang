@@ -725,7 +725,7 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
 
 .product-grid-3col {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
 }
 
@@ -738,6 +738,8 @@ h1, h2, h3, h4, h5, h6, .section-title, .d-hero-title, .widget-title {
   transition: var(--transition);
   display: flex;
   flex-direction: column;
+  max-width: 380px;
+  width: 100%;
 }
 
 .fashion-card:hover {

@@ -60,7 +60,7 @@
 
       <a href="wishlist.html" class="d-btn-icon" title="Yêu thích">
         <i class="fa-regular fa-heart"></i>
-        <span class="badge-count">2</span>
+        <span class="badge-count" id="wishlist-count" style="display: none;">0</span>
       </a>
 
       <a href="cart.html" class="d-btn-icon active-icon" id="cart-btn" title="Giỏ hàng" style="color: var(--accent-gold);">
@@ -184,8 +184,9 @@
           <div style="margin-bottom: 1.5rem;">
             <span class="filter-label">Mã Ưu Đãi VIP</span>
             <div style="display: flex; gap: 0.5rem;">
-              <input type="text" id="coupon-code-input" value="AURALIE2026" placeholder="Nhập mã (ví dụ: AURALIE2026, WELCOME10)" style="padding: 0.6rem 1rem; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.85rem; width: 100%; outline: none;">
+              <input type="text" id="coupon-code-input" placeholder="Nhập mã (ví dụ: AURALIE2026, WELCOME10)" style="padding: 0.6rem 1rem; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.85rem; width: 100%; outline: none;">
               <button class="btn-primary-luxury" id="apply-coupon-btn" style="padding: 0.6rem 1rem; border-radius: 20px; font-size: 0.75rem; white-space: nowrap;">Áp Dụng</button>
+              <button class="btn-secondary-luxury" id="remove-coupon-btn" style="display: none; padding: 0.6rem 0.8rem; border-radius: 20px; font-size: 0.75rem; white-space: nowrap; background: #faf8f5; border: 1px solid #ddd; color: #a00; cursor: pointer;" title="Hủy mã ưu đãi"><i class="fa-solid fa-xmark"></i> Xóa Mã</button>
             </div>
           </div>
 
@@ -213,7 +214,7 @@
                 <div class="payment-method-info">
                   <div class="payment-method-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
                   <div>
-                    <div class="payment-method-name">Thanh Toán Khi Nhận Hàng (COD)</div>
+                    <div class="payment-method-name" style="line-height: 1.25;">THANH TOÁN<br><span style="font-size: 0.82rem; font-weight: 500; color: var(--text-muted);">KHI NHẬN HÀNG (COD)</span></div>
                     <div class="payment-method-tag">Kiểm tra trang phục trước khi nhận</div>
                   </div>
                 </div>

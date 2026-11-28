@@ -5,7 +5,9 @@ const { verifyToken, requireAdmin } = require('../../middlewares/auth.middleware
 
 // Public endpoints
 router.get('/products/:id/reviews', ReviewController.getProductReviews);
+router.get('/products/:id/reviews/eligibility', ReviewController.checkEligibility);
 router.post('/reviews', ReviewController.createReview);
+router.post('/reviews/:id/like', ReviewController.likeReview);
 
 // Admin-only endpoints
 router.get('/admin/reviews', verifyToken, requireAdmin, ReviewController.getAdminReviews);

@@ -959,19 +959,23 @@
            =================================================================== -->
       <div class="admin-table-card admin-section-tab" id="tab-sec-orders">
         <div class="admin-card-header-flex" style="flex-direction: column; align-items: stretch; gap: 1rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div>
-              <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">2. Quản Lý Đơn Hàng</h3>
-              <span style="font-size: 0.8rem; color: var(--text-muted);">Theo dõi đơn đặt hàng, trạng thái thanh toán và vận chuyển thời gian thực</span>
+              <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin: 0 0 0.2rem 0;">2. Quản Lý Đơn Hàng
+              </h3>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Theo dõi đơn đặt hàng, trạng thái thanh toán và
+                vận chuyển thời gian thực</span>
             </div>
-            
+
             <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
               <!-- Ô tìm kiếm đơn hàng -->
               <div style="position: relative;">
-                <input type="text" id="admin-orders-search" placeholder="Tìm mã đơn, tên KH, SĐT..." 
+                <input type="text" id="admin-orders-search" placeholder="Tìm mã đơn, tên KH, SĐT..."
                   style="padding: 0.45rem 0.85rem 0.45rem 2rem; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.8rem; outline: none; width: 220px; background: #faf8f5;"
                   oninput="window.filterAdminOrders()">
-                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--text-muted);"></i>
+                <i class="fa-solid fa-magnifying-glass"
+                  style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.75rem; color: var(--text-muted);"></i>
               </div>
 
               <!-- Lọc hình thức & trạng thái thanh toán -->
@@ -985,12 +989,14 @@
               </select>
 
               <!-- Nút tải lại -->
-              <button class="review-pill" onclick="window.loadAdminOrders()" style="display: inline-flex; align-items: center; gap: 4px; padding: 0.45rem 0.85rem;" title="Tải lại đơn hàng từ CSDL">
+              <button class="review-pill" onclick="window.loadAdminOrders()"
+                style="display: inline-flex; align-items: center; gap: 4px; padding: 0.45rem 0.85rem;"
+                title="Tải lại đơn hàng từ CSDL">
                 <i class="fa-solid fa-rotate"></i> Tải lại
               </button>
 
               <!-- Xuất Excel -->
-              <button class="btn-primary-luxury" onclick="exportToExcel('orders')" 
+              <button class="btn-primary-luxury" onclick="exportToExcel('orders')"
                 style="background:#2e7d32; padding:0.45rem 0.85rem; font-size:0.75rem; border-radius:20px; white-space:nowrap; border:none; display: inline-flex; align-items: center; gap: 5px;">
                 <i class="fa-solid fa-file-excel"></i> Xuất File Excel
               </button>
@@ -1819,7 +1825,7 @@
           const statusLabel = statusUpper === 'COMPLETED' ? 'Đã Hoàn Thành' : (statusUpper === 'SHIPPED' ? 'Đang Giao Hàng' : (statusUpper === 'CONFIRMED' ? 'Đã Xác Nhận' : (statusUpper === 'PENDING' ? 'Chờ Duyệt' : (statusUpper === 'CANCELLED' ? 'Đã Hủy' : o.status))));
 
           const isPaid = (o.payment_status || '').toUpperCase() === 'PAID';
-          const payBadge = isPaid 
+          const payBadge = isPaid
             ? '<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;">Đã TT</span>'
             : '<span style="background: #ffebee; color: #c62828; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; white-space: nowrap;">Chưa TT</span>';
 
@@ -1876,15 +1882,35 @@
           });
       };
 
-      // Cập nhật trạng thái đơn hàng trực tiếp vào SQL Server
-      window.updateOrderStatus = (orderId, newStatus) => {
-        window.ApiClient.put(`/api/v1/orders/${orderId}/status`, { status: newStatus })
-          .then(data => {
-            alert(data.message || 'Cập nhật trạng thái đơn hàng thành công!');
-            window.loadAdminOrders();
-            loadAdminStats();
-          })
-          .catch(err => alert('Lỗi cập nhật trạng thái đơn: ' + err.message));
+      // Cập nhật trạng thái đơn hàng trực tiếp vào SQL Server với Modal xác nhận
+      window.updateOrderStatus = async (orderId, newStatus) => {
+        const statusMap = {
+          'PENDING': 'Chờ duyệt',
+          'CONFIRMED': 'Đã xác nhận / Đã thanh toán',
+          'SHIPPED': 'Đang giao hàng',
+          'COMPLETED': 'Hoàn thành',
+          'CANCELLED': 'Hủy đơn'
+        };
+        const statusLabel = statusMap[newStatus] || newStatus;
+        const confirmed = await Commerce.dialog(
+          'Xác nhận cập nhật trạng thái đơn hàng',
+          `<p>Bạn có chắc chắn muốn chuyển đơn hàng <strong>#${orderId}</strong> sang trạng thái <strong>${statusLabel}</strong> không?</p>`,
+          'Xác nhận chuyển'
+        );
+        if (!confirmed) {
+          window.loadAdminOrders();
+          return;
+        }
+
+        try {
+          const data = await window.ApiClient.put(`/api/v1/orders/${orderId}/status`, { status: newStatus });
+          await Commerce.notify(data.message || 'Cập nhật trạng thái đơn hàng thành công!');
+          window.loadAdminOrders();
+          loadAdminStats();
+        } catch (err) {
+          await Commerce.notify('Lỗi cập nhật trạng thái đơn: ' + err.message);
+          window.loadAdminOrders();
+        }
       };
 
       // 4. Danh Sách Đánh Giá Khách Hàng Từ Database
@@ -1926,25 +1952,28 @@
           });
       };
 
-      window.approveReview = (id) => {
-        window.ApiClient.put(`/api/v1/reviews/${id}/approve`)
-          .then(data => {
-            alert(data.message || 'Đã duyệt đánh giá thành công!');
-            window.loadAdminReviews();
-            loadAdminStats();
-          })
-          .catch(err => alert('Lỗi: ' + err.message));
+      window.approveReview = async (id) => {
+        try {
+          const data = await window.ApiClient.put(`/api/v1/reviews/${id}/approve`);
+          await Commerce.notify(data.message || 'Đã duyệt đánh giá thành công!');
+          window.loadAdminReviews();
+          loadAdminStats();
+        } catch (err) {
+          await Commerce.notify('Lỗi duyệt đánh giá: ' + err.message);
+        }
       };
 
-      window.deleteReview = (id) => {
-        if (!confirm(`Bạn có chắc chắn muốn xóa đánh giá #${id}?`)) return;
-        window.ApiClient.delete(`/api/v1/reviews/${id}`)
-          .then(data => {
-            alert(data.message || 'Đã xóa đánh giá thành công!');
-            window.loadAdminReviews();
-            loadAdminStats();
-          })
-          .catch(err => alert('Lỗi: ' + err.message));
+      window.deleteReview = async (id) => {
+        const confirmed = await Commerce.dialog('Xác nhận xóa đánh giá', `<p>Bạn có chắc chắn muốn xóa đánh giá <strong>#${id}</strong> này?</p>`, 'Xác nhận xóa');
+        if (!confirmed) return;
+        try {
+          const data = await window.ApiClient.delete(`/api/v1/reviews/${id}`);
+          await Commerce.notify(data.message || 'Đã xóa đánh giá thành công!');
+          window.loadAdminReviews();
+          loadAdminStats();
+        } catch (err) {
+          await Commerce.notify('Lỗi xóa đánh giá: ' + err.message);
+        }
       };
 
       // 5. Danh Sách Khách Hàng & Quản Lý Khách Hàng Từ Database
